@@ -7,18 +7,32 @@
     <link rel='manifest' href='~/manifest.json'>
     <link rel="shortcut icon" href="~/Icons/180x180.png" />
     <link rel="apple-touch-icon" href="~/Icons/1024x1024.png" />
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register("SW.js");
-        }
-    </script>
+    <link href="~/favicon.ico" rel="icon" />
+    <link href="~/lib/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/Bootstrap/css/mdb.min.css" rel="stylesheet" />
+    <link href="~/css/Install.css" rel="stylesheet" />
+    <script src="~/lib/ParalaxBackground/Script.js"></script>
+    <script src="~/lib/Bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/Bootstrap/js/mdb.min.js"></script>
+    <script src="~/lib/Axios/axios.min.js"></script>
+    <script src="~/lib/Vue/vue.min.js"></script>
+    <script src="~/js/Layout.js"></script>
+    @{
+        foreach (var item in ViewData["CSS"] as List<string>)
+            WriteLiteral($@"<link href='{item}' rel='stylesheet'/>");
+        foreach (var item in ViewData["JSU"] as List<string>)
+            WriteLiteral($@"<script src='{item}'></script>");
+        
+    }
 </head>
 <body>
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    <div id="app">
+        @{ if ((bool)ViewData["ParalaxOn"]) WriteLiteral("<backganim></backganim>");}
+        @RenderBody()
     </div>
+    @{ 
+        foreach (var item in ViewData["JSD"] as List<string>)
+            WriteLiteral($@"<script src='{item}'></script>");
+    }
 </body>
 </html>
