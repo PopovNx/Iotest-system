@@ -1,5 +1,5 @@
 ﻿Vue.component('backganim', {
-    template: '<div id="canvAn1"></div>',
+    template: '<div id="canvAn1" class="BackD1"></div>',
     mounted: function () {
         var canvasDiv = document.getElementById('canvAn1');
         var options = {
