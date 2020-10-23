@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
-@{var ver=3;}
+@{var ver=6;}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,9 +19,9 @@
     <script src="~/js/Layout.js?@ver"></script>
     @{
         foreach (var item in ViewData["CSS"] as List<string>)
-            WriteLiteral($@"<link href='{item}?{ver}' rel='stylesheet'/>");
+            WriteLiteral($"<link href=\"{item}?{ver}\" rel='stylesheet'/>");
         foreach (var item in ViewData["JSU"] as List<string>)
-            WriteLiteral($@"<script src='{item}?{ver}'></script>");
+            WriteLiteral($"<script src=\"{item}?{ver}\"></script>");
         
     }
 </head>
@@ -32,7 +32,7 @@
     </div>
     @{ 
         foreach (var item in ViewData["JSD"] as List<string>)
-            WriteLiteral($@"<script src='{item}?{ver}'></script>");
+            WriteLiteral($"<script src=\"{item}?{ver}\"></script>");
     }
 </body>
 </html>
