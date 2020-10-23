@@ -1,9 +1,17 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
+    <link rel='manifest' href='~/manifest.json'>
+    <link rel="shortcut icon" href="~/Icons/180x180.png" />
+    <link rel="apple-touch-icon" href="~/Icons/1024x1024.png" />
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("SW.js");
+        }
+    </script>
 </head>
 <body>
 
