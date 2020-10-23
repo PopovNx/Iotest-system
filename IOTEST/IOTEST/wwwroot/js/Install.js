@@ -1,11 +1,15 @@
 ﻿var app = new Vue({
     el: "#app",
     data: {
-        deferredPrompt: null
+        deferredPrompt: null,
+        IsIphone: /iPhone|iPad|iPod/i.test(navigator.userAgent),
     },
     methods: {
         InstallClick() {
-            this.deferredPrompt.prompt();
+            if (this.IsIphone) new bootstrap.Modal(document.getElementById('guide')).show();
+            else this.deferredPrompt.prompt();
+
+
         }
     },
     created() {
@@ -19,7 +23,6 @@
         });
     },
     mounted() {
-      
     }
 })
 
