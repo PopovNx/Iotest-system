@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html lang="ru">
+@{var ver=3;}
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,18 +11,17 @@
     <link href="~/favicon.ico" rel="icon" />
     <link href="~/lib/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/Bootstrap/css/mdb.min.css" rel="stylesheet" />
-    <link href="~/css/Install.css" rel="stylesheet" />
     <script src="~/lib/ParalaxBackground/Script.js"></script>
     <script src="~/lib/Bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/Bootstrap/js/mdb.min.js"></script>
     <script src="~/lib/Axios/axios.min.js"></script>
     <script src="~/lib/Vue/vue.min.js"></script>
-    <script src="~/js/Layout.js"></script>
+    <script src="~/js/Layout.js?@ver"></script>
     @{
         foreach (var item in ViewData["CSS"] as List<string>)
-            WriteLiteral($@"<link href='{item}' rel='stylesheet'/>");
+            WriteLiteral($@"<link href='{item}?{ver}' rel='stylesheet'/>");
         foreach (var item in ViewData["JSU"] as List<string>)
-            WriteLiteral($@"<script src='{item}'></script>");
+            WriteLiteral($@"<script src='{item}?{ver}'></script>");
         
     }
 </head>
@@ -32,7 +32,7 @@
     </div>
     @{ 
         foreach (var item in ViewData["JSD"] as List<string>)
-            WriteLiteral($@"<script src='{item}'></script>");
+            WriteLiteral($@"<script src='{item}?{ver}'></script>");
     }
 </body>
 </html>
