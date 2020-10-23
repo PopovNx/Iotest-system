@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOTEST.Controllers
 {
-    [Route("/")]
-    public class IndexController : Controller
+    [Route("/install")]
+    public class InstallController : Controller
     {
         public IActionResult Index()
         {
-            ViewData.Add("Title", "IOTEST");
-            return View("Index");
+            ViewData.Add("Title", "IOTEST Install");
+            return View("Install");
         }
     }
 }
