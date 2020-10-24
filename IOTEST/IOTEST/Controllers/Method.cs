@@ -11,11 +11,22 @@ namespace IOTEST.Controllers
     public class MethodController : Controller
     {
         [HttpPost]
-        public IActionResult Post()
+        public string Post()
         {
             var Data = HttpContext.Request.Form;
             var Method = Data["method"];
-            return View();
+            var Return = "error";
+            switch (Method)
+            {
+                case "AuchGoogle":
+
+                    break;
+                default:
+                    break;
+            }
+
+
+            return Return;
         }
     }
 }
