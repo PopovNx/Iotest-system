@@ -20,7 +20,7 @@ namespace IOTEST
             var Pach = context.Request.Path;
 
             DataControl control = new DataControl(context.Request.Cookies);
-            if (!control.IsOk) { if (Pach != "/login" && Pach != "/install") { context.Response.Redirect("/login"); } }
+            if (!control.IsOk) { if (Pach != "/login" && Pach != "/install") { context.Response.Redirect("/install"); } }
             else
             {
                 if (DataBase.Users.Where((x) => x.Gmail == control.UserData.Gmail).Count() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
