@@ -15,12 +15,17 @@ namespace IOTEST
             _next = next;
         }
 
-        public Task Invoke(HttpContext httpContext)
+        public Task Invoke(HttpContext context)
         {
+            var Pach = context.Request.Path;
+            DataControl control = new DataControl(context.Request.Cookies);
+            if (!control.IsOk) { if (Pach != "/login"&&Pach != "/install") { context.Response.Redirect("/login"); } }
+            else
+            {
 
+            }
 
-
-            return _next(httpContext);
+            return _next(context);
         }
     }
 

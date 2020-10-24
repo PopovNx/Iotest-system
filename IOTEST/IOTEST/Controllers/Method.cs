@@ -13,6 +13,8 @@ namespace IOTEST.Controllers
         [HttpPost]
         public async Task<string> PostAsync()
         {
+            DataControl control = new DataControl(HttpContext.Request.Cookies);
+
             var Method = HttpContext.Request.Form["method"];
             var Return = "";
             switch (Method)
