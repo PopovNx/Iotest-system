@@ -11,15 +11,14 @@ namespace IOTEST.Controllers
     public class MethodController : Controller
     {
         [HttpPost]
-        public string Post()
+        public async Task<string> PostAsync()
         {
-            var Data = HttpContext.Request.Form;
-            var Method = Data["method"];
-            var Return = "error";
+            var Method = HttpContext.Request.Form["method"];
+            var Return = "";
             switch (Method)
             {
                 case "AuchGoogle":
-
+                    await Methods.AuchGoogle.Invoke(HttpContext);
                     break;
                 default:
                     break;

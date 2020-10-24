@@ -1,11 +1,29 @@
-﻿using System;
+﻿using IOTEST.Items;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace IOTEST
 {
-    public class DataBase
+    public static class DataBase
     {
+        static List<User> TempDataBase = new List<User>
+        {
+        
+        };
+
+        static public List<User> Users
+        {
+            get
+            {
+                return new List<User>(TempDataBase);
+            }
+        }
+        static public async Task Register(User user)
+        {
+            TempDataBase.Add(user);
+        }
+
     }
 }
