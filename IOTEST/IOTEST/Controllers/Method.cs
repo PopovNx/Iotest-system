@@ -20,8 +20,7 @@ namespace IOTEST.Controllers
             switch (Method)
             {
                 case "AuchGoogle":
-                    await Methods.AuchGoogle.Invoke(HttpContext);
-                    break;
+                    return await Methods.AuchGoogle.Invoke(HttpContext);
                 default:
                     break;
             }

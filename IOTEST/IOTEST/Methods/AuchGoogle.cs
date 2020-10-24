@@ -11,19 +11,19 @@ namespace IOTEST.Methods
 {
     public static class AuchGoogle
     {
-        public async static Task Invoke(HttpContext context)
+        public async static Task<string> Invoke(HttpContext context)
         {
             var Mail = context.Request.Form["Email"];
             Loger.Log(context.Request.Form);
             var Finded = DataBase.Users.Where(x => x.Gmail == Mail);
+            var User = new User();
             if (Finded.Any())
             {
-                Loger.Log(Finded.First());
-
+                User = Finded.First();
             }
             else
             {
-                var User = new User();
+
                 User.FirstName = context.Request.Form["GivenName"];
                 User.FamilyName = context.Request.Form["FamilyName"];
                 User.Image = context.Request.Form["ImageURL"];
@@ -31,11 +31,14 @@ namespace IOTEST.Methods
                 User.Token = context.Request.Form["IDToken"];
                 Loger.Log("Register");
                 await DataBase.Register(User);
-                Loger.Log(User);
+
 
             }
+            Loger.Log(User);
+            var DataC = new DataControl(User);
+            context.Response.Cookies.Append(DataControl.CookieName, DataC.ToString(), new CookieOptions { Path = "/", Expires = DateTime.Now.AddYears(1) });
 
-
+            return "OK";
         }
 
     }

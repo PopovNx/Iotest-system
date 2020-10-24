@@ -15,17 +15,21 @@ namespace IOTEST
             _next = next;
         }
 
-        public Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context)
         {
             var Pach = context.Request.Path;
+          
             DataControl control = new DataControl(context.Request.Cookies);
-            if (!control.IsOk) { if (Pach != "/login"&&Pach != "/install") { context.Response.Redirect("/login"); } }
+            if (!control.IsOk) { if (Pach != "/login" && Pach != "/install") { context.Response.Redirect("/login"); } }
             else
             {
+                if (DataBase.Users.Where((x) => x.Gmail == control.UserData.Gmail).Count() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
+                if (Pach == "/login") context.Response.Redirect("/");
+               
 
             }
 
-            return _next(context);
+            await _next(context);
         }
     }
 
