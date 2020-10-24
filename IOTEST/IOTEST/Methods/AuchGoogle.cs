@@ -13,12 +13,13 @@ namespace IOTEST.Methods
     {
         public async static Task Invoke(HttpContext context)
         {
-            var Token = context.Request.Form["IDToken"];
-            File.WriteAllText("D:\\ConsoleOutput.txt",JsonConvert.SerializeObject(Token));
-            var Finded = DataBase.Users.Where(x => x.Token == Token);
+            var Mail = context.Request.Form["Email"];
+            Loger.Log(context.Request.Form);
+            var Finded = DataBase.Users.Where(x => x.Gmail == Mail);
             if (Finded.Any())
             {
-                File.WriteAllText("D:\\ConsoleOutput.txt", JsonConvert.SerializeObject(Finded.First()));
+                Loger.Log(Finded.First());
+
             }
             else
             {
@@ -26,11 +27,12 @@ namespace IOTEST.Methods
                 User.FirstName = context.Request.Form["GivenName"];
                 User.FamilyName = context.Request.Form["FamilyName"];
                 User.Image = context.Request.Form["ImageURL"];
-                User.Gmail = context.Request.Form["Email"];
-                User.Token = Token;
-                File.WriteAllText("D:\\ConsoleOutput.txt", JsonConvert.SerializeObject("register"));
-
+                User.Gmail = Mail;
+                User.Token = context.Request.Form["IDToken"];
+                Loger.Log("Register");
                 await DataBase.Register(User);
+                Loger.Log(User);
+
             }
 
 

@@ -13,7 +13,7 @@ namespace IOTEST
 {
     public static class Loger
     {
-        public static void Log(string l)
+        public static void Log(object l)
         {
             var Pach = "D:\\ConsoleOutput.txt";
             File.WriteAllText(Pach, File.ReadAllText(Pach)+"\n"+ JsonConvert.SerializeObject(l));

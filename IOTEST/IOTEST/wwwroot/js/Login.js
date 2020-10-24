@@ -4,7 +4,17 @@
 
     },
     methods: {
-      
+        onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            var Data = new FormData();
+            Data.append('method', 'AuchGoogle');
+            Data.append('GivenName', profile.getGivenName());
+            Data.append('FamilyName', profile.getFamilyName());
+            Data.append('ImageURL', profile.getImageUrl());
+            Data.append('Email', profile.getEmail());
+            Data.append('IDToken', googleUser.getAuthResponse().id_token);
+            axios.post('/method', Data);
+        }
     },
     mounted() {
         gapi.load('auth2', function () {
@@ -12,24 +22,9 @@
                 client_id: '568231728412-9mu2l70s8c878a4gn4up9t9qjpgol360.apps.googleusercontent.com',
                 cookiepolicy: 'single_host_origin',
             });
-            attachSignin(document.getElementById('BtnGoogle'));
+            auth2.attachClickHandler(document.getElementById('BtnGoogle'), {}, app.onSignIn, function (error) {
+                alert(JSON.stringify(error, undefined, 2));
+            });
         });
     }
 })
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    console.log('Full Name: ' + profile.getName());
-    console.log('Given Name: ' + profile.getGivenName());
-    console.log('Family Name: ' + profile.getFamilyName());
-    console.log("Image URL: " + profile.getImageUrl());
-    console.log("Email: " + profile.getEmail());
-    var id_token = googleUser.getAuthResponse().id_token;
-    console.log("ID Token: " + id_token);
-}
-
-function attachSignin(element) {
-    console.log(element.id);
-    auth2.attachClickHandler(element, {}, onSignIn, function (error) {
-            alert(JSON.stringify(error, undefined, 2));
-        });
-}
