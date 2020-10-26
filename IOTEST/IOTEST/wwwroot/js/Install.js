@@ -3,13 +3,12 @@
     data: {
         deferredPrompt: null,
         IsIphone: /iPhone|iPad|iPod/i.test(navigator.userAgent),
+        InstYet: false,
     },
     methods: {
         InstallClick() {
             if (this.IsIphone) new bootstrap.Modal(document.getElementById('guide')).show();
             else this.deferredPrompt.prompt();
-
-
         }
     },
     created() {
@@ -23,6 +22,11 @@
         });
     },
     mounted() {
+        setTimeout(() => {
+            app.InstYet = (app.deferredPrompt == null && !app.IsIphone)
+            console.log(app.InstYet);
+        },50);
+
     }
 })
 

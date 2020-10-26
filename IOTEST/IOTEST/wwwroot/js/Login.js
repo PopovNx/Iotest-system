@@ -13,7 +13,7 @@
             Data.append('ImageURL', profile.getImageUrl());
             Data.append('Email', profile.getEmail());
             Data.append('IDToken', googleUser.getAuthResponse().id_token);
-            axios.post('/method', Data).then(() => location = location);
+            axios.post('/method', Data).then(() => location = location); 
         }
     },
     mounted() {
