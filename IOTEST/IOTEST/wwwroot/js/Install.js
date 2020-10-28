@@ -11,7 +11,8 @@
             else this.deferredPrompt.prompt();
         },
         ToWeb() {
-
+            Cookies.set("Web", true, { expires: 228 });
+            location.href = "/login";
         }
     },
     created() {

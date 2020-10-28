@@ -2,10 +2,14 @@
 <html lang="ru">
 @{var ver="0.0.0.5"+DateTime.Now.Ticks.ToString();}
 <head>
+    <script src="~/lib/Cookie/js.cookie.min.js"></script>
     <script>
         var Pwa = window.matchMedia('(display-mode: standalone)').matches;
-        if (Pwa == false && location.pathname != "/install") location.href = "/install";
+        if (Cookies.get("Web") == undefined) Cookies.set("Web", false, { expires: 228 });
+        if (Cookies.get("Web") == "true" && location.pathname == "/install") location.href = "/login";
+        if (Pwa == false && location.pathname != "/install" && Cookies.get("Web") != "true") location.href = "/install";
         if (Pwa == true && location.pathname == "/install") location.href = "/login";
+
     </script>
     <style>
         [v-cloak] {
@@ -22,7 +26,6 @@
     <link href="~/favicon.ico" rel="icon" />
     <link href="~/lib/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/lib/Bootstrap/css/mdb.min.css" rel="stylesheet" />
-    <script src="~/lib/Cookie/js.cookie.min.js"></script>
     <script src="https://apis.google.com/js/api:client.js"></script>
     <script src="~/lib/ParalaxBackground/Script.js"></script>
     <script src="~/lib/Bootstrap/js/bootstrap.bundle.min.js"></script>
