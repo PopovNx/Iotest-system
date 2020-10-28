@@ -16,10 +16,9 @@ namespace IOTEST.Methods
             var Mail = context.Request.Form["Email"];
             var Finded = DataBase.Users.Where(x => x.Gmail == Mail);
             var User = new User();
-            if (Finded.Any())
-            {
+            if (Finded.Any())            
                 User = Finded.First();
-            }
+            
             else
             {
 
@@ -28,6 +27,7 @@ namespace IOTEST.Methods
                 User.Image = context.Request.Form["ImageURL"];
                 User.Gmail = Mail;
                 User.Token = context.Request.Form["IDToken"];
+                User.UserProf = UserProfType.Unset;
                 await DataBase.Register(User);
 
 

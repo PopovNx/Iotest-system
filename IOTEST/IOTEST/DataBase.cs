@@ -21,8 +21,9 @@ namespace IOTEST
             }
         }
         static public async Task Register(User user)
-        {
+        {      
             TempDataBase.Add(user);
+            await Task.Delay(1);
         }
 
     }
