@@ -27,6 +27,7 @@ namespace IOTEST
             {
                 if (DataBase.Users.Where((x) => x.Gmail == control.UserData.Gmail).Count() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
                 if (Pach == "/login") context.Response.Redirect("/");
+                return;
             }
 
             await _next(context);

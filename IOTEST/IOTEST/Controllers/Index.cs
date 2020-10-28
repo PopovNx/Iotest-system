@@ -12,6 +12,7 @@ namespace IOTEST.Controllers
         public IActionResult Index()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
+            if (!control.IsOk) { HttpContext.Response.Redirect("/login"); return View("Empty"); ; }
             ViewData.Add("Title", "IOTEST");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Index.css" });
