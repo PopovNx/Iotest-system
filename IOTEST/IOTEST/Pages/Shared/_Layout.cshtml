@@ -3,11 +3,15 @@
 @{var ver="0.0.0.5"+DateTime.Now.Ticks.ToString();}
 <head>
     <script>
-        var isInstall = window.matchMedia('(display-mode: standalone)').matches;
-        if (isInstall == false && location.pathname != "/install") location.href = "/install";
-        if (isInstall == true && location.pathname == "/install") location.href = "/login";
-
+        var Pwa = window.matchMedia('(display-mode: standalone)').matches;
+        if (Pwa == false && location.pathname != "/install") location.href = "/install";
+        if (Pwa == true && location.pathname == "/install") location.href = "/login";
     </script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
@@ -35,11 +39,11 @@
     }
 </head>
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
         @{ if ((bool)ViewData["ParalaxOn"]) WriteLiteral("<backganim></backganim>");}
         @RenderBody()
     </div>
-    @{ 
+    @{
         foreach (var item in ViewData["JSD"] as List<string>)
             WriteLiteral($"<script src=\"{item}?{ver}\"></script>");
     }

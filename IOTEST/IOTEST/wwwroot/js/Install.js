@@ -9,6 +9,9 @@
         InstallClick() {
             if (this.IsIphone) new bootstrap.Modal(document.getElementById('guide')).show();
             else this.deferredPrompt.prompt();
+        },
+        ToWeb() {
+
         }
     },
     created() {
@@ -17,7 +20,7 @@
             this.deferredPrompt = e;
         });
         window.addEventListener("appinstalled", () => {
-            console.log("instaled")
+            location.href = "/login";
             this.deferredPrompt = null;
         });
     },
@@ -25,7 +28,7 @@
         setTimeout(() => {
             app.InstYet = (app.deferredPrompt == null && !app.IsIphone)
             console.log(app.InstYet);
-        },50);
+        },100);
 
     }
 })
