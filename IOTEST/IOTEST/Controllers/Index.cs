@@ -14,9 +14,9 @@ namespace IOTEST.Controllers
 
             ViewData.Add("Title", "IOTEST");
             ViewData.Add("ParalaxOn", true);
-            ViewData.Add("CSS", new List<string> {  });
-            ViewData.Add("JSU", new List<string> {  });
-            ViewData.Add("JSD", new List<string> {  });
+            ViewData.Add("CSS", new List<string> { "css/Index.css" });
+            ViewData.Add("JSU", new List<string> { "VueComponents/InstallCompoonents.js" });
+            ViewData.Add("JSD", new List<string> { "js/Index.js" });
             return View("Index");
         }
     }

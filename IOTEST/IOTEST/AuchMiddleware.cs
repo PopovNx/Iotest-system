@@ -17,6 +17,9 @@ namespace IOTEST
 
         public async Task Invoke(HttpContext context)
         {
+           
+            await _next(context);
+            return;
             var Pach = context.Request.Path;
 
             DataControl control = new DataControl(context.Request.Cookies);
