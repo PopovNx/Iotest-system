@@ -15,9 +15,9 @@ namespace IOTEST.Controllers
             if (!control.IsOk) { HttpContext.Response.Redirect("/login"); return View("Empty");}
 
             ViewData.Add("Title", "Тест - ");
-            ViewData.Add("ParalaxOn", true);
+            ViewData.Add("ParalaxOn", false);
             ViewData.Add("CSS", new List<string> { "css/Test.css" });
-            ViewData.Add("JSU", new List<string> { "js/VueComp.js" });
+            ViewData.Add("JSU", new List<string> { "js/VueComp.js", "lib/Pixijs/pixi.min.js", "TestItems/Classes.js" });
             ViewData.Add("JSD", new List<string> { "js/Test.js" });
             ViewData.Add("User", control.UserData);
 

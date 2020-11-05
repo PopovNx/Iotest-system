@@ -33,7 +33,6 @@
     <script src="~/lib/Axios/axios.min.js"></script>
     <script src="~/lib/Vue/vue.min.js"></script>
 
-
     @{
         foreach (var item in ViewData["CSS"] as List<string>)
             WriteLiteral($"<link href=\"{item}?{ver}\" rel='stylesheet'/>");
