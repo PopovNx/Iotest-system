@@ -15,7 +15,7 @@ namespace IOTEST.Controllers
             ViewData.Add("Title", "IOTEST Login");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Install.css" });
-            ViewData.Add("JSU", new List<string> { "VueComponents/InstallCompoonents.js" });
+            ViewData.Add("JSU", new List<string> { "js/VueComp.js" });
             ViewData.Add("JSD", new List<string> { "js/Login.js" });
             return View("Login");
         }

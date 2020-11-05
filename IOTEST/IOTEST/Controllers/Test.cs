@@ -6,21 +6,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IOTEST.Controllers
 {
-    [Route("/")]
-    public class IndexController : Controller
+    [Route("/test")]
+    public class TestController : Controller
     {
         public IActionResult Index()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
-            if (!control.IsOk) { HttpContext.Response.Redirect("/login"); return View("Empty"); ; }
-            ViewData.Add("Title", "IOTEST");
+            if (!control.IsOk) { HttpContext.Response.Redirect("/login"); return View("Empty");}
+
+            ViewData.Add("Title", "Тест - ");
             ViewData.Add("ParalaxOn", true);
-            ViewData.Add("CSS", new List<string> { "css/Index.css" });
+            ViewData.Add("CSS", new List<string> { "css/Test.css" });
             ViewData.Add("JSU", new List<string> { "js/VueComp.js" });
-            ViewData.Add("JSD", new List<string> { "js/Index.js" });
+            ViewData.Add("JSD", new List<string> { "js/Test.js" });
             ViewData.Add("User", control.UserData);
 
-            return View("Index");
+            return View("Test");
         }
     }
 }
