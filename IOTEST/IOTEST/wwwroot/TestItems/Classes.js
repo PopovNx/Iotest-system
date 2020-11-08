@@ -28,7 +28,26 @@ SavedMap.sObject = class {
     Weight;
 }
 SavedMap.sTrigger = class {
-
+    constructor(vis, mag, pos, id) {
+        this.Visual = vis;
+        this.Magnetic = mag;
+        this.Position = pos;
+        this.Id = id;
+    }
+    Visual;
+    Magnetic;
+    Position;
+    Id;
+}
+SavedMap.sTrigger.PositionT = class {
+    constructor(x, y, s) {
+        this.X = x;
+        this.Y = y;
+        this.Size = s;
+    }
+    X;
+    Y;
+    Size;
 }
 SavedMap.sObject.PositionT = class {
     constructor(x, y, z, s, r) {
@@ -56,7 +75,10 @@ class VisualMap {
                     console.error(e);
             }
         });
+        smap.Triggers.forEach((e) => {
+            this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic));
 
+        });
     }
     Work() {
 
@@ -70,76 +92,24 @@ class VisualMap {
 class VisualTest {
     constructor(smap, display) {
         this.Canvas = display;
-        this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas , backgroundColor: 0xf0f0f0, antialias: true, })
+        this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, backgroundColor: 0xf0f0f0, antialias: true, })
         this.VDisplayContainer = new PIXI.Container();
         this.VDisplay.stage.addChild(this.VDisplayContainer);
         this.Vmap = new VisualMap(smap);
+        this.Vmap.Triggers.forEach((e) => this.VDisplayContainer.addChild(e.graphics));
         this.Vmap.Objects.forEach((e) => this.VDisplayContainer.addChild(e.sprite));
-        this.Vmap.Triggers.forEach((e) => container.addChild(e.graphics));
         this.VDisplay.ticker.add((delta) => this.TestWorker(delta));
         window.addEventListener('resize', () => { this.resize(this); });
         this.resize(this);
     }
-    TrigerWorker() {
-        this.Vmap.Triggers.forEach((e) => {
-            e.Draw();
-            var elementcount = 0;
-            this.Vmap.Elements.forEach((el) => {
-                if (e.magnetic) {
-                    if (Funcs.pointInPoly(e.VectorArray, el.sprite.x, el.sprite.y)) {
-                        elementcount++;
-                    }
-                }
-                if (el.sprite.dragging) {
-                    if (e.magnetic && Funcs.pointInPoly(e.VectorArray, el.sprite.hasposx, el.sprite.hasposy)) {
-                        el.sprite.OnTrigger = true;
-                        el.sprite.x = e.x;
-                        el.sprite.y = e.y;
-                    } else el.sprite.OnTrigger = false;
-                }
-
-            })
-            e.elementcount = elementcount;
-            // console.log(e.elementcount);
-        });
-    }
     TestWorker(delta) {
-        this.TrigerWorker();
+        this.Vmap.Triggers.forEach((e) => e.Work(this.Vmap.Objects));
     }
     VDisplay;
     VDisplayContainer;
     Vmap;
     Canvas;
-    Funcs = {
-        getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {
-            var d = (startX1 - endX1) * (endY2 - startY2) - (startY1 - endY1) * (endX2 - startX2);
-            var da = (startX1 - startX2) * (endY2 - startY2) - (startY1 - startY2) * (endX2 - startX2);
-            var db = (startX1 - endX1) * (startY1 - startY2) - (startY1 - endY1) * (startX1 - startX2);
 
-            var ta = da / d;
-            var tb = db / d;
-
-            if (ta >= 0 && ta <= 1 && tb >= 0 && tb <= 1) {
-                var dx = startX1 + ta * (endX1 - startX1);
-                var dy = startY1 + ta * (endY1 - startY1);
-                return [dx, dy];
-            }
-            return [-100, -100];
-        },
-        pointInPoly(poly, pointX, pointY) {
-            var i, j, c = false;
-            var polyCords = [[poly[0], poly[1]], [poly[2], poly[3]], [poly[4], poly[5]], [poly[6], poly[7]]];
-            for (i = 0, j = polyCords.length - 1; i < polyCords.length; j = i++) {
-
-                if (((polyCords[i][1] > pointY) != (polyCords[j][1] > pointY)) && (pointX < (polyCords[j][0] - polyCords[i][0]) * (pointY - polyCords[i][1]) / (polyCords[j][1] - polyCords[i][1]) + polyCords[i][0])) {
-                    c = !c;
-                }
-
-            }
-
-            return c;
-        }
-    }
     resize(t) {
         let TestWidth = document.getElementById("testMain").clientWidth;
         t.VDisplay.renderer.resize(TestWidth, TestWidth / 3 * 2);
@@ -157,7 +127,7 @@ class VisualTest {
 }
 
 class DragableObject {
-    static NullTexture = 'Prefabs/Shared/Null.png';
+    static NullTexture = 'TestItems/Prefabs/Shared/Null.png';
     constructor(img, scale, x, y, r, cc = true, drag = false) {
         this.texture = PIXI.Texture.from(img);
         this.sprite = new PIXI.Sprite(this.texture);
@@ -256,6 +226,22 @@ class Trigger {
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
+    Work(Objects) {
+        var elementcount = 0;
+        var Sum = 0;
+
+        Objects.forEach((e) => {
+            elementcount += this.Funcs.pointInPoly(this.VectorArray, e.sprite.x, e.sprite.y);
+            if (e.sprite.dragging && (e.sprite.OnTrigger = (this.magnetic && this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy)))) {
+                e.sprite.x = this.x;
+                e.sprite.y = this.y;
+            }
+        });
+        this.elementcount = elementcount;
+        console.log(this.elementcount);
+        this.Draw();
+
+    }
     color = 0x2600ff;
     graphics;
     VectorArray;
@@ -264,4 +250,34 @@ class Trigger {
     Size;
     visual;
     elementcount;
+    Funcs = {
+        getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {
+            var d = (startX1 - endX1) * (endY2 - startY2) - (startY1 - endY1) * (endX2 - startX2);
+            var da = (startX1 - startX2) * (endY2 - startY2) - (startY1 - startY2) * (endX2 - startX2);
+            var db = (startX1 - endX1) * (startY1 - startY2) - (startY1 - endY1) * (startX1 - startX2);
+
+            var ta = da / d;
+            var tb = db / d;
+
+            if (ta >= 0 && ta <= 1 && tb >= 0 && tb <= 1) {
+                var dx = startX1 + ta * (endX1 - startX1);
+                var dy = startY1 + ta * (endY1 - startY1);
+                return [dx, dy];
+            }
+            return [-100, -100];
+        },
+        pointInPoly(poly, pointX, pointY) {
+            var i, j, c = false;
+            var polyCords = [[poly[0], poly[1]], [poly[2], poly[3]], [poly[4], poly[5]], [poly[6], poly[7]]];
+            for (i = 0, j = polyCords.length - 1; i < polyCords.length; j = i++) {
+
+                if (((polyCords[i][1] > pointY) != (polyCords[j][1] > pointY)) && (pointX < (polyCords[j][0] - polyCords[i][0]) * (pointY - polyCords[i][1]) / (polyCords[j][1] - polyCords[i][1]) + polyCords[i][0])) {
+                    c = !c;
+                }
+
+            }
+
+            return c;
+        }
+    }
 }
