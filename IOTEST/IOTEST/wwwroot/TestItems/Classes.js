@@ -28,16 +28,20 @@ SavedMap.sObject = class {
     Weight;
 }
 SavedMap.sTrigger = class {
-    constructor(vis, mag, pos, id) {
+    constructor(vis, mag, pos, id, idtypes, tdata) {
         this.Visual = vis;
         this.Magnetic = mag;
         this.Position = pos;
         this.Id = id;
+        this.IdTypes = idtypes;
+        this.TestData = tdata;
     }
     Visual;
     Magnetic;
     Position;
     Id;
+    IdTypes;
+    TestData;
 }
 SavedMap.sTrigger.PositionT = class {
     constructor(x, y, s) {
@@ -69,22 +73,23 @@ class VisualMap {
         smap.Objects.forEach((e) => {
             switch (e.Group) {
                 case "Electrons":
-                    this.Objects.push(new ElectronsObjects(parseInt(e.Position.Size) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant));
+                    var Obj = new ElectronsObjects(parseInt(e.Position.Size) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                    Obj.GroupType = e.Group + "." + e.Type;
+                    Obj.Id = e.Id;
+                    Obj.Weight = e.Weight;
+                    this.Objects.push(Obj);
                     break;
                 default:
                     console.error(e);
             }
         });
         smap.Triggers.forEach((e) => {
-            this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic));
+            this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic, e.Id, e.IdTypes, e.TestData));
 
         });
     }
     Work() {
-
-
-
-
+        this.Triggers.forEach((e) => e.Work(this.Objects));
     }
     Objects = [];
     Triggers = [];
@@ -103,13 +108,15 @@ class VisualTest {
         this.resize(this);
     }
     TestWorker(delta) {
-        this.Vmap.Triggers.forEach((e) => e.Work(this.Vmap.Objects));
+        this.Vmap.Work();  
+        this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
+        console.log(this.SceneSum);
     }
     VDisplay;
     VDisplayContainer;
     Vmap;
     Canvas;
-
+    SceneSum;
     resize(t) {
         let TestWidth = document.getElementById("testMain").clientWidth;
         t.VDisplay.renderer.resize(TestWidth, TestWidth / 3 * 2);
@@ -144,6 +151,7 @@ class DragableObject {
             .on('pointerupoutside', this.onDragEnd)
             .on('pointermove', this.onDragMove);
     }
+
     texture;
     sprite;
     onDragStart(event) {
@@ -151,6 +159,9 @@ class DragableObject {
         this.alpha = 0.5;
         this.dragging = true;
     }
+    GroupType;
+    Id;
+    Weight;
 
     onDragEnd() {
         this.alpha = 1;
@@ -178,7 +189,10 @@ class ElectronsObjects extends DragableObject {
             textures: ['TestItems/Prefabs/Electrons/Resistor.png']
         },
         Led: {
-            textures: ['TestItems/Prefabs/Electrons/Led.png']
+            textures: [
+                'TestItems/Prefabs/Electrons/Leds/1.png',
+                'TestItems/Prefabs/Electrons/Leds/2.png'
+            ]
         },
         Battery: {
             textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
@@ -206,11 +220,14 @@ class ElectronsObjects extends DragableObject {
 }
 
 class Trigger {
-    constructor(Size, x, y, visual, magnetic) {
+    constructor(Size, x, y, visual, magnetic, id, Idt, dt) {
         this.magnetic = magnetic;
         this.x = x;
         this.y = y;
         this.visual = visual;
+        this.Id = id;
+        this.IdTypes = Idt;
+        this.TestData = dt;
         this.Size = Size;
         this.elementcount = 0;
         this.VectorArray = [];
@@ -231,14 +248,31 @@ class Trigger {
         var Sum = 0;
 
         Objects.forEach((e) => {
-            elementcount += this.Funcs.pointInPoly(this.VectorArray, e.sprite.x, e.sprite.y);
+            var OnTrigger = this.Funcs.pointInPoly(this.VectorArray, e.sprite.x, e.sprite.y);
+
+            if (OnTrigger) {
+                elementcount += 1;
+                switch (this.IdTypes) {
+                    case 0:
+                        Sum += this.TestData.includes(e.GroupType) ? e.Weight : 0;
+                        break;
+                    case 1:
+                        Sum += this.TestData.includes(e.Id) ? e.Weight : 0;
+                        break;
+                    case 2:
+                        Sum +=  e.Weight;
+                        break;
+                    default:
+                }
+            }
+
             if (e.sprite.dragging && (e.sprite.OnTrigger = (this.magnetic && this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy)))) {
                 e.sprite.x = this.x;
                 e.sprite.y = this.y;
             }
         });
         this.elementcount = elementcount;
-        console.log(this.elementcount);
+        this.Sum = Sum;
         this.Draw();
 
     }
@@ -249,6 +283,10 @@ class Trigger {
     y;
     Size;
     visual;
+    Id;
+    IdTypes;
+    Sum;
+    TestData;
     elementcount;
     Funcs = {
         getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {

@@ -23,13 +23,14 @@ var Smap = new SavedMap(
         new SavedMap.sObject("Static", "Electrons", "Wire", new SavedMap.sObject.PositionT(175, 100, 1, 15, 90), 1, 0, 1),
 
 
-        new SavedMap.sObject("Dynamic", "Electrons", "Led", new SavedMap.sObject.PositionT(100, 100, 1, 20, 0), 0, 0, 1),
-        new SavedMap.sObject("Dynamic", "Electrons", "Battery", new SavedMap.sObject.PositionT(100, 200, 1, 20, 0), 0, 0, 1),
+        new SavedMap.sObject("Dynamic", "Electrons", "Led", new SavedMap.sObject.PositionT(100, 100, 1, 20, 0), 1, 1, 3),
+        new SavedMap.sObject("Dynamic", "Electrons", "Led", new SavedMap.sObject.PositionT(100, 200, 1, 20, 0), 1, 2, 3),
+        new SavedMap.sObject("Dynamic", "Electrons", "Battery", new SavedMap.sObject.PositionT(100, 300, 1, 20, 0), 0, 3, 2),
 
     ],
     [
-        new SavedMap.sTrigger(true, true, new SavedMap.sTrigger.PositionT(325 + 150, 100, 50), 1),
-        new SavedMap.sTrigger(true, true, new SavedMap.sTrigger.PositionT(325 + 150, 400, 50), 1),
+        new SavedMap.sTrigger(true, true, new SavedMap.sTrigger.PositionT(325 + 150, 100, 50), 1, 1, [3]),
+        new SavedMap.sTrigger(true, true, new SavedMap.sTrigger.PositionT(325 + 150, 400, 50), 1, 1, [1]),
         //    new SavedMap.sTrigger(true,false,new SavedMap.sTrigger.PositionT(500,300,50),1),
     ]
 );
