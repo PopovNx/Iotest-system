@@ -22,6 +22,7 @@ namespace IOTEST
 
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddRazorPages();
             services.AddControllers();
         }

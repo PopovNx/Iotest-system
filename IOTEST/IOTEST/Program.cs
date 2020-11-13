@@ -31,6 +31,7 @@ namespace IOTEST
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>().UseIIS();
+            
                 });
     }
 }

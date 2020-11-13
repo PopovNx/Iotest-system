@@ -1,23 +1,24 @@
-﻿
-class SavedMap {
-    constructor(objs, trgs) {
+﻿class SavedMap {
+    constructor(objs, trgs, inter) {
         this.Objects = objs;
         this.Triggers = trgs;
+        this.Interactive = inter;
 
     }
     Objects;
     Triggers;
+    Interactive;
 
 }
 SavedMap.sObject = class {
-    constructor(st, gr, ty, pos, vari, id, w) {
-        this.State = st;
-        this.Group = gr;
-        this.Type = ty;
+    constructor(state, group, type, pos, variant, id, cost) {
+        this.State = state;
+        this.Group = group;
+        this.Type = type;
         this.Position = pos;
-        this.Variant = vari;
+        this.Variant = variant;
         this.Id = id;
-        this.Weight = w;
+        this.Weight = cost;
     }
     State;
     Group;
@@ -43,6 +44,46 @@ SavedMap.sTrigger = class {
     IdTypes;
     TestData;
 }
+SavedMap.InteractorWorker = class {
+    constructor(ids, on, interactor) {
+        this.Ids = ids;
+        this.On = on;
+        this.Interactor = interactor;
+    }
+    Work() {
+        if (this.On.Test()) this.Interactor.Invoke(this.Ids);
+    }
+    Ids;
+    On;
+    Interactor;
+}
+SavedMap.InteractorWorker.Interactor = class {
+    constructor() {
+
+    }
+    Invoke(ids) {
+        
+        console.log("Inv");
+    }
+}
+SavedMap.InteractorWorker.onc = class {
+    constructor() {
+        this.Invoked = false;
+        window.onmousemove = (e) => { this.EventPresented(e) };
+    }
+    Invoked;
+    EventPresented(e) {
+        this.Invoked = true;
+    }
+    Test() {
+        if (this.Invoked) {
+            this.Invoked = false;
+            return true;
+        }
+        return false;      
+    }
+}
+
 SavedMap.sTrigger.PositionT = class {
     constructor(x, y, s) {
         this.X = x;
@@ -87,12 +128,18 @@ class VisualMap {
             this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic, e.Id, e.IdTypes, e.TestData));
 
         });
+        smap.Interactive.forEach((e) => {
+            this.Interactive.push(e);
+            
+        });
     }
     Work() {
         this.Triggers.forEach((e) => e.Work(this.Objects));
+        this.Interactive.forEach((e) => e.Work());
     }
     Objects = [];
     Triggers = [];
+    Interactive = [];
 }
 class VisualTest {
     constructor(smap, display) {
@@ -108,7 +155,7 @@ class VisualTest {
         this.resize(this);
     }
     TestWorker(delta) {
-        this.Vmap.Work();  
+        this.Vmap.Work();
         this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
         console.log(this.SceneSum);
     }
@@ -260,7 +307,7 @@ class Trigger {
                         Sum += this.TestData.includes(e.Id) ? e.Weight : 0;
                         break;
                     case 2:
-                        Sum +=  e.Weight;
+                        Sum += e.Weight;
                         break;
                     default:
                 }
