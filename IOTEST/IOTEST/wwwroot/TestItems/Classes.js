@@ -50,38 +50,107 @@ SavedMap.InteractorWorker = class {
         this.On = on;
         this.Interactor = interactor;
     }
-    Work() {
-        if (this.On.Test()) this.Interactor.Invoke(this.Ids);
+    Work(SceneSum, Objs, Trgs) {
+        var Diya = this.On.Test(SceneSum, Objs, Trgs);
+        console.log(Diya);
+        this.Interactor.Invoke(Diya, this.Ids, Objs, Trgs);
     }
     Ids;
     On;
     Interactor;
 }
 SavedMap.InteractorWorker.Interactor = class {
-    constructor() {
+    constructor(Type,Data ) {
+
+
+        switch (Type) {
+            case "Variator":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        t.SetVariant(istrue ? Data[1] : Data[0]);
+                    })
+                };
+                break;
+            case "RotatorSet":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        t.SetRotation(istrue ? Data[1] : Data[0]);
+                    })
+                };
+                break;
+            case "RotatorAdd":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        t.AddRotation(istrue ? Data[1] : Data[0]);
+                    })
+                };
+                break;
+            case "Visible":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        t.SetVisible(istrue ? Data[1] : Data[0]);
+                    })
+                };
+                break;
+        }
+   
 
     }
-    Invoke(ids) {
-        
-        console.log("Inv");
-    }
+    Invoke(istrue, ids, Objs, Trgs)
+    { }
 }
 SavedMap.InteractorWorker.onc = class {
     constructor() {
         this.Invoked = false;
-        window.onmousemove = (e) => { this.EventPresented(e) };
     }
     Invoked;
-    EventPresented(e) {
+    EventPresented() {
         this.Invoked = true;
     }
-    Test() {
+    Test(SceneSum, Obgs, Trgs) {
+
         if (this.Invoked) {
             this.Invoked = false;
             return true;
         }
-        return false;      
+        return false;
     }
+}
+SavedMap.InteractorWorker.OnSum = class extends SavedMap.InteractorWorker.onc {
+    constructor(type, agr) {
+        super();
+        this.Type = type;
+        this.Agr = agr;
+    }
+    Type;
+    Agr;
+    Test(SceneSum, Obgs, Trgs) {
+        if (SceneSum == undefined) return false;
+
+        switch (this.Type) {
+            case "scene":
+                if (eval((SceneSum + this.Agr).toString())) return true;
+                break;
+        }
+        return false;
+    }
+
+}
+SavedMap.InteractorWorker.OnHover = class extends SavedMap.InteractorWorker.onc {
+    constructor(ids) {
+        super();
+        this.Ids = ids;
+    }
+    Ids;
+    Test(SceneSum,Obgs, Trgs) {
+        var rt = false;
+        Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {          
+            if (t.MouseOnThis) rt = true;
+
+        })
+        return rt;
+    }
+
 }
 
 SavedMap.sTrigger.PositionT = class {
@@ -95,18 +164,22 @@ SavedMap.sTrigger.PositionT = class {
     Size;
 }
 SavedMap.sObject.PositionT = class {
-    constructor(x, y, z, s, r) {
+    constructor(x, y, z, s, r, fx = 1, fy = 1) {
         this.X = x;
         this.Y = y;
         this.Z = z;
         this.Size = s;
         this.Rotation = r;
+        this.FlipX = fx;
+        this.FlipY = fy;
     }
     X;
     Y;
     Z;
     Size;
     Rotation;
+    FlipX;
+    FlipY;
 }
 class VisualMap {
     constructor(smap) {
@@ -114,7 +187,7 @@ class VisualMap {
         smap.Objects.forEach((e) => {
             switch (e.Group) {
                 case "Electrons":
-                    var Obj = new ElectronsObjects(parseInt(e.Position.Size) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                    var Obj = new ElectronsObjects(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
                     Obj.GroupType = e.Group + "." + e.Type;
                     Obj.Id = e.Id;
                     Obj.Weight = e.Weight;
@@ -130,12 +203,13 @@ class VisualMap {
         });
         smap.Interactive.forEach((e) => {
             this.Interactive.push(e);
-            
+
         });
     }
-    Work() {
+    Work(SceneSum) {
+
         this.Triggers.forEach((e) => e.Work(this.Objects));
-        this.Interactive.forEach((e) => e.Work());
+        this.Interactive.forEach((e) => e.Work(SceneSum, this.Objects, this.Triggers));
     }
     Objects = [];
     Triggers = [];
@@ -155,9 +229,8 @@ class VisualTest {
         this.resize(this);
     }
     TestWorker(delta) {
-        this.Vmap.Work();
+        this.Vmap.Work(this.SceneSum);
         this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
-        console.log(this.SceneSum);
     }
     VDisplay;
     VDisplayContainer;
@@ -182,12 +255,19 @@ class VisualTest {
 
 class DragableObject {
     static NullTexture = 'TestItems/Prefabs/Shared/Null.png';
-    constructor(img, scale, x, y, r, cc = true, drag = false) {
-        this.texture = PIXI.Texture.from(img);
+    constructor(variants, variant, sx, sy, x, y, r, cc = true, drag = false) {
+        this.texture = PIXI.Texture.from(variants[variant]);
+        this.Variant = variant;
+        this.Variants = variants;
+        this.Rotation = r;
+        this.MouseOnThis = false;
+        this.Visible = true;
         this.sprite = new PIXI.Sprite(this.texture);
         this.sprite.x = x || 1;
         this.sprite.y = y || 1;
-        this.sprite.scale.set(scale || 1);
+        this.sprite.scale.set(1);
+        this.sprite.scale.x = sx;
+        this.sprite.scale.y = sy;
         this.sprite.anchor.set(cc ? 0.5 : 0);
         this.sprite.interactive = drag;
         this.sprite.buttonMode = drag;
@@ -196,27 +276,39 @@ class DragableObject {
             .on('pointerdown', this.onDragStart)
             .on('pointerup', this.onDragEnd)
             .on('pointerupoutside', this.onDragEnd)
-            .on('pointermove', this.onDragMove);
+            .on('pointermove', this.onDragMove)
+            .on('pointerover', () =>this.onPointerOver(this))
+            .on('pointerout', () =>this.onPointerOut(this));
     }
-
+    Variant;
+    Variants;
     texture;
     sprite;
+    MouseOnThis;
+    GroupType;
+    Id;
+    Weight;
+    Rotation;
+    Visible;
+    onPointerOver(tz) {
+
+        tz.MouseOnThis = true;
+    }
+    onPointerOut(tz) {
+        tz.MouseOnThis = false;
+    }
     onDragStart(event) {
+
         this.data = event.data;
         this.alpha = 0.5;
         this.dragging = true;
     }
-    GroupType;
-    Id;
-    Weight;
-
-    onDragEnd() {
+    onDragEnd(event) {
         this.alpha = 1;
         this.dragging = false;
         this.data = null;
     }
-
-    onDragMove() {
+    onDragMove(event) {
         if (this.dragging) {
             const newPosition = this.data.getLocalPosition(this.parent);
             this.hasposx = newPosition.x;
@@ -228,8 +320,31 @@ class DragableObject {
 
         }
     }
-
-}
+    SetVariant(variant) {
+        if (this.Variant == variant) return;
+        this.Variant = variant;
+        this.sprite.texture = this.texture = PIXI.Texture.from(this.Variants[variant]);
+        console.log(variant);
+    }
+    SetRotation(rotation) {
+        if (this.Rotation == rotation) return;
+        this.Rotation = rotation;
+        this.sprite.rotation = Math.PI / 180 * this.Rotation;
+        console.log(rotation);
+    }
+    AddRotation(rotation) {
+        if (0 == rotation) return;
+        this.Rotation += rotation;
+        this.sprite.rotation = Math.PI / 180 * this.Rotation;
+        console.log(rotation);
+    }
+    SetVisible(visible) {
+        if (this.Visible == visible) return;
+        this.Visible = visible;
+        this.sprite.visible = this.Visible;
+        console.log(visible);
+    }
+} 
 class ElectronsObjects extends DragableObject {
     static Types = {
         Resistor: {
@@ -257,13 +372,14 @@ class ElectronsObjects extends DragableObject {
             textures: ['TestItems/Prefabs/Electrons/Reostat.png']
         },
     }
-    constructor(scale, x, y, r, type, isdragable, varitant) {
+    constructor(sx, sy, x, y, r, type, isdragable, varitant) {
         var texture = type.textures[varitant];
         if (texture === undefined) texture = DragableObject.NullTexture;
-        super(texture, scale, x, y, r, true, isdragable);
+        super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
         this.type = type;
     }
     type;
+
 }
 
 class Trigger {
