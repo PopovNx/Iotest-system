@@ -51,9 +51,7 @@ SavedMap.InteractorWorker = class {
         this.Interactor = interactor;
     }
     Work(SceneSum, Objs, Trgs) {
-        var Diya = this.On.Test(SceneSum, Objs, Trgs);
-        console.log(Diya);
-        this.Interactor.Invoke(Diya, this.Ids, Objs, Trgs);
+        this.Interactor.Invoke(this.On.Test(SceneSum, Objs, Trgs), this.Ids, Objs, Trgs);
     }
     Ids;
     On;
@@ -117,22 +115,29 @@ SavedMap.InteractorWorker.onc = class {
     }
 }
 SavedMap.InteractorWorker.OnSum = class extends SavedMap.InteractorWorker.onc {
-    constructor(type, agr) {
+    constructor(type, agr,ids) {
         super();
         this.Type = type;
         this.Agr = agr;
+        this.Ids = ids;
     }
     Type;
     Agr;
+    Ids;
     Test(SceneSum, Obgs, Trgs) {
         if (SceneSum == undefined) return false;
-
+        var rt = false;
         switch (this.Type) {
             case "scene":
-                if (eval((SceneSum + this.Agr).toString())) return true;
+                if (eval((SceneSum + this.Agr).toString())) rt = true;
+                break;
+            case "trigger":
+                Trgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
+                    if (eval((t.Sum + this.Agr).toString())) rt = true;;
+                })
                 break;
         }
-        return false;
+        return rt;
     }
 
 }
@@ -149,6 +154,17 @@ SavedMap.InteractorWorker.OnHover = class extends SavedMap.InteractorWorker.onc 
 
         })
         return rt;
+    }
+
+}
+SavedMap.InteractorWorker.OnAlways = class extends SavedMap.InteractorWorker.onc {
+    constructor(on) {
+        super();
+        this.On = on;
+    }
+    On;
+    Test(SceneSum, Obgs, Trgs) {
+        return this.On.toString() == "true";
     }
 
 }
@@ -252,7 +268,6 @@ class VisualTest {
         this.VDisplayContainer = undefined;
     }
 }
-
 class DragableObject {
     static NullTexture = 'TestItems/Prefabs/Shared/Null.png';
     constructor(variants, variant, sx, sy, x, y, r, cc = true, drag = false) {
@@ -269,8 +284,9 @@ class DragableObject {
         this.sprite.scale.x = sx;
         this.sprite.scale.y = sy;
         this.sprite.anchor.set(cc ? 0.5 : 0);
-        this.sprite.interactive = drag;
+        this.sprite.interactive = true;
         this.sprite.buttonMode = drag;
+        this.sprite.CanMove = drag;
         this.sprite.rotation = Math.PI / 180 * r;
         this.sprite
             .on('pointerdown', this.onDragStart)
@@ -290,6 +306,8 @@ class DragableObject {
     Weight;
     Rotation;
     Visible;
+    Button;
+    CanMove;
     onPointerOver(tz) {
 
         tz.MouseOnThis = true;
@@ -298,10 +316,12 @@ class DragableObject {
         tz.MouseOnThis = false;
     }
     onDragStart(event) {
+        if (this.CanMove) {
+            this.data = event.data;
+            this.alpha = 0.5;
+            this.dragging = true;
+        }
 
-        this.data = event.data;
-        this.alpha = 0.5;
-        this.dragging = true;
     }
     onDragEnd(event) {
         this.alpha = 1;
@@ -344,6 +364,14 @@ class DragableObject {
         this.sprite.visible = this.Visible;
         console.log(visible);
     }
+    SetCanMove(canmove) {
+        if (this.CanMove == canmove) return;
+        this.canmove = canmove;
+
+
+
+
+    }
 } 
 class ElectronsObjects extends DragableObject {
     static Types = {
@@ -381,7 +409,6 @@ class ElectronsObjects extends DragableObject {
     type;
 
 }
-
 class Trigger {
     constructor(Size, x, y, visual, magnetic, id, Idt, dt) {
         this.magnetic = magnetic;
