@@ -44,7 +44,23 @@ SavedMap.sTrigger = class {
     IdTypes;
     TestData;
 }
-SavedMap.InteractorWorker = class {
+SavedMap.InteractorWorker = class { constructor(ids, on, interactor) { this.Ids = ids; this.On = on; this.Interactor = interactor; } Ids; On; Interactor; }
+SavedMap.InteractorWorker.Interactor = class { constructor(Type, Data) { this.Type = Type; this.Data = Data; } Type; Data; }
+SavedMap.InteractorWorker.On = class {
+    constructor(OnName, Data1, Data2, Data3) {
+        this.OnName = OnName; 
+        this.Data1 = Data1; 
+        this.Data2 = Data2; 
+        this.Data3 = Data3; 
+    }
+    OnName;
+    Data1;
+    Data2;
+    Data3;
+}
+SavedMap.sTrigger.PositionT = class { constructor(x, y, s) { this.X = x; this.Y = y; this.Size = s; } X; Y; Size; }
+SavedMap.sObject.PositionT = class { constructor(x, y, z, s, r, fx = 1, fy = 1) { this.X = x; this.Y = y; this.Z = z; this.Size = s; this.Rotation = r; this.FlipX = fx; this.FlipY = fy; } X; Y; Z; Size; Rotation; FlipX; FlipY; }
+class InteractorWorker {
     constructor(ids, on, interactor) {
         this.Ids = ids;
         this.On = on;
@@ -57,15 +73,23 @@ SavedMap.InteractorWorker = class {
     On;
     Interactor;
 }
-SavedMap.InteractorWorker.Interactor = class {
-    constructor(Type,Data ) {
-
-
-        switch (Type) {
+class Interactor {
+    constructor(Saved) {
+        var Data = Saved.Data;
+        switch (Saved.Type) {
             case "Variator":
                 this.Invoke = (istrue, ids, Objs, Trgs) => {
                     Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
                         t.SetVariant(istrue ? Data[1] : Data[0]);
+                    })
+                };
+                break;
+            case "VariatorChange":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        if (istrue) {
+                            t.SetVariant(t.Variant == Data[0] ? Data[1] : Data[0]);
+                        }
                     })
                 };
                 break;
@@ -98,13 +122,29 @@ SavedMap.InteractorWorker.Interactor = class {
                 };
                 break;
         }
-   
+    }
+    Invoke(istrue, ids, Objs, Trgs) { }
+}
+class OnEvents {
+    static Create(saved) {
+
+
+        switch (saved.OnName) {
+            case "Sum":
+                return new OnEvents.OnSum(saved.Data1, saved.Data2, saved.Data3);
+            case "Hover":
+                return new OnEvents.OnHover(saved.Data1, saved.Data2, saved.Data3);
+            case "Always":
+                return new OnEvents.OnAlways(saved.Data1, saved.Data2, saved.Data3);
+            case "Click":
+                return new OnEvents.OnСlick(saved.Data1, saved.Data2, saved.Data3);
+            default:
+        }
 
     }
-    Invoke(istrue, ids, Objs, Trgs)
-    { }
+
 }
-SavedMap.InteractorWorker.onc = class {
+OnEvents.BaseEvent = class {
     constructor() {
         this.Invoked = false;
     }
@@ -121,8 +161,8 @@ SavedMap.InteractorWorker.onc = class {
         return false;
     }
 }
-SavedMap.InteractorWorker.OnSum = class extends SavedMap.InteractorWorker.onc {
-    constructor(type, agr,ids) {
+OnEvents.OnSum = class extends OnEvents.BaseEvent {
+    constructor(type, agr, ids) {
         super();
         this.Type = type;
         this.Agr = agr;
@@ -148,15 +188,15 @@ SavedMap.InteractorWorker.OnSum = class extends SavedMap.InteractorWorker.onc {
     }
 
 }
-SavedMap.InteractorWorker.OnHover = class extends SavedMap.InteractorWorker.onc {
+OnEvents.OnHover = class extends OnEvents.BaseEvent {
     constructor(ids) {
         super();
         this.Ids = ids;
     }
     Ids;
-    Test(SceneSum,Obgs, Trgs) {
+    Test(SceneSum, Obgs, Trgs) {
         var rt = false;
-        Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {          
+        Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
             if (t.MouseOnThis) rt = true;
 
         })
@@ -164,7 +204,7 @@ SavedMap.InteractorWorker.OnHover = class extends SavedMap.InteractorWorker.onc 
     }
 
 }
-SavedMap.InteractorWorker.OnAlways = class extends SavedMap.InteractorWorker.onc {
+OnEvents.OnAlways = class extends OnEvents.BaseEvent {
     constructor(on) {
         super();
         this.On = on;
@@ -173,9 +213,8 @@ SavedMap.InteractorWorker.OnAlways = class extends SavedMap.InteractorWorker.onc
     Test(SceneSum, Obgs, Trgs) {
         return this.On.toString() == "true";
     }
-
 }
-SavedMap.InteractorWorker.OnСlick = class extends SavedMap.InteractorWorker.onc {
+OnEvents.OnСlick = class extends OnEvents.BaseEvent {
     constructor(ids) {
         super();
         this.Ids = ids;
@@ -185,39 +224,10 @@ SavedMap.InteractorWorker.OnСlick = class extends SavedMap.InteractorWorker.onc
         var rt = false;
         Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
             if (t.ReadClick()) rt = true;
-
         })
         return rt;
     }
 
-}
-SavedMap.sTrigger.PositionT = class {
-    constructor(x, y, s) {
-        this.X = x;
-        this.Y = y;
-        this.Size = s;
-    }
-    X;
-    Y;
-    Size;
-}
-SavedMap.sObject.PositionT = class {
-    constructor(x, y, z, s, r, fx = 1, fy = 1) {
-        this.X = x;
-        this.Y = y;
-        this.Z = z;
-        this.Size = s;
-        this.Rotation = r;
-        this.FlipX = fx;
-        this.FlipY = fy;
-    }
-    X;
-    Y;
-    Z;
-    Size;
-    Rotation;
-    FlipX;
-    FlipY;
 }
 class VisualMap {
     constructor(smap) {
@@ -240,9 +250,10 @@ class VisualMap {
 
         });
         smap.Interactive.forEach((e) => {
-            this.Interactive.push(e);
+            this.Interactive.push(new InteractorWorker(e.Ids, OnEvents.Create(e.On), new Interactor(e.Interactor)));
 
         });
+        console.log(this.Interactive);
     }
     Work(SceneSum) {
 
@@ -318,7 +329,7 @@ class DragableObject {
             .on('pointerdown', (e) => this.onDragStart(e))
             .on('pointerup', (e) => this.onDragEnd(e))
             .on('pointerupoutside', (e) => this.onDragEnd(e))
-            .on('pointermove', (e) =>this.onDragMove(e))
+            .on('pointermove', (e) => this.onDragMove(e))
             .on('pointerover', (e) => this.onPointerOver(e))
             .on('pointerout', (e) => this.onPointerOut(e));
     }
@@ -329,7 +340,7 @@ class DragableObject {
     texture;
     sprite;
     MouseOnThis;
-    GroupType;   
+    GroupType;
     Rotation;
     Visible;
     Button;
@@ -349,9 +360,9 @@ class DragableObject {
         if (!this.CanMove) return;
         this.sprite.data = event.data;
         this.sprite.alpha = 0.5;
-        this.Dragging = true;        
+        this.Dragging = true;
 
-    }   
+    }
     onDragEnd(event) {
         this.MouseDown = false;
         this.Clicked = true;
@@ -416,10 +427,10 @@ class DragableObject {
             return true
         }
         return false
-    
+
     }
 
-} 
+}
 class ElectronsObjects extends DragableObject {
     static Types = {
         Resistor: {
@@ -429,6 +440,12 @@ class ElectronsObjects extends DragableObject {
             textures: [
                 'TestItems/Prefabs/Electrons/Leds/1.png',
                 'TestItems/Prefabs/Electrons/Leds/2.png'
+            ]
+        },
+        Key: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Keys/1.png',
+                'TestItems/Prefabs/Electrons/Keys/2.png'
             ]
         },
         Battery: {
@@ -487,13 +504,15 @@ class Trigger {
                 elementcount += 1;
                 switch (this.IdTypes) {
                     case 0:
+                        console.log(this.TestData);
+                        console.log(e.GroupType);
                         Sum += this.TestData.includes(e.GroupType) ? e.Weight : 0;
                         break;
                     case 1:
                         Sum += this.TestData.includes(e.Id) ? e.Weight : 0;
                         break;
                     case 2:
-                        Sum += this.TestData.includes(e.GroupType +":"+ e.Variant) ? e.Weight : 0;
+                        Sum += this.TestData.includes(e.GroupType + ":" + e.Variant) ? e.Weight : 0;
                         break;
                     case 3:
                         Sum += e.Weight;
@@ -550,7 +569,6 @@ class Trigger {
                 }
 
             }
-
             return c;
         }
     }
