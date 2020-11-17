@@ -36,16 +36,11 @@ var Smap = new SavedMap(
         new SavedMap.sTrigger(true, true, new SavedMap.sTrigger.PositionT(325, 400, 50), 0,2, ["Electrons.Key:1"]),
     ],
     [
-        // new SavedMap.InteractorWorker([1], new SavedMap.InteractorWorker.OnSum("scene", ">=10"), new SavedMap.InteractorWorker.Interactor("Variator", [0, 1])),
-        //new SavedMap.InteractorWorker([1], new SavedMap.InteractorWorker.OnSum("trigger", ">=1",[1]), new SavedMap.InteractorWorker.Interactor("Variator", [0, 1])),
-       // new SavedMap.InteractorWorker([1], new SavedMap.InteractorWorker.OnAlways(true), new SavedMap.InteractorWorker.Interactor("RotatorAdd", [0, 2])),
         new SavedMap.InteractorWorker([4], new SavedMap.InteractorWorker.On("Click", [4]), new SavedMap.InteractorWorker.Interactor("VariatorChange", [0, 1])),
         new SavedMap.InteractorWorker([1], new SavedMap.InteractorWorker.On("Sum","scene", ">=10"), new SavedMap.InteractorWorker.Interactor("Variator", [0, 1]))
     ]
 
 );
-
-
 var app = new Vue({
     el: "#app",
     data: {

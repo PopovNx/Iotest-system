@@ -253,7 +253,6 @@ class VisualMap {
             this.Interactive.push(new InteractorWorker(e.Ids, OnEvents.Create(e.On), new Interactor(e.Interactor)));
 
         });
-        console.log(this.Interactive);
     }
     Work(SceneSum) {
 
@@ -267,7 +266,7 @@ class VisualMap {
 class VisualTest {
     constructor(smap, display) {
         this.Canvas = display;
-        this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, backgroundColor: 0xf0f0f0, antialias: true, })
+        this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, backgroundColor: 0xf0f0f0, antialias: false, })
         this.VDisplayContainer = new PIXI.Container();
         this.VDisplay.stage.addChild(this.VDisplayContainer);
         this.Vmap = new VisualMap(smap);
@@ -387,25 +386,21 @@ class DragableObject {
         if (this.Variant == variant) return;
         this.Variant = variant;
         this.sprite.texture = this.texture = PIXI.Texture.from(this.Variants[variant]);
-        console.log(variant);
     }
     SetRotation(rotation) {
         if (this.Rotation == rotation) return;
         this.Rotation = rotation;
         this.sprite.rotation = Math.PI / 180 * this.Rotation;
-        console.log(rotation);
     }
     AddRotation(rotation) {
         if (0 == rotation) return;
         this.Rotation += rotation;
         this.sprite.rotation = Math.PI / 180 * this.Rotation;
-        console.log(rotation);
     }
     SetVisible(visible) {
         if (this.Visible == visible) return;
         this.Visible = visible;
         this.sprite.visible = this.Visible;
-        console.log(visible);
     }
     SetCanMove(canmove) {
         if (this.CanMove == canmove) return;
@@ -504,8 +499,6 @@ class Trigger {
                 elementcount += 1;
                 switch (this.IdTypes) {
                     case 0:
-                        console.log(this.TestData);
-                        console.log(e.GroupType);
                         Sum += this.TestData.includes(e.GroupType) ? e.Weight : 0;
                         break;
                     case 1:
