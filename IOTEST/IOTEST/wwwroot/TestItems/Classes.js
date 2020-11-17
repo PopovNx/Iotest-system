@@ -90,6 +90,13 @@ SavedMap.InteractorWorker.Interactor = class {
                     })
                 };
                 break;
+            case "CanMove":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        t.SetCanMove(istrue ? Data[1] : Data[0]);
+                    })
+                };
+                break;
         }
    
 
@@ -168,7 +175,22 @@ SavedMap.InteractorWorker.OnAlways = class extends SavedMap.InteractorWorker.onc
     }
 
 }
+SavedMap.InteractorWorker.OnСlick = class extends SavedMap.InteractorWorker.onc {
+    constructor(ids) {
+        super();
+        this.Ids = ids;
+    }
+    Ids;
+    Test(SceneSum, Obgs, Trgs) {
+        var rt = false;
+        Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
+            if (t.ReadClick()) rt = true;
 
+        })
+        return rt;
+    }
+
+}
 SavedMap.sTrigger.PositionT = class {
     constructor(x, y, s) {
         this.X = x;
@@ -245,6 +267,7 @@ class VisualTest {
         this.resize(this);
     }
     TestWorker(delta) {
+        console.log(this.SceneSum);
         this.Vmap.Work(this.SceneSum);
         this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
     }
@@ -286,56 +309,65 @@ class DragableObject {
         this.sprite.anchor.set(cc ? 0.5 : 0);
         this.sprite.interactive = true;
         this.sprite.buttonMode = drag;
-        this.sprite.CanMove = drag;
+        this.CanMove = drag;
         this.sprite.rotation = Math.PI / 180 * r;
+        this.sprite.DragClass = this;
+        this.MouseDown = false;
+        this.Clicked = false;
         this.sprite
-            .on('pointerdown', this.onDragStart)
-            .on('pointerup', this.onDragEnd)
-            .on('pointerupoutside', this.onDragEnd)
-            .on('pointermove', this.onDragMove)
-            .on('pointerover', () =>this.onPointerOver(this))
-            .on('pointerout', () =>this.onPointerOut(this));
+            .on('pointerdown', (e) => this.onDragStart(e))
+            .on('pointerup', (e) => this.onDragEnd(e))
+            .on('pointerupoutside', (e) => this.onDragEnd(e))
+            .on('pointermove', (e) =>this.onDragMove(e))
+            .on('pointerover', (e) => this.onPointerOver(e))
+            .on('pointerout', (e) => this.onPointerOut(e));
     }
     Variant;
     Variants;
+    Id;
+    Weight;
     texture;
     sprite;
     MouseOnThis;
-    GroupType;
-    Id;
-    Weight;
+    GroupType;   
     Rotation;
     Visible;
     Button;
     CanMove;
-    onPointerOver(tz) {
-
-        tz.MouseOnThis = true;
+    MouseDown;
+    Dragging;
+    Clicked;
+    Type;
+    onPointerOver(event) {
+        this.MouseOnThis = true;
     }
-    onPointerOut(tz) {
-        tz.MouseOnThis = false;
+    onPointerOut(event) {
+        this.MouseOnThis = false;
     }
     onDragStart(event) {
-        if (this.CanMove) {
-            this.data = event.data;
-            this.alpha = 0.5;
-            this.dragging = true;
-        }
+        this.MouseDown = true;
+        if (!this.CanMove) return;
+        this.sprite.data = event.data;
+        this.sprite.alpha = 0.5;
+        this.Dragging = true;        
 
-    }
+    }   
     onDragEnd(event) {
-        this.alpha = 1;
-        this.dragging = false;
-        this.data = null;
+        this.MouseDown = false;
+        this.Clicked = true;
+        this.sprite.alpha = 1;
+        this.Dragging = false;
+        this.sprite.data = null;
     }
     onDragMove(event) {
-        if (this.dragging) {
-            const newPosition = this.data.getLocalPosition(this.parent);
-            this.hasposx = newPosition.x;
-            this.hasposy = newPosition.y;
-            if (!this.OnTrigger) {
-                this.x = newPosition.x;
-                this.y = newPosition.y;
+        if (!this.CanMove) return;
+        if (this.Dragging) {
+            const newPosition = this.sprite.data.getLocalPosition(this.sprite.parent);
+            this.sprite.hasposx = newPosition.x;
+            this.sprite.hasposy = newPosition.y;
+            if (!this.sprite.OnTrigger) {
+                this.sprite.x = newPosition.x;
+                this.sprite.y = newPosition.y;
             }
 
         }
@@ -366,12 +398,27 @@ class DragableObject {
     }
     SetCanMove(canmove) {
         if (this.CanMove == canmove) return;
-        this.canmove = canmove;
-
-
-
+        this.CanMove = canmove;
+        this.sprite.CanMove = canmove;
+        this.sprite.buttonMode = this.Button || canmove;
 
     }
+    SetIsButton(on) {
+        if (this.Button == on) return;
+        this.Button = on;
+        this.sprite.buttonMode = on;
+
+    }
+    ReadClick() {
+        if (this.Clicked) {
+
+            this.Clicked = false;
+            return true
+        }
+        return false
+    
+    }
+
 } 
 class ElectronsObjects extends DragableObject {
     static Types = {
@@ -401,12 +448,9 @@ class ElectronsObjects extends DragableObject {
         },
     }
     constructor(sx, sy, x, y, r, type, isdragable, varitant) {
-        var texture = type.textures[varitant];
-        if (texture === undefined) texture = DragableObject.NullTexture;
         super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
-        this.type = type;
+        super.Type = type;
     }
-    type;
 
 }
 class Trigger {
@@ -439,7 +483,6 @@ class Trigger {
 
         Objects.forEach((e) => {
             var OnTrigger = this.Funcs.pointInPoly(this.VectorArray, e.sprite.x, e.sprite.y);
-
             if (OnTrigger) {
                 elementcount += 1;
                 switch (this.IdTypes) {
@@ -450,13 +493,16 @@ class Trigger {
                         Sum += this.TestData.includes(e.Id) ? e.Weight : 0;
                         break;
                     case 2:
+                        Sum += this.TestData.includes(e.GroupType +":"+ e.Variant) ? e.Weight : 0;
+                        break;
+                    case 3:
                         Sum += e.Weight;
                         break;
                     default:
                 }
             }
 
-            if (e.sprite.dragging && (e.sprite.OnTrigger = (this.magnetic && this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy)))) {
+            if (e.sprite.DragClass.Dragging && (e.sprite.OnTrigger = (this.magnetic && this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy)))) {
                 e.sprite.x = this.x;
                 e.sprite.y = this.y;
             }
