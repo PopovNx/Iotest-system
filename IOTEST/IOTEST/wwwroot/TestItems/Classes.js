@@ -48,10 +48,10 @@ SavedMap.InteractorWorker = class { constructor(ids, on, interactor) { this.Ids 
 SavedMap.InteractorWorker.Interactor = class { constructor(Type, Data) { this.Type = Type; this.Data = Data; } Type; Data; }
 SavedMap.InteractorWorker.On = class {
     constructor(OnName, Data1, Data2, Data3) {
-        this.OnName = OnName; 
-        this.Data1 = Data1; 
-        this.Data2 = Data2; 
-        this.Data3 = Data3; 
+        this.OnName = OnName;
+        this.Data1 = Data1;
+        this.Data2 = Data2;
+        this.Data3 = Data3;
     }
     OnName;
     Data1;
@@ -233,9 +233,17 @@ class VisualMap {
     constructor(smap) {
         smap.Objects.sort(function (x, y) { return x.Position.Z < y.Position.Z ? -1 : 1 })
         smap.Objects.forEach((e) => {
+
             switch (e.Group) {
                 case "Electrons":
                     var Obj = new ElectronsObjects(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                    Obj.GroupType = e.Group + "." + e.Type;
+                    Obj.Id = e.Id;
+                    Obj.Weight = e.Weight;
+                    this.Objects.push(Obj);
+                    break;
+                case "Custom":
+                    var Obj = new CustumObject(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), e.Type, e.State == "Dynamic" ? true : false, e.Variant);
                     Obj.GroupType = e.Group + "." + e.Type;
                     Obj.Id = e.Id;
                     Obj.Weight = e.Weight;
@@ -255,9 +263,8 @@ class VisualMap {
         });
     }
     Work(SceneSum) {
-
-        this.Triggers.forEach((e) => e.Work(this.Objects));
         this.Interactive.forEach((e) => e.Work(SceneSum, this.Objects, this.Triggers));
+        this.Triggers.forEach((e) => e.Work(this.Objects, this.Triggers));
     }
     Objects = [];
     Triggers = [];
@@ -322,6 +329,7 @@ class DragableObject {
         this.CanMove = drag;
         this.sprite.rotation = Math.PI / 180 * r;
         this.sprite.DragClass = this;
+        this.sprite.OnTrigger = false;
         this.MouseDown = false;
         this.Clicked = false;
         this.sprite
@@ -426,45 +434,6 @@ class DragableObject {
     }
 
 }
-class ElectronsObjects extends DragableObject {
-    static Types = {
-        Resistor: {
-            textures: ['TestItems/Prefabs/Electrons/Resistor.png']
-        },
-        Led: {
-            textures: [
-                'TestItems/Prefabs/Electrons/Leds/1.png',
-                'TestItems/Prefabs/Electrons/Leds/2.png'
-            ]
-        },
-        Key: {
-            textures: [
-                'TestItems/Prefabs/Electrons/Keys/1.png',
-                'TestItems/Prefabs/Electrons/Keys/2.png'
-            ]
-        },
-        Battery: {
-            textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
-        },
-        Capacitor: {
-            textures: ['TestItems/Prefabs/Electrons/Capacitor.png']
-        },
-        Wire: {
-            textures: [
-                'TestItems/Prefabs/Electrons/Wires/1.png',
-                'TestItems/Prefabs/Electrons/Wires/2.png',
-            ]
-        },
-        Reostat: {
-            textures: ['TestItems/Prefabs/Electrons/Reostat.png']
-        },
-    }
-    constructor(sx, sy, x, y, r, type, isdragable, varitant) {
-        super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
-        super.Type = type;
-    }
-
-}
 class Trigger {
     constructor(Size, x, y, visual, magnetic, id, Idt, dt) {
         this.magnetic = magnetic;
@@ -489,7 +458,7 @@ class Trigger {
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
-    Work(Objects) {
+    Work(Objects, Trgs) {
         var elementcount = 0;
         var Sum = 0;
 
@@ -514,9 +483,21 @@ class Trigger {
                 }
             }
 
-            if (e.sprite.DragClass.Dragging && (e.sprite.OnTrigger = (this.magnetic && this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy)))) {
-                e.sprite.x = this.x;
-                e.sprite.y = this.y;
+            var OnTrg = (this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy));
+            if (OnTrg) {
+                if (e.sprite.DragClass.Dragging && this.magnetic) {
+                    e.sprite.OnTrigger = true;
+                    e.sprite.x = this.x;
+                    e.sprite.y = this.y;
+                }
+            }
+            else {
+                var OnEnother = false;
+                Trgs.forEach((tr) => {
+                    var OnTrgtr = (tr.Funcs.pointInPoly(tr.VectorArray, e.sprite.hasposx, e.sprite.hasposy));
+                    if (OnTrgtr) OnEnother = true;
+                });
+                e.sprite.OnTrigger = OnEnother;
             }
         });
         this.elementcount = elementcount;
@@ -565,4 +546,88 @@ class Trigger {
             return c;
         }
     }
+}
+class ElectronsObjects extends DragableObject {
+    static Types = {
+        Resistor: {
+            textures: ['TestItems/Prefabs/Electrons/Resistor.png']
+        },
+        Led: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Leds/1.png',
+                'TestItems/Prefabs/Electrons/Leds/2.png'
+            ]
+        },
+        Key: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Keys/1.png',
+                'TestItems/Prefabs/Electrons/Keys/2.png'
+            ]
+        },
+        Battery: {
+            textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
+        },
+        Capacitor: {
+            textures: ['TestItems/Prefabs/Electrons/Capacitor.png']
+        },
+        Wire: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Wires/1.png',
+                'TestItems/Prefabs/Electrons/Wires/2.png',
+            ]
+        },
+        Reostat: {
+            textures: ['TestItems/Prefabs/Electrons/Reostat.png']
+        },
+    }
+    constructor(sx, sy, x, y, r, type, isdragable, varitant) {
+        super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
+        super.Type = type;
+    }
+
+}
+class CustumObject extends DragableObject {
+    constructor(sx, sy, x, y, r, type, isdragable, varitant) {
+        super(type, varitant, sx, sy, x, y, r, true, isdragable);
+        super.Type = type;
+    }
+}
+class EatObjects extends DragableObject {
+    static Types = {
+        Resistor: {
+            textures: ['TestItems/Prefabs/Electrons/Resistor.png']
+        },
+        Led: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Leds/1.png',
+                'TestItems/Prefabs/Electrons/Leds/2.png'
+            ]
+        },
+        Key: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Keys/1.png',
+                'TestItems/Prefabs/Electrons/Keys/2.png'
+            ]
+        },
+        Battery: {
+            textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
+        },
+        Capacitor: {
+            textures: ['TestItems/Prefabs/Electrons/Capacitor.png']
+        },
+        Wire: {
+            textures: [
+                'TestItems/Prefabs/Electrons/Wires/1.png',
+                'TestItems/Prefabs/Electrons/Wires/2.png',
+            ]
+        },
+        Reostat: {
+            textures: ['TestItems/Prefabs/Electrons/Reostat.png']
+        },
+    }
+    constructor(sx, sy, x, y, r, type, isdragable, varitant) {
+        super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
+        super.Type = type;
+    }
+
 }

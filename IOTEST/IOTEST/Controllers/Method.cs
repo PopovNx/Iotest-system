@@ -21,6 +21,8 @@ namespace IOTEST.Controllers
             {
                 case "AuchGoogle":
                     return await Methods.AuchGoogle.Invoke(HttpContext);
+                case "ImgToBase":
+                    return await Methods.ImgToBase.Invoke(HttpContext);
                 default:
                     break;
             }
