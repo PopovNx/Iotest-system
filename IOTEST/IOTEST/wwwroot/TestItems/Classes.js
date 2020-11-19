@@ -1,14 +1,14 @@
 ﻿class SavedMap {
-    constructor(objs, trgs, inter) {
+    constructor(objs, trgs, inter, type) {
         this.Objects = objs;
         this.Triggers = trgs;
         this.Interactive = inter;
-
+        this.MapType = type;
     }
     Objects;
     Triggers;
     Interactive;
-
+    MapType;
 }
 SavedMap.sObject = class {
     constructor(state, group, type, pos, variant, id, cost) {
@@ -118,6 +118,12 @@ class Interactor {
                 this.Invoke = (istrue, ids, Objs, Trgs) => {
                     Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
                         t.SetCanMove(istrue ? Data[1] : Data[0]);
+                    })
+                };
+            case "IsButton":
+                this.Invoke = (istrue, ids, Objs, Trgs) => {
+                    Objs.filter((e) => ids.includes(e.Id)).forEach((t) => {
+                        t.SetIsButton(istrue ? Data[1] : Data[0]);
                     })
                 };
                 break;
@@ -237,21 +243,21 @@ class VisualMap {
             switch (e.Group) {
                 case "Electrons":
                     var Obj = new ElectronsObjects(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
-                    Obj.GroupType = e.Group + "." + e.Type;
-                    Obj.Id = e.Id;
-                    Obj.Weight = e.Weight;
-                    this.Objects.push(Obj);
                     break;
                 case "Custom":
                     var Obj = new CustumObject(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), e.Type, e.State == "Dynamic" ? true : false, e.Variant);
-                    Obj.GroupType = e.Group + "." + e.Type;
-                    Obj.Id = e.Id;
-                    Obj.Weight = e.Weight;
-                    this.Objects.push(Obj);
+                    break;
+                case "Eat":
+                    var Obj = new EatObjects(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), EatObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
                     break;
                 default:
                     console.error(e);
             }
+
+            Obj.GroupType = e.Group + "." + e.Type;
+            Obj.Id = e.Id;
+            Obj.Weight = e.Weight;
+            this.Objects.push(Obj);
         });
         smap.Triggers.forEach((e) => {
             this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic, e.Id, e.IdTypes, e.TestData));
@@ -277,6 +283,8 @@ class VisualTest {
         this.VDisplayContainer = new PIXI.Container();
         this.VDisplay.stage.addChild(this.VDisplayContainer);
         this.Vmap = new VisualMap(smap);
+        this.MapType = smap.MapType;
+        this.SceneSum = 0;
         this.Vmap.Triggers.forEach((e) => this.VDisplayContainer.addChild(e.graphics));
         this.Vmap.Objects.forEach((e) => this.VDisplayContainer.addChild(e.sprite));
         this.VDisplay.ticker.add((delta) => this.TestWorker(delta));
@@ -288,6 +296,7 @@ class VisualTest {
         this.Vmap.Work(this.SceneSum);
         this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
     }
+    MapType;
     VDisplay;
     VDisplayContainer;
     Vmap;
@@ -482,22 +491,23 @@ class Trigger {
                     default:
                 }
             }
-
-            var OnTrg = (this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy));
-            if (OnTrg) {
-                if (e.sprite.DragClass.Dragging && this.magnetic) {
-                    e.sprite.OnTrigger = true;
-                    e.sprite.x = this.x;
-                    e.sprite.y = this.y;
+            if (this.magnetic) {
+                var OnTrg = (this.Funcs.pointInPoly(this.VectorArray, e.sprite.hasposx, e.sprite.hasposy));
+                if (OnTrg) {
+                    if (e.sprite.DragClass.Dragging && this.magnetic) {
+                        e.sprite.OnTrigger = true;
+                        e.sprite.x = this.x;
+                        e.sprite.y = this.y;
+                    }
                 }
-            }
-            else {
-                var OnEnother = false;
-                Trgs.forEach((tr) => {
-                    var OnTrgtr = (tr.Funcs.pointInPoly(tr.VectorArray, e.sprite.hasposx, e.sprite.hasposy));
-                    if (OnTrgtr) OnEnother = true;
-                });
-                e.sprite.OnTrigger = OnEnother;
+                else {
+                    var OnEnother = false;
+                    Trgs.filter((x) => x.magnetic).forEach((tr) => {
+                        var OnTrgtr = (tr.Funcs.pointInPoly(tr.VectorArray, e.sprite.hasposx, e.sprite.hasposy));
+                        if (OnTrgtr) OnEnother = true;
+                    });
+                    e.sprite.OnTrigger = OnEnother;
+                }
             }
         });
         this.elementcount = elementcount;
@@ -594,40 +604,71 @@ class CustumObject extends DragableObject {
 }
 class EatObjects extends DragableObject {
     static Types = {
-        Resistor: {
-            textures: ['TestItems/Prefabs/Electrons/Resistor.png']
-        },
-        Led: {
+        Apple: {
             textures: [
-                'TestItems/Prefabs/Electrons/Leds/1.png',
-                'TestItems/Prefabs/Electrons/Leds/2.png'
+                'TestItems/Prefabs/Eat/Apple/0.png',
+                'TestItems/Prefabs/Eat/Apple/1.png',
+                'TestItems/Prefabs/Eat/Apple/2.png',
+                'TestItems/Prefabs/Eat/Apple/3.png',
             ]
         },
-        Key: {
+        Grapes: {
             textures: [
-                'TestItems/Prefabs/Electrons/Keys/1.png',
-                'TestItems/Prefabs/Electrons/Keys/2.png'
+                'TestItems/Prefabs/Eat/Grapes/0.png',
+                'TestItems/Prefabs/Eat/Grapes/1.png',
+                'TestItems/Prefabs/Eat/Grapes/2.png',
             ]
         },
-        Battery: {
-            textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
-        },
-        Capacitor: {
-            textures: ['TestItems/Prefabs/Electrons/Capacitor.png']
-        },
-        Wire: {
+        Lemon: {
             textures: [
-                'TestItems/Prefabs/Electrons/Wires/1.png',
-                'TestItems/Prefabs/Electrons/Wires/2.png',
+                'TestItems/Prefabs/Eat/Lemon/0.png',
+                'TestItems/Prefabs/Eat/Lemon/1.png',
+                'TestItems/Prefabs/Eat/Lemon/2.png',
+                'TestItems/Prefabs/Eat/Lemon/3.png',
             ]
         },
-        Reostat: {
-            textures: ['TestItems/Prefabs/Electrons/Reostat.png']
+        Pear: {
+            textures: [
+                'TestItems/Prefabs/Eat/Pear/0.png',
+                'TestItems/Prefabs/Eat/Pear/1.png',
+                'TestItems/Prefabs/Eat/Pear/2.png',
+                'TestItems/Prefabs/Eat/Pear/3.png',
+            ]
+        },
+        Raspberry: {
+            textures: [
+                'TestItems/Prefabs/Eat/Raspberry/0.png',
+                'TestItems/Prefabs/Eat/Raspberry/1.png',
+                'TestItems/Prefabs/Eat/Raspberry/2.png',
+                'TestItems/Prefabs/Eat/Raspberry/3.png',
+            ]
+        },
+        Tomato: {
+            textures: [
+                'TestItems/Prefabs/Eat/Tomato/0.png',
+                'TestItems/Prefabs/Eat/Tomato/1.png',
+                'TestItems/Prefabs/Eat/Tomato/2.png',
+                'TestItems/Prefabs/Eat/Tomato/3.png',
+            ]
+        },
+        Watermelon: {
+            textures: [
+                'TestItems/Prefabs/Eat/Watermelon/0.png',
+                'TestItems/Prefabs/Eat/Watermelon/1.png',
+                'TestItems/Prefabs/Eat/Watermelon/2.png',
+                'TestItems/Prefabs/Eat/Watermelon/3.png',
+            ]
         },
     }
     constructor(sx, sy, x, y, r, type, isdragable, varitant) {
         super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
         super.Type = type;
     }
+
+}
+class TestWorker {
+
+
+
 
 }
