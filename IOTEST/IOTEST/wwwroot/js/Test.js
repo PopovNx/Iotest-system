@@ -1,5 +1,5 @@
 ﻿'use strict';
-var Smap1 = new SavedMap(
+var Smap1 = new SavedMap("1",
     [
         new SavedMap.sObject("Static", "Electrons", "Wire", new SavedMap.sObject.PositionT(100 + 150, 100, 1, 15, 0), 0, 0, 1),
         new SavedMap.sObject("Static", "Electrons", "Wire", new SavedMap.sObject.PositionT(175 + 150, 100, 1, 15, 0), 0, 0, 1),
@@ -47,6 +47,5 @@ var app = new Vue({
     },
     mounted() {
         this.Vtest = new VisualTest(Smap1, document.getElementById("MT1"));
-        console.log(this.Vtest);
     }
 })

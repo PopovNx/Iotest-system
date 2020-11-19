@@ -1,14 +1,18 @@
 ﻿class SavedMap {
-    constructor(objs, trgs, inter, type) {
+    constructor(Bg,objs, trgs, inter, type, TestSettings) {
         this.Objects = objs;
         this.Triggers = trgs;
         this.Interactive = inter;
         this.MapType = type;
+        this.TestSettings = TestSettings;
+        this.Bg = Bg;
     }
     Objects;
     Triggers;
     Interactive;
     MapType;
+    TestSettings;
+    Bg
 }
 SavedMap.sObject = class {
     constructor(state, group, type, pos, variant, id, cost) {
@@ -60,6 +64,14 @@ SavedMap.InteractorWorker.On = class {
 }
 SavedMap.sTrigger.PositionT = class { constructor(x, y, s) { this.X = x; this.Y = y; this.Size = s; } X; Y; Size; }
 SavedMap.sObject.PositionT = class { constructor(x, y, z, s, r, fx = 1, fy = 1) { this.X = x; this.Y = y; this.Z = z; this.Size = s; this.Rotation = r; this.FlipX = fx; this.FlipY = fy; } X; Y; Z; Size; Rotation; FlipX; FlipY; }
+SavedMap.TestS = class {
+    constructor(PassRule) {
+
+    }
+    /** Rules: SumPass, SumBal, SumRosbal */   PassRule;
+    /** Bal Setting */   PassRule;
+
+}
 class InteractorWorker {
     constructor(ids, on, interactor) {
         this.Ids = ids;
@@ -259,14 +271,8 @@ class VisualMap {
             Obj.Weight = e.Weight;
             this.Objects.push(Obj);
         });
-        smap.Triggers.forEach((e) => {
-            this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic, e.Id, e.IdTypes, e.TestData));
-
-        });
-        smap.Interactive.forEach((e) => {
-            this.Interactive.push(new InteractorWorker(e.Ids, OnEvents.Create(e.On), new Interactor(e.Interactor)));
-
-        });
+        smap.Triggers.forEach((e) => this.Triggers.push(new Trigger(e.Position.Size, e.Position.X, e.Position.Y, e.Visual, e.Magnetic, e.Id, e.IdTypes, e.TestData)));
+        smap.Interactive.forEach((e) => this.Interactive.push(new InteractorWorker(e.Ids, OnEvents.Create(e.On), new Interactor(e.Interactor))));
     }
     Work(SceneSum) {
         this.Interactive.forEach((e) => e.Work(SceneSum, this.Objects, this.Triggers));
@@ -282,6 +288,16 @@ class VisualTest {
         this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, backgroundColor: 0xf0f0f0, antialias: false, })
         this.VDisplayContainer = new PIXI.Container();
         this.VDisplay.stage.addChild(this.VDisplayContainer);
+        var Load = PIXI.Texture.from('/TestItems/Prefabs/Backgrounds/' + smap.Bg + ".jpg");
+        var Texture = new PIXI.Texture(Load);
+        this.Background = new PIXI.Sprite(Texture);
+        this.VDisplayContainer.addChild(this.Background);
+        var sx = 900.0 / Texture.width;
+        var sy = 600.0 / Texture.height;
+        console.log(sx,sy)
+        this.Background.scale.set(sx,sy);
+
+
         this.Vmap = new VisualMap(smap);
         this.MapType = smap.MapType;
         this.SceneSum = 0;
@@ -296,6 +312,7 @@ class VisualTest {
         this.Vmap.Work(this.SceneSum);
         this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
     }
+    Background;
     MapType;
     VDisplay;
     VDisplayContainer;
