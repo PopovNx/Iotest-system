@@ -1,5 +1,6 @@
 ﻿'use strict';
 var cond1 = {
+    Name: "Создание схемы",
     Smap: new SavedMap("7",
         [
             new SavedMap.sObject("Static", "Electrons", "Wire", new SavedMap.sObject.PositionT(100 + 150, 100, 1, 15, 0), 0, 0, 1),
@@ -28,10 +29,23 @@ var cond1 = {
         new SavedMap.InteractorWorker([3], new SavedMap.InteractorWorker.On("Click", [3]), new SavedMap.InteractorWorker.Interactor("VariatorChange", [0, 1])),
         new SavedMap.InteractorWorker([1], new SavedMap.InteractorWorker.On("Sum", "scene", ">=5"), new SavedMap.InteractorWorker.Interactor("Variator", [0, 1])),
         new SavedMap.InteractorWorker([3], new SavedMap.InteractorWorker.On("Always", true), new SavedMap.InteractorWorker.Interactor("IsButton", [0, 1]))
-    ], "Test", new SavedMap.TestS("SumPass", 5))
-    Cond:
+    ], "Test", new SavedMap.TestS("SumPass", 5)),
+    Cond: "## Задание 1\n###### Первое задание будет простым, нужно всего лишь заставить данный светодиод светится в электронной схеме, а затем нажать на кнопочку сдать",
+    MaxBal:4,
+
 }
 
+var Test = {
+    Name: "Электрические схемы",
+    OcenType: "Sum",
+    Maps: [
+        cond1,
+        cond1,
+        cond1,
+
+    ]
+
+}
 
 
 
@@ -41,16 +55,44 @@ var app = new Vue({
     data: {
         Vtest: null,
         DblockNow: 0,
+        TitleNow: null,
+        MarkDownEngine: null,
+        Canvas: null,
+        MaxBalNow: 0,
+        OcenType: null,
     },
     methods: {
+        LoadLvl(test, id) {
+            var LvlNow = test.Maps[id];
+            console.log(LvlNow);
+            this.MaxBalNow = LvlNow.MaxBal;
+            this.OcenType = LvlNow.Smap.TestSettings.PassRule;
+            this.SetTitle(LvlNow.Name, id + 1, test.Maps.length);
+            this.SetCondition(LvlNow.Cond);
+
+            if (this.Vtest != null) {
+                this.Vtest.destroy();
+                this.Vtest = null;
+            }
+           
+            this.Vtest = new VisualTest(LvlNow.Smap, this.Canvas);
+
+
+        },
+
         ChangeButtonClick(e) {
             this.DblockNow = !this.DblockNow;
-
-
+        },
+        SetCondition(MarkDown) {
+            document.getElementById("ConditionText").innerHTML = this.MarkDownEngine.makeHtml(MarkDown);
+        },
+        SetTitle(Title, Nnow,Nend) {
+            this.TitleNow = "#" + Nnow + "/" + Nend + " " + Title;
         }
-
     },
     mounted() {
-        this.Vtest = new VisualTest(cond1.Smap, document.getElementById("MT1"));
+        this.Canvas = document.getElementById("MT1");
+        this.MarkDownEngine = new showdown.Converter();
+        this.LoadLvl(Test,0);
     }
 })
