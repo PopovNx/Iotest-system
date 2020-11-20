@@ -1,5 +1,5 @@
 ﻿class SavedMap {
-    constructor(Bg,objs, trgs, inter, type, TestSettings) {
+    constructor(Bg, objs, trgs, inter, type, TestSettings) {
         this.Objects = objs;
         this.Triggers = trgs;
         this.Interactive = inter;
@@ -65,11 +65,9 @@ SavedMap.InteractorWorker.On = class {
 SavedMap.sTrigger.PositionT = class { constructor(x, y, s) { this.X = x; this.Y = y; this.Size = s; } X; Y; Size; }
 SavedMap.sObject.PositionT = class { constructor(x, y, z, s, r, fx = 1, fy = 1) { this.X = x; this.Y = y; this.Z = z; this.Size = s; this.Rotation = r; this.FlipX = fx; this.FlipY = fy; } X; Y; Z; Size; Rotation; FlipX; FlipY; }
 SavedMap.TestS = class {
-    constructor(PassRule) {
-
-    }
+    constructor(PassRule, BalSetting) { this.PassRule = PassRule; this.BalSetting = BalSetting; }
     /** Rules: SumPass, SumBal, SumRosbal */   PassRule;
-    /** Bal Setting */   PassRule;
+    /** Bal Setting */   BalSetting;
 
 }
 class InteractorWorker {
@@ -285,34 +283,28 @@ class VisualMap {
 class VisualTest {
     constructor(smap, display) {
         this.Canvas = display;
-        this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, backgroundColor: 0xf0f0f0, antialias: false, })
+        this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, transparent: true, antialias: false, })
+        this.Twork = new TestWorker(smap.TestSettings);
         this.VDisplayContainer = new PIXI.Container();
         this.VDisplay.stage.addChild(this.VDisplayContainer);
-        var Load = PIXI.Texture.from('/TestItems/Prefabs/Backgrounds/' + smap.Bg + ".jpg");
-        var Texture = new PIXI.Texture(Load);
-        this.Background = new PIXI.Sprite(Texture);
-        this.VDisplayContainer.addChild(this.Background);
-        var sx = 900.0 / Texture.width;
-        var sy = 600.0 / Texture.height;
-        console.log(sx,sy)
-        this.Background.scale.set(sx,sy);
-
-
+        this.Canvas.style.background = "url('/TestItems/Prefabs/Backgrounds/" + smap.Bg + ".jpg')"
+        this.Canvas.style.backgroundRepeat = "round"
         this.Vmap = new VisualMap(smap);
         this.MapType = smap.MapType;
         this.SceneSum = 0;
         this.Vmap.Triggers.forEach((e) => this.VDisplayContainer.addChild(e.graphics));
         this.Vmap.Objects.forEach((e) => this.VDisplayContainer.addChild(e.sprite));
-        this.VDisplay.ticker.add((delta) => this.TestWorker(delta));
+        this.VDisplay.ticker.add((delta) => this.Worker(delta));
+        this.VDisplay.ticker.add((delta) => this.Twork.Work(this.SceneSum));
         window.addEventListener('resize', () => { this.resize(this); });
         this.resize(this);
     }
-    TestWorker(delta) {
+    Twork;
+    Worker(delta) {
         console.log(this.SceneSum);
         this.Vmap.Work(this.SceneSum);
         this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce((a, b) => a + b, 0);
     }
-    Background;
     MapType;
     VDisplay;
     VDisplayContainer;
@@ -684,8 +676,15 @@ class EatObjects extends DragableObject {
 
 }
 class TestWorker {
-
-
-
+    constructor(TestS) {
+        this.Passed = false;
+        switch (TestS.PassRule) {
+            case "SumPass":
+                this.Work = ((SceneSum) => this.Passed = SceneSum >= TestS.BalSetting);
+                break;
+        }
+    }
+    Passed;
+    Work;
 
 }
