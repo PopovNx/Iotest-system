@@ -1,76 +1,121 @@
-﻿class SavedMap {
-    constructor(Bg, objs, trgs, inter, type, TestSettings) {
-        this.Objects = objs;
-        this.Triggers = trgs;
-        this.Interactive = inter;
-        this.MapType = type;
-        this.TestSettings = TestSettings;
-        this.Bg = Bg;
+﻿'use strict'
+export namespace SaveData {
+    export namespace Positions {
+        export class PObject {
+            constructor(x, y, z, s, r, fx = 1, fy = 1) {
+                this.X = x;
+                this.Y = y;
+                this.Z = z;
+                this.Size = s;
+                this.Rotation = r;
+                this.FlipX = fx;
+                this.FlipY = fy;
+            };
+            public X: number;
+            public Y: number;
+            public Z: number;
+            public Size: number;
+            public Rotation: number;
+            public FlipX: number;
+            public FlipY: number;
+        }
+        export class PTrigger {
+            constructor(x, y, s) {
+                this.X = x;
+                this.Y = y;
+                this.Size = s;
+            }
+            public X: number;
+            public Y: number;
+            public Size: number;
+        }
     }
-    Objects;
-    Triggers;
-    Interactive;
-    MapType;
-    TestSettings;
-    Bg
-}
-SavedMap.sObject = class {
-    constructor(state, group, type, pos, variant, id, cost) {
-        this.State = state;
-        this.Group = group;
-        this.Type = type;
-        this.Position = pos;
-        this.Variant = variant;
-        this.Id = id;
-        this.Weight = cost;
+    export class SavedMap {
+        public constructor(Bg, objs, trgs, inter, type, TestSettings) {
+            this.Objects = objs;
+            this.Triggers = trgs;
+            this.Interactive = inter;
+            this.MapType = type;
+            this.TestSettings = TestSettings;
+            this.Bg = Bg;
+        }
+        public Objects: Array<SavedObject>;
+        public Triggers: Array<SavedTrigger>;
+        public Interactive: Array<SavedInteractorWorker>;
+        public MapType: string;
+        public TestSettings: SavedTestSettings;
+        public Bg: string;
+
     }
-    State;
-    Group;
-    Type;
-    Position;
-    Variant;
-    Id;
-    Weight;
-}
-SavedMap.sTrigger = class {
-    constructor(vis, mag, pos, id, idtypes, tdata) {
-        this.Visual = vis;
-        this.Magnetic = mag;
-        this.Position = pos;
-        this.Id = id;
-        this.IdTypes = idtypes;
-        this.TestData = tdata;
+
+
+    export class SavedObject {
+        constructor(state, group, type, pos, variant, id, cost) {
+            this.State = state;
+            this.Group = group;
+            this.Type = type;
+            this.Position = pos;
+            this.Variant = variant;
+            this.Id = id;
+            this.Weight = cost;
+        }
+        State: string;
+        Group: string;
+        Type: string;
+        Position: Positions.PObject;
+        Variant: number;
+        Id: number;
+        Weight: number;
     }
-    Visual;
-    Magnetic;
-    Position;
-    Id;
-    IdTypes;
-    TestData;
-}
-SavedMap.InteractorWorker = class { constructor(ids, on, interactor) { this.Ids = ids; this.On = on; this.Interactor = interactor; } Ids; On; Interactor; }
-SavedMap.InteractorWorker.Interactor = class { constructor(Type, Data) { this.Type = Type; this.Data = Data; } Type; Data; }
-SavedMap.InteractorWorker.On = class {
-    constructor(OnName, Data1, Data2, Data3) {
-        this.OnName = OnName;
-        this.Data1 = Data1;
-        this.Data2 = Data2;
-        this.Data3 = Data3;
+    export class SavedTrigger {
+        constructor(vis, mag, pos, id, idtypes, tdata) {
+            this.Visual = vis;
+            this.Magnetic = mag;
+            this.Position = pos;
+            this.Id = id;
+            this.IdTypes = idtypes;
+            this.TestData = tdata;
+        }
+        Visual: string;
+        Magnetic;
+        Position: Positions.PTrigger;
+        Id: number;
+        IdTypes;
+        TestData;
+
     }
-    OnName;
-    Data1;
-    Data2;
-    Data3;
-}
-SavedMap.sTrigger.PositionT = class { constructor(x, y, s) { this.X = x; this.Y = y; this.Size = s; } X; Y; Size; }
-SavedMap.sObject.PositionT = class { constructor(x, y, z, s, r, fx = 1, fy = 1) { this.X = x; this.Y = y; this.Z = z; this.Size = s; this.Rotation = r; this.FlipX = fx; this.FlipY = fy; } X; Y; Z; Size; Rotation; FlipX; FlipY; }
-SavedMap.TestS = class {
-    constructor(PassRule, BalSetting) { this.PassRule = PassRule; this.BalSetting = BalSetting; }
+    export class SavedInteractorWorker {
+        constructor(ids, on, interactor) {
+            this.Ids = ids;
+            this.On = on;
+            this.Interactor = interactor;;
+        }
+        Ids;
+        On;
+        Interactor;
+        static Interactor = class { constructor(Type, Data) { this.Type = Type; this.Data = Data; } Type; Data; }
+        static On = class {
+            constructor(OnName, Data1, Data2, Data3) {
+                this.OnName = OnName;
+                this.Data1 = Data1;
+                this.Data2 = Data2;
+                this.Data3 = Data3;
+            }
+            OnName;
+            Data1;
+            Data2;
+            Data3;
+        }
+
+    }
+    export class SavedTestSettings {
+        constructor(PassRule, BalSetting) { this.PassRule = PassRule; this.BalSetting = BalSetting; }
     /** Rules: SumPass, SumBal, SumRosbal */   PassRule;
     /** Bal Setting */   BalSetting;
 
+    }
 }
-class InteractorWorker {
+export class InteractorWorker {
     constructor(ids, on, interactor) {
         this.Ids = ids;
         this.On = on;
@@ -83,7 +128,7 @@ class InteractorWorker {
     On;
     Interactor;
 }
-class Interactor {
+export class Interactor {
     constructor(Saved) {
         var Data = Saved.Data;
         switch (Saved.Type) {
@@ -141,124 +186,122 @@ class Interactor {
     }
     Invoke(istrue, ids, Objs, Trgs) { }
 }
-class OnEvents {
+export class OnEvents {
     static Create(saved) {
-
-
         switch (saved.OnName) {
             case "Sum":
                 return new OnEvents.OnSum(saved.Data1, saved.Data2, saved.Data3);
             case "Hover":
-                return new OnEvents.OnHover(saved.Data1, saved.Data2, saved.Data3);
+                return new OnEvents.OnHover(saved.Data1);
             case "Always":
-                return new OnEvents.OnAlways(saved.Data1, saved.Data2, saved.Data3);
+                return new OnEvents.OnAlways(saved.Data1);
             case "Click":
-                return new OnEvents.OnСlick(saved.Data1, saved.Data2, saved.Data3);
+                return new OnEvents.OnСlick(saved.Data1);
             default:
         }
 
     }
-
-}
-OnEvents.BaseEvent = class {
-    constructor() {
-        this.Invoked = false;
-    }
-    Invoked;
-    EventPresented() {
-        this.Invoked = true;
-    }
-    Test(SceneSum, Obgs, Trgs) {
-
-        if (this.Invoked) {
+    static BaseEvent = class {
+        constructor() {
             this.Invoked = false;
-            return true;
         }
-        return false;
-    }
-}
-OnEvents.OnSum = class extends OnEvents.BaseEvent {
-    constructor(type, agr, ids) {
-        super();
-        this.Type = type;
-        this.Agr = agr;
-        this.Ids = ids;
-    }
-    Type;
-    Agr;
-    Ids;
-    Test(SceneSum, Obgs, Trgs) {
-        if (SceneSum == undefined) return false;
-        var rt = false;
-        switch (this.Type) {
-            case "scene":
-                if (eval((SceneSum + this.Agr).toString())) rt = true;
-                break;
-            case "trigger":
-                Trgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
-                    if (eval((t.Sum + this.Agr).toString())) rt = true;;
-                })
-                break;
+        Invoked;
+        EventPresented() {
+            this.Invoked = true;
         }
-        return rt;
+        Test(SceneSum, Obgs, Trgs) {
+
+            if (this.Invoked) {
+                this.Invoked = false;
+                return true;
+            }
+            return false;
+        }
+    }
+    static OnSum = class extends OnEvents.BaseEvent {
+        constructor(type, agr, ids) {
+            super();
+            this.Type = type;
+            this.Agr = agr;
+            this.Ids = ids;
+        }
+        Type;
+        Agr;
+        Ids;
+        Test(SceneSum, Obgs, Trgs) {
+            if (SceneSum == undefined) return false;
+            var rt = false;
+            switch (this.Type) {
+                case "scene":
+                    if (eval((SceneSum + this.Agr).toString())) rt = true;
+                    break;
+                case "trigger":
+                    Trgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
+                        if (eval((t.Sum + this.Agr).toString())) rt = true;;
+                    })
+                    break;
+            }
+            return rt;
+        }
+
+    }
+    static OnHover = class extends OnEvents.BaseEvent {
+        constructor(ids) {
+            super();
+            this.Ids = ids;
+        }
+        Ids;
+        Test(SceneSum, Obgs, Trgs) {
+            var rt = false;
+            Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
+                if (t.MouseOnThis) rt = true;
+
+            })
+            return rt;
+        }
+
+    }
+    static OnAlways = class extends OnEvents.BaseEvent {
+        constructor(on) {
+            super();
+            this.On = on;
+        }
+        On;
+        Test(SceneSum, Obgs, Trgs) {
+            return this.On.toString() == "true";
+        }
+    }
+    static OnСlick = class extends OnEvents.BaseEvent {
+        constructor(ids) {
+            super();
+            this.Ids = ids;
+        }
+        Ids;
+        Test(SceneSum, Obgs, Trgs) {
+            var rt = false;
+            Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
+                if (t.ReadClick()) rt = true;
+            })
+            return rt;
+        }
+
     }
 
 }
-OnEvents.OnHover = class extends OnEvents.BaseEvent {
-    constructor(ids) {
-        super();
-        this.Ids = ids;
-    }
-    Ids;
-    Test(SceneSum, Obgs, Trgs) {
-        var rt = false;
-        Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
-            if (t.MouseOnThis) rt = true;
-
-        })
-        return rt;
-    }
-
-}
-OnEvents.OnAlways = class extends OnEvents.BaseEvent {
-    constructor(on) {
-        super();
-        this.On = on;
-    }
-    On;
-    Test(SceneSum, Obgs, Trgs) {
-        return this.On.toString() == "true";
-    }
-}
-OnEvents.OnСlick = class extends OnEvents.BaseEvent {
-    constructor(ids) {
-        super();
-        this.Ids = ids;
-    }
-    Ids;
-    Test(SceneSum, Obgs, Trgs) {
-        var rt = false;
-        Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
-            if (t.ReadClick()) rt = true;
-        })
-        return rt;
-    }
-
-}
-class VisualMap {
-    constructor(smap) {
+export class VisualMap {
+    constructor(smap: SaveData.SavedMap) {
         smap.Objects.sort(function (x, y) { return x.Position.Z < y.Position.Z ? -1 : 1 })
         smap.Objects.forEach((e) => {
 
             switch (e.Group) {
                 case "Electrons":
-                    var Obj = new ElectronsObjects(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                    var Obj = new ElectronsObjects(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, ElectronsObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
                     break;
                 case "Custom":
-                    var Obj = new CustumObject(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), e.Type, e.State == "Dynamic" ? true : false, e.Variant);
+                    var Obj = new CustumObject(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, e.Type, e.State == "Dynamic" ? true : false, e.Variant);
                     break;
                 case "Eat":
-                    var Obj = new EatObjects(parseInt(e.Position.Size * e.Position.FlipX) / 100, parseInt(e.Position.Size * e.Position.FlipY) / 100, parseInt(e.Position.X), parseInt(e.Position.Y), parseInt(e.Position.Rotation), EatObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                    var Obj = new EatObjects(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, EatObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
                     break;
                 default:
                     console.error(e);
@@ -280,11 +323,13 @@ class VisualMap {
     Triggers = [];
     Interactive = [];
 }
-class VisualTest {
+export class VisualTest {
     constructor(smap, display) {
         this.Canvas = display;
+        // @ts-ignore */}
         this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, transparent: true, antialias: false, })
         this.Twork = new TestWorker(smap.TestSettings);
+        // @ts-ignore */}
         this.VDisplayContainer = new PIXI.Container();
         this.VDisplay.stage.addChild(this.VDisplayContainer);
         this.Canvas.style.background = "url('/TestItems/Prefabs/Backgrounds/" + smap.Bg + ".jpg')"
@@ -324,20 +369,22 @@ class VisualTest {
         this.VDisplay.destroy();
         this.VDisplay = undefined;
         this.Vmap = undefined;
-        this.Funcs = undefined;
         this.resize = undefined;
         this.VDisplayContainer = undefined;
     }
 }
-class DragableObject {
+export class DragableObject {
     static NullTexture = 'TestItems/Prefabs/Shared/Null.png';
     constructor(variants, variant, sx, sy, x, y, r, cc = true, drag = false) {
+        // @ts-ignore */}
         this.texture = PIXI.Texture.from(variants[variant]);
         this.Variant = variant;
+        this.Type = variant;
         this.Variants = variants;
         this.Rotation = r;
         this.MouseOnThis = false;
         this.Visible = true;
+        // @ts-ignore */}
         this.sprite = new PIXI.Sprite(this.texture);
         this.sprite.x = x || 1;
         this.sprite.y = y || 1;
@@ -361,22 +408,22 @@ class DragableObject {
             .on('pointerover', (e) => this.onPointerOver(e))
             .on('pointerout', (e) => this.onPointerOut(e));
     }
-    Variant;
-    Variants;
-    Id;
-    Weight;
-    texture;
-    sprite;
-    MouseOnThis;
-    GroupType;
-    Rotation;
-    Visible;
-    Button;
-    CanMove;
-    MouseDown;
-    Dragging;
-    Clicked;
-    Type;
+    public Variant;
+    public Variants;
+    public Id;
+    public Weight;
+    public texture;
+    public sprite;
+    public MouseOnThis;
+    public GroupType;
+    public Rotation;
+    public Visible;
+    public Button;
+    public CanMove;
+    public MouseDown;
+    public Dragging;
+    public Clicked;
+    public Type: string;
     onPointerOver(event) {
         this.MouseOnThis = true;
     }
@@ -414,6 +461,7 @@ class DragableObject {
     SetVariant(variant) {
         if (this.Variant == variant) return;
         this.Variant = variant;
+        // @ts-ignore */}
         this.sprite.texture = this.texture = PIXI.Texture.from(this.Variants[variant]);
     }
     SetRotation(rotation) {
@@ -455,7 +503,7 @@ class DragableObject {
     }
 
 }
-class Trigger {
+export class Trigger {
     constructor(Size, x, y, visual, magnetic, id, Idt, dt) {
         this.magnetic = magnetic;
         this.x = x;
@@ -468,6 +516,7 @@ class Trigger {
         this.elementcount = 0;
         this.VectorArray = [];
         this.VectorArray.push(this.x - this.Size, this.y - this.Size, this.x + this.Size, this.y - this.Size, this.x + this.Size, this.y + this.Size, this.x - this.Size, this.y + this.Size);
+        // @ts-ignore */}
         this.graphics = new PIXI.Graphics();
     }
     Draw() {
@@ -535,6 +584,7 @@ class Trigger {
     Size;
     visual;
     Id;
+    magnetic;
     IdTypes;
     Sum;
     TestData;
@@ -569,7 +619,7 @@ class Trigger {
         }
     }
 }
-class ElectronsObjects extends DragableObject {
+export class ElectronsObjects extends DragableObject {
     static Types = {
         Resistor: {
             textures: ['TestItems/Prefabs/Electrons/Resistor.png']
@@ -603,18 +653,17 @@ class ElectronsObjects extends DragableObject {
         },
     }
     constructor(sx, sy, x, y, r, type, isdragable, varitant) {
+
         super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
-        super.Type = type;
     }
 
 }
-class CustumObject extends DragableObject {
+export class CustumObject extends DragableObject {
     constructor(sx, sy, x, y, r, type, isdragable, varitant) {
         super(type, varitant, sx, sy, x, y, r, true, isdragable);
-        super.Type = type;
     }
 }
-class EatObjects extends DragableObject {
+export class EatObjects extends DragableObject {
     static Types = {
         Apple: {
             textures: [
@@ -674,11 +723,10 @@ class EatObjects extends DragableObject {
     }
     constructor(sx, sy, x, y, r, type, isdragable, varitant) {
         super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
-        super.Type = type;
     }
 
 }
-class TestWorker {
+export class TestWorker {
     constructor(TestS) {
         this.Passed = false;
         this.PassRule = TestS.PassRule;
@@ -695,66 +743,66 @@ class TestWorker {
     Work;
 
 }
-class VisualTestsWorker {
+export class VisualTestsWorker {
     constructor(Test, MarkdownEng) {
-        this.#TestData = Test;
-        this.#NowTestId = 0;
-        this.#MaxTestId = Test.Maps.length;
-        this.#MarkdownEngine = MarkdownEng;        
+        this.TestData = Test;
+        this.NowTestId = 0;
+        this.MaxTestId = Test.Maps.length;
+        this.MarkdownEngine = MarkdownEng;
     }
-    #Vtest;
-    #TestData;
-    Canvas;
-    #NowTestId;
-    #MaxTestId;
-    #MarkdownEngine;
-    VisualData = {};
-    EndData = {};
-    #LoadLvl() {
-        if (this.#Vtest != null) {
-            this.#Vtest.destroy();
-            this.#Vtest = null;
+    private Vtest;
+    private TestData;
+    public Canvas;
+    private NowTestId;
+    private MaxTestId;
+    private MarkdownEngine;
+    public VisualData = {};
+    public EndData = {};
+    private LoadLvl() {
+        if (this.Vtest != null) {
+            this.Vtest.destroy();
+            this.Vtest = null;
         }
-        var LvlNow = this.#TestData.Maps[this.#NowTestId];
-        this.#UpdateVisual(LvlNow.Name, this.#NowTestId, this.#MaxTestId, LvlNow.MaxBal, LvlNow.Smap.TestSettings.PassRule, LvlNow.Cond);
-        this.#Vtest = new VisualTest(LvlNow.Smap, this.Canvas);
+        var LvlNow = this.TestData.Maps[this.NowTestId];
+        this.UpdateVisual(LvlNow.Name, this.NowTestId, this.MaxTestId, LvlNow.MaxBal, LvlNow.Smap.TestSettings.PassRule, LvlNow.Cond);
+        this.Vtest = new VisualTest(LvlNow.Smap, this.Canvas);
     };
-    #UpdateVisual(Name, id, MaxTestId, MaxBal, PassRule, Conditioten) {
+    private UpdateVisual(Name, id, MaxTestId, MaxBal, PassRule, Conditioten) {
         this.VisualData = {
             Title: "#" + (id + 1).toString() + "/" + MaxTestId.toString() + " " + Name,
-            Condition: this.#MarkdownEngine.makeHtml(Conditioten),
+            Condition: this.MarkdownEngine.makeHtml(Conditioten),
             MaxBal: MaxBal,
             OcenType: PassRule,
         }
 
     };
     Pass(tz) {
-        var passData = tz.#Vtest.Pass();
+        var passData = tz.Vtest.Pass();
         console.log(passData);
-        if (++tz.#NowTestId >= tz.#MaxTestId) tz.#EndTest();
-        else tz.#LoadLvl();
+        if (++tz.NowTestId >= tz.MaxTestId) tz.EndTest();
+        else tz.LoadLvl();
         sessionStorage.setItem("Td" + this.NowTestId, passData);
     };
-    #EndTest() {
-        this.#Vtest.destroy();
-        this.#Vtest = null;
+    EndTest() {
+        this.Vtest.destroy();
+        this.Vtest = null;
         this.EndData = {
-            C:true,
+            C: true,
 
         };
         console.log("End");
     }
     Start(Canvas) {
         this.Canvas = Canvas;
-        this.#LoadLvl();
+        this.LoadLvl();
     }
 
 
 }
 
-class VisualSavedTest {
+export class VisualSavedTest {
     constructor(Name, Cond, MaxBal, Smap) {
-        this.Name= Name;
+        this.Name = Name;
         this.Cond = Cond;
         this.MaxBal = MaxBal;
         this.Smap = Smap;
@@ -764,7 +812,7 @@ class VisualSavedTest {
     Cond;
     MaxBal;
 }
-class ClassicSavedTest {
+export class ClassicSavedTest {
     constructor(Text, MaxBal, TestBase) {
         this.Text = Text;
         this.MaxBal = MaxBal;
@@ -773,4 +821,5 @@ class ClassicSavedTest {
     Text;
     MaxBal;
     TestBase;
+
 }

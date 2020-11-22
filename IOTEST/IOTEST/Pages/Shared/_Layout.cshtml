@@ -33,12 +33,11 @@
     <script src="~/lib/Bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/Bootstrap/js/mdb.min.js"></script>
     <script src="~/lib/Vue/vue.min.js"></script>
-
     @{
         foreach (var item in ViewData["CSS"] as List<string>)
             WriteLiteral($"<link href=\"{item}?{ver}\" rel='stylesheet'/>");
         foreach (var item in ViewData["JSU"] as List<string>)
-            WriteLiteral($"<script src=\"{item}?{ver}\"></script>");
+            WriteLiteral($"<script src=\"{item}?{ver}\" ></script>");
 
     }
 </head>
@@ -49,7 +48,7 @@
     </div>
     @{
         foreach (var item in ViewData["JSD"] as List<string>)
-            WriteLiteral($"<script src=\"{item}?{ver}\"></script>");
+            WriteLiteral($"<script src=\"{item}?{ver}\" type='module'></script>");
     }
 </body>
 </html>

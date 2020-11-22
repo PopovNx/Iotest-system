@@ -21,11 +21,10 @@ namespace IOTEST.Controllers
             DataControl control = new DataControl(HttpContext.Request.Cookies);
             if (!control.IsOk || !db.Users.Where(x => x.Id == control.UserData.Id).Any()) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
 
-
             ViewData.Add("Title", "Тест - ");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Test.css" });
-            ViewData.Add("JSU", new List<string> { "lib/Showdown/showdown.min.js", "js/VueComp.js", "lib/Pixijs/pixi.min.js", "TestItems/Classes.js" });
+            ViewData.Add("JSU", new List<string> { "lib/Showdown/showdown.min.js", "lib/Pixijs/pixi.min.js", "js/VueComp.js" });
             ViewData.Add("JSD", new List<string> { "js/Test.js" });
             ViewData.Add("User", control.UserData);
 
