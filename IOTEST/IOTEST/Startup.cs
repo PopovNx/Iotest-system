@@ -1,6 +1,8 @@
+using IOTEST.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -22,9 +24,10 @@ namespace IOTEST
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddRazorPages();
             services.AddControllers();
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

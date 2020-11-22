@@ -1,11 +1,11 @@
 ﻿@model IndexController
 @{ 
-    var user = ViewData["User"] as IOTEST.Items.User;
+    var user = ViewData["User"] as IOTEST.Database.UserContext.User;
     
 }
     <header>
         <script>
-           app.needRegister =@((user.UserProf== Items.UserProfType.Unset).ToString().ToLower());
+           app.needRegister =@((user.UserProf== IOTEST.Database.UserContext.UserProfType.Unset).ToString().ToLower());
         </script>
         <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
             <div class="container-fluid ">

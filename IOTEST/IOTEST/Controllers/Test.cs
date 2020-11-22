@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IOTEST.Database;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOTEST.Controllers
@@ -9,10 +10,18 @@ namespace IOTEST.Controllers
     [Route("/test")]
     public class TestController : Controller
     {
+        private UserContext db;
+
+        public TestController(UserContext context)
+        {
+            db = context;
+
+        }
         public IActionResult Index()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
             if (!control.IsOk) { HttpContext.Response.Redirect("/login"); return View("Empty");}
+
 
             ViewData.Add("Title", "Тест - ");
             ViewData.Add("ParalaxOn", true);

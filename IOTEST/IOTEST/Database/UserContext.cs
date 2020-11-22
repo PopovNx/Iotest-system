@@ -32,7 +32,6 @@ namespace IOTEST.Database
         public UserContext(DbContextOptions<UserContext> options) : base(options)
         {
             Database.EnsureCreated();
-
         }
     }
 }
