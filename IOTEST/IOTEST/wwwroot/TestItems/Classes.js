@@ -311,6 +311,9 @@ class VisualTest {
     Vmap;
     Canvas;
     SceneSum;
+    Pass() {
+        return btoa(this.Twork.Passed + "|" + this.Twork.PassRule + "|" + JSON.stringify(this.Twork.BalSetting));
+    }
     resize(t) {
         let TestWidth = document.getElementById("testMain").clientWidth;
         t.VDisplay.renderer.resize(TestWidth, TestWidth / 3 * 2);
@@ -678,13 +681,75 @@ class EatObjects extends DragableObject {
 class TestWorker {
     constructor(TestS) {
         this.Passed = false;
-        switch (TestS.PassRule) {
+        this.PassRule = TestS.PassRule;
+        this.BalSetting = TestS.BalSetting;
+        switch (this.PassRule) {
             case "SumPass":
-                this.Work = ((SceneSum) => this.Passed = SceneSum >= TestS.BalSetting);
+                this.Work = ((SceneSum) => this.Passed = SceneSum >= this.BalSetting);
                 break;
         }
     }
+    PassRule;
+    BalSetting;
     Passed;
     Work;
+
+}
+
+
+class VisualTestsWorker {
+    constructor(Test, MarkdownEng) {
+        this.#TestData = Test;
+        this.#NowTestId = 0;
+        this.#MaxTestId = Test.Maps.length;
+        this.#MarkdownEngine = MarkdownEng;        
+    }
+    #Vtest;
+    #TestData;
+    Canvas;
+    #NowTestId;
+    #MaxTestId;
+    #MarkdownEngine;
+    VisualData = {};
+    EndData = {};
+    #LoadLvl() {
+        if (this.#Vtest != null) {
+            this.#Vtest.destroy();
+            this.#Vtest = null;
+        }
+        var LvlNow = this.#TestData.Maps[this.#NowTestId];
+        this.#UpdateVisual(LvlNow.Name, this.#NowTestId, this.#MaxTestId, LvlNow.MaxBal, LvlNow.Smap.TestSettings.PassRule, LvlNow.Cond);
+        this.#Vtest = new VisualTest(LvlNow.Smap, this.Canvas);
+    };
+    #UpdateVisual(Name, id, MaxTestId, MaxBal, PassRule, Conditioten) {
+        this.VisualData = {
+            Title: "#" + (id + 1).toString() + "/" + MaxTestId.toString() + " " + Name,
+            Condition: this.#MarkdownEngine.makeHtml(Conditioten),
+            MaxBal: MaxBal,
+            OcenType: PassRule,
+        }
+
+    };
+    Pass(tz) {
+        var passData = tz.#Vtest.Pass();
+        console.log(passData);
+        if (++tz.#NowTestId >= tz.#MaxTestId) tz.#EndTest();
+        else tz.#LoadLvl();
+        sessionStorage.setItem("Td" + this.NowTestId, passData);
+    };
+    #EndTest() {
+        this.#Vtest.destroy();
+        this.#Vtest = null;
+        this.EndData = {
+            C:true,
+
+        };
+        console.log("End");
+    }
+    Start(Canvas) {
+        this.Canvas = Canvas;
+        this.#LoadLvl();
+    }
+
 
 }

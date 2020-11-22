@@ -1,48 +1,88 @@
 ﻿@model IndexController
-@{ 
+@{
     var user = ViewData["User"] as IOTEST.Items.User;
-    
+
 }
-    <header>
-        <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
-            <div class="container-fluid ">
-                <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="/">
-                    <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
-                    <span>
-                        Test
-                    </span>
-                </a>
-                <span class="DOB navbar-brand float-left ml-auto">
-                    <span class="mr-1">@user.FirstName</span>
-                    <span class="mr-2">@user.FamilyName</span>
-                    <img src="@user.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+<header>
+    <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
+        <div class="container-fluid ">
+            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="/">
+                <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
+                <span>
+                    Test
                 </span>
+            </a>
+            <span class="DOB navbar-brand float-left ml-auto">
+                <span class="mr-1">@user.FirstName</span>
+                <span class="mr-2">@user.FamilyName</span>
+                <img src="@user.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+            </span>
+        </div>
+    </nav>
+</header>
+<div id="Page" class="user-select-none container-fluid" v-cloak>
+    <div class="row mt-1">
+        <div class="col-12 offset-0 col-sm-10 offset-sm-1 mt-3 col-lg-8 offset-lg-2 offset-xl-3 col-xl-6   DOB" style="background-color:rgba(45, 51, 51, 0.50)">
+            <div v-show="PageNow=='Start'">
+                <div id="starthead" class="text-left row pt-2">
+                    <h4 class="text-light mt-2 col-8">Тестирование</h4>
+                    <hr class="bg-light my-2" />
+                </div>
+                <div id="startMain" class="text-center text-light">
+                    <div>
+                        <div id="startTextTitle"><h2>{{PreTestData.Name}}</h2></div>
+                        <hr>
+                        <div id="startTextOpis"><h6>{{PreTestData.Opis}}</h6></div>
+                        <hr>
+                        <div id="startParams" class="row">
+                            <span class="list-group-item bg-dark col-4">Максимальный бал: {{PreTestData.MaxBal}}</span>
+                            <button class="btn btn-outline-light col-4 offset-4" v-on:click="PageNow='Test'">Приступить</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </nav>
-    </header>
-    <div id="Page" class="user-select-none container-fluid">
-        <div class="row mt-1">
-            <div class="col-12 offset-0 col-sm-10 offset-sm-1 mt-3 col-lg-8 offset-lg-2 offset-xl-3 col-xl-6   DOB" style="background-color:rgba(45, 51, 51, 0.50)">
+            <div v-show="PageNow=='End'">
+                <div id="endhead" class="text-left row pt-2">
+                    <h4 class="text-light mt-2 col-8">Результаты</h4>
+                    <hr class="bg-light my-2" />
+                </div>
+                <div id="endMain" class="text-center text-light">
+                    <div>
+                        <div id="endTextTitle"><h2>Тест пройден</h2></div>
+                        <hr>
+                        <div id="endTextOpis"><h6 v-for="c in PreTestData.EndText">{{c}}</h6></div>
+                        <hr>
+                        <div id="endParams" class="row">
+                            <span class="list-group-item bg-dark col-4">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
+                            <button class="btn btn-outline-light col-4 offset-4" v-on:click="locarion='/'">На главную</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div v-show="PageNow=='Test'">
                 <div id="testhead" class="text-left row pt-2">
-                    <h4 class="text-light mt-2 col-8">{{TitleNow}}</h4>
-                    <button class="btn btn-outline-light col-3" v-on:click="ChangeButtonClick">{{DblockNow?"Условие":"К выполнению"}}</button>
+                    <h4 class="text-light mt-2 col-8">{{Test.VisualData.Title}}</h4>
                     <hr class="bg-light my-2" />
                 </div>
                 <div id="testMain" class="text-center text-light  DOB">
                     <div v-show="DblockNow==0" id="ConditionBlock">
-                        <div id="ConditionText"></div>
-                        <div id="ConditionParams">
-                            <ul class="list-group  DOB">
-                                <li class="list-group-item  bg-dark col-5">Максимальный бал: {{MaxBalNow}}</li>
-                                <li class="list-group-item  bg-dark col-5">Тип оценивания: {{OcenType=="SumPass"?"Зачёт":"Бал"}}</li>
-                            </ul>
-
+                        <div id="ConditionText" v-html="Test.VisualData.Condition"></div>
+                        <hr>
+                        <div id="ConditionParams" class="row">
+                            <span class="list-group-item  bg-dark col-4">Максимальный бал: {{Test.VisualData.MaxBal}}</span>
+                            <span class="list-group-item  bg-dark col-4 offset-4">Тип оценивания: {{Test.VisualData.OcenType=="SumPass"?"Зачёт":"Бал"}}</span>
                         </div>
                     </div>
-                    <div v-show="DblockNow==1"  id="InteractiveBlock">
+                    <div v-show="DblockNow==1" id="InteractiveBlock">
                         <canvas id="MT1"></canvas>
                     </div>
+                </div>
+                <div id="testfooter" class="text-left  pt-2 mt-0">
+                    <hr class="bg-light md-2 mt-0" />
+                    <button class="btn btn-outline-light" v-on:click="Test.Pass(Test)">Сдать</button>
+                    <button class="btn btn-outline-light float-right" v-on:click="DblockNow = !DblockNow">{{DblockNow?"Условие":"К выполнению"}}</button>
                 </div>
             </div>
         </div>
     </div>
+</div>

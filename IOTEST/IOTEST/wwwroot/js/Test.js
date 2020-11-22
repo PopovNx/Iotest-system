@@ -31,13 +31,17 @@ var cond1 = {
         new SavedMap.InteractorWorker([3], new SavedMap.InteractorWorker.On("Always", true), new SavedMap.InteractorWorker.Interactor("IsButton", [0, 1]))
     ], "Test", new SavedMap.TestS("SumPass", 5)),
     Cond: "## Задание 1\n###### Первое задание будет простым, нужно всего лишь заставить данный светодиод светится в электронной схеме, а затем нажать на кнопочку сдать",
-    MaxBal:4,
+    MaxBal:5,
 
 }
 
 var Test = {
     Name: "Электрические схемы",
+    Opis: "Данный тест покажет ваши базовые знания электрических схем и электронных компонентов",
+    EndText: ["Материалы для повторения:", "Стр 16-29 п4-6", "Стр 30 определение наизусть"],
     OcenType: "Sum",
+    DispNowBal: true,
+    MaxBal: 12,
     Maps: [
         cond1,
         cond1,
@@ -50,49 +54,33 @@ var Test = {
 
 
 
-var app = new Vue({
+let app = new Vue({
     el: "#app",
     data: {
-        Vtest: null,
+        Test: {},
         DblockNow: 0,
-        TitleNow: null,
-        MarkDownEngine: null,
-        Canvas: null,
-        MaxBalNow: 0,
-        OcenType: null,
+        PageNow: "Test",
+        PreTestData: {},
     },
     methods: {
-        LoadLvl(test, id) {
-            var LvlNow = test.Maps[id];
-            console.log(LvlNow);
-            this.MaxBalNow = LvlNow.MaxBal;
-            this.OcenType = LvlNow.Smap.TestSettings.PassRule;
-            this.SetTitle(LvlNow.Name, id + 1, test.Maps.length);
-            this.SetCondition(LvlNow.Cond);
 
-            if (this.Vtest != null) {
-                this.Vtest.destroy();
-                this.Vtest = null;
-            }
-           
-            this.Vtest = new VisualTest(LvlNow.Smap, this.Canvas);
-
-
+    },
+    watch: {
+        "Test.VisualData": function (e) {
+            this.DblockNow = 0;
         },
-
-        ChangeButtonClick(e) {
-            this.DblockNow = !this.DblockNow;
+        "Test.EndData": function (e) {
+            if(e.C==true)
+            this.PageNow = "End";
         },
-        SetCondition(MarkDown) {
-            document.getElementById("ConditionText").innerHTML = this.MarkDownEngine.makeHtml(MarkDown);
-        },
-        SetTitle(Title, Nnow,Nend) {
-            this.TitleNow = "#" + Nnow + "/" + Nend + " " + Title;
-        }
+    },
+    created() {
+        this.PreTestData = Test;
+        this.Test = new VisualTestsWorker(Test, new showdown.Converter());
+       
     },
     mounted() {
-        this.Canvas = document.getElementById("MT1");
-        this.MarkDownEngine = new showdown.Converter();
-        this.LoadLvl(Test,0);
+        this.Test.Start(document.getElementById("MT1"));
+        this.PageNow = "Start";
     }
 })
