@@ -6,31 +6,27 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IOTEST.Database;
 
 namespace IOTEST.Methods
 {
-    public static class AuchGoogle
+    public class AuchGoogle : IMethod
     {
-        public async static Task<string> Invoke(HttpContext context)
+        public async Task<string> Invoke(HttpContext context, UserContext userContext)
         {
             var Mail = context.Request.Form["Email"];
-            var Finded = DataBase.Users.Where(x => x.Gmail == Mail);
+            var Finded = userContext.Users.Where(x => x.Gmail == Mail);
             var User = new User();
-            if (Finded.Any())            
-                User = Finded.First();
-            
+            if (Finded.Any()) User = Finded.First();
             else
             {
-
                 User.FirstName = context.Request.Form["GivenName"];
                 User.FamilyName = context.Request.Form["FamilyName"];
                 User.Image = context.Request.Form["ImageURL"];
                 User.Gmail = Mail;
                 User.Token = context.Request.Form["IDToken"];
                 User.UserProf = UserProfType.Unset;
-                await DataBase.Register(User);
-
-
+                await userContext.AddAsync(User);
             }
             var DataC = new DataControl(User);
             context.Response.Cookies.Append(DataControl.CookieName, DataC.ToString(), new CookieOptions { Path = "/", Expires = DateTime.Now.AddYears(1) });

@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -27,6 +28,7 @@ namespace IOTEST
             services.AddRazorPages();
             services.AddControllers();
             string connection = Configuration.GetConnectionString("DefaultConnection");
+            Debug.WriteLine(connection);
             services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
         }
 

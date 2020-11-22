@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IOTEST.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 
@@ -15,7 +16,7 @@ namespace IOTEST
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, UserContext userContext)
         {
             await _next(context);
             return;
@@ -25,7 +26,7 @@ namespace IOTEST
             if (!control.IsOk) { if (Pach != "/login" && Pach != "/install") { context.Response.Redirect("/install"); } }
             else
             {
-                if (DataBase.Users.Where((x) => x.Gmail == control.UserData.Gmail).Count() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
+                if (userContext.Users.Where((x) => x.Gmail == control.UserData.Gmail).Count() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
                 if (Pach == "/login") context.Response.Redirect("/");
             }
 

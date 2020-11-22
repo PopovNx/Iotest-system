@@ -3,13 +3,22 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using IOTEST.Database;
+using IOTEST.Methods;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IOTEST.Controllers
 {
+
     [Route("/method")]
     public class MethodController : Controller
     {
+        private UserContext UserDb;
+
+        public MethodController(UserContext context)
+        {
+            UserDb = context;
+        }
         [HttpPost]
         public async Task<string> PostAsync()
         {
@@ -20,9 +29,7 @@ namespace IOTEST.Controllers
             switch (Method)
             {
                 case "AuchGoogle":
-                    return await Methods.AuchGoogle.Invoke(HttpContext);
-                case "ImgToBase":
-                    return await Methods.ImgToBase.Invoke(HttpContext);
+                    return await ((IMethod)new AuchGoogle()).Invoke(HttpContext, UserDb);
                 default:
                     break;
             }

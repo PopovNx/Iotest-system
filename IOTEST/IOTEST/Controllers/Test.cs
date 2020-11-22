@@ -15,12 +15,11 @@ namespace IOTEST.Controllers
         public TestController(UserContext context)
         {
             db = context;
-
         }
         public IActionResult Index()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
-            if (!control.IsOk) { HttpContext.Response.Redirect("/login"); return View("Empty");}
+            if (!control.IsOk || !db.Users.Where(x => x.Id == control.UserData.Id).Any()) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
 
 
             ViewData.Add("Title", "Тест - ");
