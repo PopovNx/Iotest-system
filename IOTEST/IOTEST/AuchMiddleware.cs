@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using IOTEST.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOTEST
 {
@@ -18,15 +19,20 @@ namespace IOTEST
 
         public async Task Invoke(HttpContext context, UserContext userContext)
         {
-            await _next(context);
-            return;
+           // await _next(context);return;
             var Pach = context.Request.Path;
 
             DataControl control = new DataControl(context.Request.Cookies);
-            if (!control.IsOk) { if (Pach != "/login" && Pach != "/install") { context.Response.Redirect("/install"); } }
+            if (!control.IsOk)
+            {
+                if (Pach != "/login" && Pach != "/install")
+                {
+                    context.Response.Redirect("/install");
+                }
+            }
             else
             {
-                if (userContext.Users.Where((x) => x.Gmail == control.UserData.Gmail).Count() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
+                if (await userContext.Users.Where((x) => x.Gmail == control.UserData.Gmail).CountAsync() != 1) { context.Response.Cookies.Delete(DataControl.CookieName); context.Response.Redirect($"/login"); }
                 if (Pach == "/login") context.Response.Redirect("/");
             }
 

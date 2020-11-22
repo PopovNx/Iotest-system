@@ -1,7 +1,9 @@
 ﻿'use strict';
-var cond1 = {
-    Name: "Создание схемы",
-    Smap: new SavedMap("7",
+var cond1 = new VisualSavedTest(
+    "Создание схемы",
+    "## Задание 1\n###### Первое задание будет простым, нужно всего лишь заставить данный светодиод светится в электронной схеме, а затем нажать на кнопочку сдать",
+    5,
+    new SavedMap("7",
         [
             new SavedMap.sObject("Static", "Electrons", "Wire", new SavedMap.sObject.PositionT(100 + 150, 100, 1, 15, 0), 0, 0, 1),
             new SavedMap.sObject("Static", "Electrons", "Wire", new SavedMap.sObject.PositionT(175 + 150, 100, 1, 15, 0), 0, 0, 1),
@@ -30,10 +32,15 @@ var cond1 = {
         new SavedMap.InteractorWorker([1], new SavedMap.InteractorWorker.On("Sum", "scene", ">=5"), new SavedMap.InteractorWorker.Interactor("Variator", [0, 1])),
         new SavedMap.InteractorWorker([3], new SavedMap.InteractorWorker.On("Always", true), new SavedMap.InteractorWorker.Interactor("IsButton", [0, 1]))
     ], "Test", new SavedMap.TestS("SumPass", 5)),
-    Cond: "## Задание 1\n###### Первое задание будет простым, нужно всего лишь заставить данный светодиод светится в электронной схеме, а затем нажать на кнопочку сдать",
-    MaxBal:5,
+);
 
-}
+
+var Cond2 = new ClassicSavedTest("В каком году открыли что-то там", 3,
+
+
+
+)
+
 
 var Test = {
     Name: "Электрические схемы",
@@ -70,14 +77,14 @@ let app = new Vue({
             this.DblockNow = 0;
         },
         "Test.EndData": function (e) {
-            if(e.C==true)
-            this.PageNow = "End";
+            if (e.C == true)
+                this.PageNow = "End";
         },
     },
     created() {
         this.PreTestData = Test;
         this.Test = new VisualTestsWorker(Test, new showdown.Converter());
-       
+
     },
     mounted() {
         this.Test.Start(document.getElementById("MT1"));

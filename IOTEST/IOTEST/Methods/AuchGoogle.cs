@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using IOTEST.Database;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOTEST.Methods
 {
@@ -14,10 +16,13 @@ namespace IOTEST.Methods
     {
         public async Task<string> Invoke(HttpContext context, UserContext userContext)
         {
-            var Mail = context.Request.Form["Email"];
-            var Finded = userContext.Users.Where(x => x.Gmail == Mail);
+            var Mail = context.Request.Form["Email"].ToString();
+            var IsAny = await userContext.Users.AnyAsync(x => x.Gmail == Mail);
             var User = new User();
-            if (Finded.Any()) User = Finded.First();
+            if (IsAny)
+            {
+                User = await userContext.Users.Where(x => x.Gmail == Mail).FirstOrDefaultAsync();
+            }
             else
             {
                 User.FirstName = context.Request.Form["GivenName"];
@@ -27,6 +32,7 @@ namespace IOTEST.Methods
                 User.Token = context.Request.Form["IDToken"];
                 User.UserProf = UserProfType.Unset;
                 await userContext.AddAsync(User);
+                await userContext.SaveChangesAsync();
             }
             var DataC = new DataControl(User);
             context.Response.Cookies.Append(DataControl.CookieName, DataC.ToString(), new CookieOptions { Path = "/", Expires = DateTime.Now.AddYears(1) });

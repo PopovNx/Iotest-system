@@ -695,8 +695,6 @@ class TestWorker {
     Work;
 
 }
-
-
 class VisualTestsWorker {
     constructor(Test, MarkdownEng) {
         this.#TestData = Test;
@@ -752,4 +750,27 @@ class VisualTestsWorker {
     }
 
 
+}
+
+class VisualSavedTest {
+    constructor(Name, Cond, MaxBal, Smap) {
+        this.Name= Name;
+        this.Cond = Cond;
+        this.MaxBal = MaxBal;
+        this.Smap = Smap;
+    }
+    Smap;
+    Name;
+    Cond;
+    MaxBal;
+}
+class ClassicSavedTest {
+    constructor(Text, MaxBal, TestBase) {
+        this.Text = Text;
+        this.MaxBal = MaxBal;
+        this.TestBase = TestBase;
+    }
+    Text;
+    MaxBal;
+    TestBase;
 }
