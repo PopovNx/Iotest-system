@@ -11,13 +11,13 @@ export namespace SaveData {
                 this.FlipX = fx;
                 this.FlipY = fy;
             };
+            public FlipX: number;
+            public FlipY: number;
+            public Rotation: number;
+            public Size: number;
             public X: number;
             public Y: number;
             public Z: number;
-            public Size: number;
-            public Rotation: number;
-            public FlipX: number;
-            public FlipY: number;
         }
         export class Trigger {
             constructor(x: number, y: number, s: number) {
@@ -28,7 +28,7 @@ export namespace SaveData {
             public X: number;
             public Y: number;
             public Size: number;
-        } 
+        }
     }
     export namespace Types {
         export class TObject {
@@ -64,7 +64,6 @@ export namespace SaveData {
             Id: number;
             IdTypes: number;
             TestData: Array<any>;
-
         }
     }
     export namespace InteractorTypes {
@@ -100,7 +99,6 @@ export namespace SaveData {
             On: SIWData.On;
             Interactor: SIWData.Interactor;
         }
-
     }
     export class SavedMap {
         public constructor(Bg, objs, trgs, inter, type, TestSettings) {
@@ -124,7 +122,6 @@ export namespace SaveData {
         PassRule: string;
         /** Bal Setting */
         BalSetting: any;
-
     }
     export class VisualSavedTest {
         constructor(Name, Cond, MaxBal, Smap) {
@@ -147,7 +144,6 @@ export namespace SaveData {
         Text: string;
         MaxBal: number;
         TestBase: Array<any>;
-
     }
 }
 namespace Interactive {
@@ -235,7 +231,6 @@ namespace Interactive {
                     return new OnEvents.OnСlick(saved.Data1);
                 default:
             }
-
         }
         static BaseEvent = class {
             constructor() {
@@ -246,7 +241,6 @@ namespace Interactive {
                 this.Invoked = true;
             }
             Test(SceneSum, Obgs, Trgs) {
-
                 if (this.Invoked) {
                     this.Invoked = false;
                     return true;
@@ -279,7 +273,6 @@ namespace Interactive {
                 }
                 return rt;
             }
-
         }
         static OnHover = class extends OnEvents.BaseEvent {
             constructor(ids) {
@@ -291,11 +284,9 @@ namespace Interactive {
                 var rt = false;
                 Obgs.filter((e) => this.Ids.includes(e.Id)).forEach((t) => {
                     if (t.MouseOnThis) rt = true;
-
                 })
                 return rt;
             }
-
         }
         static OnAlways = class extends OnEvents.BaseEvent {
             constructor(on) {
@@ -320,9 +311,7 @@ namespace Interactive {
                 })
                 return rt;
             }
-
         }
-
     }
 }
 namespace Objects {
@@ -397,7 +386,6 @@ namespace Objects {
             this.elementcount = elementcount;
             this.Sum = Sum;
             this.Draw();
-
         }
         color = 0x2600ff;
         graphics;
@@ -432,11 +420,9 @@ namespace Objects {
                 var i, j, c = false;
                 var polyCords = [[poly[0], poly[1]], [poly[2], poly[3]], [poly[4], poly[5]], [poly[6], poly[7]]];
                 for (i = 0, j = polyCords.length - 1; i < polyCords.length; j = i++) {
-
                     if (((polyCords[i][1] > pointY) != (polyCords[j][1] > pointY)) && (pointX < (polyCords[j][0] - polyCords[i][0]) * (pointY - polyCords[i][1]) / (polyCords[j][1] - polyCords[i][1]) + polyCords[i][0])) {
                         c = !c;
                     }
-
                 }
                 return c;
             }
@@ -445,11 +431,10 @@ namespace Objects {
     export class DragableObject {
         static NullTexture = 'TestItems/Prefabs/Shared/Null.png';
         constructor(variants, variant, sx, sy, x, y, r, cc = true, drag = false) {
-           
             if (variants[variant] == undefined) this.texture = variants.texture;
             else
-                 // @ts-ignore */}
-            this.texture = PIXI.Texture.from(variants[variant]);
+                // @ts-ignore */}
+                this.texture = PIXI.Texture.from(variants[variant]);
             this.Variant = variant;
             this.Type = variant;
             this.Variants = variants;
@@ -508,7 +493,6 @@ namespace Objects {
             this.sprite.data = event.data;
             this.sprite.alpha = 0.5;
             this.Dragging = true;
-
         }
         onDragEnd(event) {
             this.MouseDown = false;
@@ -527,7 +511,6 @@ namespace Objects {
                     this.sprite.x = newPosition.x;
                     this.sprite.y = newPosition.y;
                 }
-
             }
         }
         SetVariant(variant) {
@@ -556,24 +539,19 @@ namespace Objects {
             this.CanMove = canmove;
             this.sprite.CanMove = canmove;
             this.sprite.buttonMode = this.Button || canmove;
-
         }
         SetIsButton(on) {
             if (this.Button == on) return;
             this.Button = on;
             this.sprite.buttonMode = on;
-
         }
         ReadClick() {
             if (this.Clicked) {
-
                 this.Clicked = false;
                 return true
             }
             return false
-
         }
-
     }
     export class ElectronsObjects extends DragableObject {
         static Types = {
@@ -609,10 +587,8 @@ namespace Objects {
             },
         }
         constructor(sx, sy, x, y, r, type, isdragable, varitant) {
-
             super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
         }
-
     }
     export class CustumObject extends DragableObject {
         constructor(sx, sy, x, y, r, type, isdragable, varitant) {
@@ -680,14 +656,12 @@ namespace Objects {
         constructor(sx, sy, x, y, r, type, isdragable, varitant) {
             super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
         }
-
     }
     export class Label extends DragableObject {
-
         static Variants: Array<any> = [            // @ts-ignore */}
-            new PIXI.TextStyle({ fontFamily: 'Arial',  fill: ['#ffffff'],    fontSize: 120, }), // @ts-ignore */}
-            new PIXI.TextStyle({ fontFamily: 'Arial',  fill: ['#000000'],    fontSize: 120, }), // @ts-ignore */}
-            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], stroke: '#000000', strokeThickness: 12,   fontSize: 120, }), // @ts-ignore */}
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], fontSize: 120, }), // @ts-ignore */}
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#000000'], fontSize: 120, }), // @ts-ignore */}
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], stroke: '#000000', strokeThickness: 12, fontSize: 120, }), // @ts-ignore */}
             new PIXI.TextStyle({
                 fontFamily: 'Arial',
                 dropShadow: true,
@@ -704,16 +678,14 @@ namespace Objects {
                 strokeThickness: 12
             }),
 
-
         ];
         constructor(sx, sy, x, y, r, type, isdragable, varitant) {
             console.log(type, varitant, sx, sy, x, y, r, true, isdragable);
-                // @ts-ignore */}
+            // @ts-ignore */}
             var richText = new PIXI.Text(type, Label.Variants[varitant]);
             richText.updateText();
             super(richText, 0, sx, sy, x, y, r, true, isdragable);
         }
-
     }
 }
 namespace Services {
@@ -819,9 +791,7 @@ namespace Services {
         BalSetting;
         Passed;
         Work;
-
     }
-
 }
 export class VisualTestsWorker {
     constructor(Test, MarkdownEng) {
@@ -837,12 +807,11 @@ export class VisualTestsWorker {
     private MaxTestId;
     private MarkdownEngine;
     public VisualData = {};
-    public EndData = {}; 
+    public EndData = {};
     private LoadLvl() {
         if (this.Vtest != null) {
             this.Vtest.destroy();
             this.Vtest = null;
-           
         }
         var LvlNow = this.TestData.Maps[this.NowTestId];
         this.UpdateVisual(LvlNow.Name, this.NowTestId, this.MaxTestId, LvlNow.MaxBal, LvlNow.Smap.TestSettings.PassRule, LvlNow.Cond);
@@ -855,7 +824,6 @@ export class VisualTestsWorker {
             MaxBal: MaxBal,
             OcenType: PassRule,
         }
-
     };
     Pass(tz) {
         var passData = tz.Vtest.Pass();
@@ -869,7 +837,6 @@ export class VisualTestsWorker {
         this.Vtest = null;
         this.EndData = {
             C: true,
-
         };
         console.log("End");
     }
@@ -877,7 +844,4 @@ export class VisualTestsWorker {
         this.Canvas = Canvas;
         this.LoadLvl();
     }
-
-
 }
-
