@@ -1,33 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST.Database;
+using IOTEST;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOTEST.Controllers
 {
     [Route("/test")]
     public class TestController : Controller
     {
-        private UserContext db;
-
-        public TestController(UserContext context)
+        private IoContext Database;
+        public TestController(IoContext userContext)
         {
-            db = context;
+           this.Database = userContext;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
-            if (!control.IsOk || !db.Users.Where(x => x.Id == control.UserData.Id).Any()) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
-
+            if (!control.IsOk || !(await Database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
+     
             ViewData.Add("Title", "Тест - ");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Test.css" });
             ViewData.Add("JSU", new List<string> { "lib/Showdown/showdown.min.js", "lib/Pixijs/pixi.min.js", "js/VueComp.js" });
             ViewData.Add("JSD", new List<string> { "js/Test.js" });
             ViewData.Add("User", control.UserData);
-
+   
             return View("Test");
         }
     }

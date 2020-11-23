@@ -1,4 +1,3 @@
-using IOTEST.Database;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,8 +28,8 @@ namespace IOTEST
             services.AddControllers();
             string connection = Configuration.GetConnectionString("DefaultConnection");
             Debug.WriteLine(connection);
-            services.AddDbContext<UserContext>(options => options.UseSqlServer(connection));
-        }
+            services.AddDbContext<IoContext>(options => options.UseSqlServer(connection));
+           }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

@@ -14,6 +14,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 export var SaveData;
 (function (SaveData) {
+    var ResultData = /** @class */ (function () {
+        function ResultData(Result, MAX, Rule, Settings) {
+            this.Max = MAX;
+            this.Result = Result;
+            this.Rule = Rule;
+            this.Settings = Settings;
+        }
+        return ResultData;
+    }());
+    SaveData.ResultData = ResultData;
     var Positions;
     (function (Positions) {
         var TObject = /** @class */ (function () {
@@ -117,9 +127,9 @@ export var SaveData;
     }());
     SaveData.SavedMap = SavedMap;
     var SavedTestSettings = /** @class */ (function () {
-        function SavedTestSettings(PassRule, BalSetting) {
+        function SavedTestSettings(PassRule, Bal) {
             this.PassRule = PassRule;
-            this.BalSetting = BalSetting;
+            this.Bal = Bal;
         }
         return SavedTestSettings;
     }());
@@ -143,6 +153,19 @@ export var SaveData;
         return ClassicSavedTest;
     }());
     SaveData.ClassicSavedTest = ClassicSavedTest;
+    var Test = /** @class */ (function () {
+        function Test(Name, Opis, EndText, OcenType, DispNowBal, MaxBal, Maps) {
+            this.Name = Name;
+            this.Opis = Opis;
+            this.EndText = EndText;
+            this.OcenType = OcenType;
+            this.DispNowBal = DispNowBal;
+            this.MaxBal = MaxBal;
+            this.Maps = Maps;
+        }
+        return Test;
+    }());
+    SaveData.Test = Test;
 })(SaveData || (SaveData = {}));
 var Interactive;
 (function (Interactive) {
@@ -677,7 +700,6 @@ var Objects;
         __extends(Label, _super);
         function Label(sx, sy, x, y, r, type, isdragable, varitant) {
             var _this = this;
-            console.log(type, varitant, sx, sy, x, y, r, true, isdragable);
             // @ts-ignore */}
             var richText = new PIXI.Text(type, Label.Variants[varitant]);
             richText.updateText();
@@ -777,8 +799,9 @@ var Services;
             this.Vmap.Work(this.SceneSum);
             this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce(function (a, b) { return a + b; }, 0);
         };
-        VisualTest.prototype.Pass = function () {
-            return btoa(this.Twork.Passed + "|" + this.Twork.PassRule + "|" + JSON.stringify(this.Twork.BalSetting));
+        VisualTest.prototype.Pass = function (max) {
+            var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
+            return btoa(JSON.stringify(Result));
         };
         VisualTest.prototype.resize = function (t) {
             var TestWidth = document.getElementById("testMain").clientWidth;
@@ -786,7 +809,6 @@ var Services;
             t.VDisplay.stage.scale.set(TestWidth / 900, TestWidth / 900);
         };
         VisualTest.prototype.destroy = function () {
-            console.log("destroy");
             this.VDisplay.destroy();
             this.VDisplay = undefined;
             this.Vmap = undefined;
@@ -801,12 +823,8 @@ var Services;
             var _this = this;
             this.Passed = false;
             this.PassRule = TestS.PassRule;
-            this.BalSetting = TestS.BalSetting;
-            switch (this.PassRule) {
-                case "SumPass":
-                    this.Work = (function (SceneSum) { return _this.Passed = SceneSum >= _this.BalSetting; });
-                    break;
-            }
+            this.Bal = TestS.Bal;
+            this.Work = (function (SceneSum) { return _this.Passed = SceneSum; });
         }
         return TestWorker;
     }());
@@ -841,13 +859,12 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     ;
     VisualTestsWorker.prototype.Pass = function (tz) {
-        var passData = tz.Vtest.Pass();
+        var passData = tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal);
         console.log(passData);
         if (++tz.NowTestId >= tz.MaxTestId)
             tz.EndTest();
         else
             tz.LoadLvl();
-        sessionStorage.setItem("Td" + this.NowTestId, passData);
     };
     ;
     VisualTestsWorker.prototype.EndTest = function () {

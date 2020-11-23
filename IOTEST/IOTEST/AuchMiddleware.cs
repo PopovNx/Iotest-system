@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST.Database;
+using IOTEST;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ namespace IOTEST
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, UserContext userContext)
+        public async Task Invoke(HttpContext context, IoContext userContext)
         {
            // await _next(context);return;
             var Pach = context.Request.Path;

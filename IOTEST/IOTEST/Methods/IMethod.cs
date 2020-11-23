@@ -1,4 +1,4 @@
-﻿using IOTEST.Database;
+﻿using IOTEST;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,6 @@ namespace IOTEST.Methods
 {
     interface IMethod
     {
-       public Task<string> Invoke(HttpContext Context, UserContext userContext );
+       public Task<string> Invoke(HttpContext Context, IoContext userContext );
     }
 }

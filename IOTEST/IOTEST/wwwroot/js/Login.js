@@ -18,7 +18,7 @@
     },
     mounted() {
         gapi.load('auth2', function () {
-            auth2 = gapi.auth2.init({
+           var auth2 = gapi.auth2.init({
                 client_id: '568231728412-9mu2l70s8c878a4gn4up9t9qjpgol360.apps.googleusercontent.com',
                 cookiepolicy: 'single_host_origin',
             });

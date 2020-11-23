@@ -1,5 +1,18 @@
 ﻿'use strict'
 export namespace SaveData {
+    export class ResultData {
+        constructor(Result: any, MAX: number, Rule: any, Settings: any) {
+            this.Max = MAX;
+            this.Result = Result;
+            this.Rule = Rule;
+            this.Settings = Settings;
+
+        }
+        Result;
+        Max;
+        Rule;
+        Settings;
+    } 
     export namespace Positions {
         export class TObject {
             constructor(x: number, y: number, z: number, s: number, r: number, fx: number = 1, fy: number = 1) {
@@ -117,11 +130,10 @@ export namespace SaveData {
         public Bg: string;
     }
     export class SavedTestSettings {
-        constructor(PassRule, BalSetting) { this.PassRule = PassRule; this.BalSetting = BalSetting; }
-        /** Rules: SumPass, SumBal, SumRosbal */
+        constructor(PassRule, Bal) { this.PassRule = PassRule; this.Bal = Bal; }
+        /** Rules: SumPass, SumBal*/
         PassRule: string;
-        /** Bal Setting */
-        BalSetting: any;
+        Bal: number;
     }
     export class VisualSavedTest {
         constructor(Name, Cond, MaxBal, Smap) {
@@ -144,6 +156,24 @@ export namespace SaveData {
         Text: string;
         MaxBal: number;
         TestBase: Array<any>;
+    }
+    export class Test {
+        constructor(Name, Opis, EndText, OcenType, DispNowBal, MaxBal, Maps) {
+            this.Name = Name;
+            this.Opis = Opis;
+            this.EndText = EndText;
+            this.OcenType = OcenType;   
+            this.DispNowBal = DispNowBal;
+            this.MaxBal = MaxBal;
+            this.Maps = Maps;
+        }
+        Name;
+        Opis;
+        EndText;
+        OcenType;
+        DispNowBal;
+        MaxBal;
+        Maps;
     }
 }
 namespace Interactive {
@@ -680,7 +710,6 @@ namespace Objects {
 
         ];
         constructor(sx, sy, x, y, r, type, isdragable, varitant) {
-            console.log(type, varitant, sx, sy, x, y, r, true, isdragable);
             // @ts-ignore */}
             var richText = new PIXI.Text(type, Label.Variants[varitant]);
             richText.updateText();
@@ -759,8 +788,9 @@ namespace Services {
         Vmap: VisualMap;
         Canvas;
         SceneSum: number;
-        Pass() {
-            return btoa(this.Twork.Passed + "|" + this.Twork.PassRule + "|" + JSON.stringify(this.Twork.BalSetting));
+        Pass(max) {
+            var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
+            return btoa(JSON.stringify(Result));
         }
         resize(t) {
             let TestWidth = document.getElementById("testMain").clientWidth;
@@ -768,7 +798,6 @@ namespace Services {
             t.VDisplay.stage.scale.set(TestWidth / 900, TestWidth / 900);
         }
         destroy() {
-            console.log("destroy");
             this.VDisplay.destroy();
             this.VDisplay = undefined;
             this.Vmap = undefined;
@@ -780,15 +809,13 @@ namespace Services {
         constructor(TestS) {
             this.Passed = false;
             this.PassRule = TestS.PassRule;
-            this.BalSetting = TestS.BalSetting;
-            switch (this.PassRule) {
-                case "SumPass":
-                    this.Work = ((SceneSum) => this.Passed = SceneSum >= this.BalSetting);
-                    break;
-            }
+            this.Bal = TestS.Bal;
+
+                    this.Work = ((SceneSum) => this.Passed = SceneSum);
+  
         }
         PassRule;
-        BalSetting;
+        Bal;
         Passed;
         Work;
     }
@@ -826,11 +853,10 @@ export class VisualTestsWorker {
         }
     };
     Pass(tz) {
-        var passData = tz.Vtest.Pass();
+        var passData = tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal);
         console.log(passData);
         if (++tz.NowTestId >= tz.MaxTestId) tz.EndTest();
         else tz.LoadLvl();
-        sessionStorage.setItem("Td" + this.NowTestId, passData);
     };
     EndTest() {
         this.Vtest.destroy();

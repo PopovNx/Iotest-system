@@ -1,4 +1,4 @@
-﻿using static IOTEST.Database.UserContext;
+﻿using static IOTEST.IoContext;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST.Database;
+using IOTEST;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,7 +14,7 @@ namespace IOTEST.Methods
 {
     public class AuchGoogle : IMethod
     {
-        public async Task<string> Invoke(HttpContext context, UserContext userContext)
+        public async Task<string> Invoke(HttpContext context, IoContext userContext)
         {
             var Mail = context.Request.Form["Email"].ToString();
             var IsAny = await userContext.Users.AnyAsync(x => x.Gmail == Mail);

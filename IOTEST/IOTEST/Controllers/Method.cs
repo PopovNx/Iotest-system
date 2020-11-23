@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST.Database;
+using IOTEST;
 using IOTEST.Methods;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,9 +13,9 @@ namespace IOTEST.Controllers
     [Route("/method")]
     public class MethodController : Controller
     {
-        private UserContext UserDb;
+        private IoContext UserDb;
 
-        public MethodController(UserContext context)
+        public MethodController(IoContext context)
         {
             UserDb = context;
         }
