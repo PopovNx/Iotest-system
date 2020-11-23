@@ -16,8 +16,8 @@ export var SaveData;
 (function (SaveData) {
     var Positions;
     (function (Positions) {
-        var Object = /** @class */ (function () {
-            function Object(x, y, z, s, r, fx, fy) {
+        var TObject = /** @class */ (function () {
+            function TObject(x, y, z, s, r, fx, fy) {
                 if (fx === void 0) { fx = 1; }
                 if (fy === void 0) { fy = 1; }
                 this.X = x;
@@ -29,9 +29,9 @@ export var SaveData;
                 this.FlipY = fy;
             }
             ;
-            return Object;
+            return TObject;
         }());
-        Positions.Object = Object;
+        Positions.TObject = TObject;
         var Trigger = /** @class */ (function () {
             function Trigger(x, y, s) {
                 this.X = x;
@@ -44,8 +44,8 @@ export var SaveData;
     })(Positions = SaveData.Positions || (SaveData.Positions = {}));
     var Types;
     (function (Types) {
-        var Object = /** @class */ (function () {
-            function Object(state, group, type, pos, variant, id, cost) {
+        var TObject = /** @class */ (function () {
+            function TObject(state, group, type, pos, variant, id, cost) {
                 this.State = state;
                 this.Group = group;
                 this.Type = type;
@@ -54,9 +54,9 @@ export var SaveData;
                 this.Id = id;
                 this.Weight = cost;
             }
-            return Object;
+            return TObject;
         }());
-        Types.Object = Object;
+        Types.TObject = TObject;
         var Trigger = /** @class */ (function () {
             function Trigger(vis, mag, pos, id, idtypes, tdata) {
                 this.Visual = vis;
@@ -442,8 +442,11 @@ var Objects;
             var _this = this;
             if (cc === void 0) { cc = true; }
             if (drag === void 0) { drag = false; }
-            // @ts-ignore */}
-            this.texture = PIXI.Texture.from(variants[variant]);
+            if (variants[variant] == undefined)
+                this.texture = variants.texture;
+            else
+                // @ts-ignore */}
+                this.texture = PIXI.Texture.from(variants[variant]);
             this.Variant = variant;
             this.Type = variant;
             this.Variants = variants;
@@ -670,6 +673,40 @@ var Objects;
         return EatObjects;
     }(DragableObject));
     Objects_1.EatObjects = EatObjects;
+    var Label = /** @class */ (function (_super) {
+        __extends(Label, _super);
+        function Label(sx, sy, x, y, r, type, isdragable, varitant) {
+            var _this = this;
+            console.log(type, varitant, sx, sy, x, y, r, true, isdragable);
+            // @ts-ignore */}
+            var richText = new PIXI.Text(type, Label.Variants[varitant]);
+            richText.updateText();
+            _this = _super.call(this, richText, 0, sx, sy, x, y, r, true, isdragable) || this;
+            return _this;
+        }
+        Label.Variants = [
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], fontSize: 120, }),
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#000000'], fontSize: 120, }),
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], stroke: '#000000', strokeThickness: 12, fontSize: 120, }),
+            new PIXI.TextStyle({
+                fontFamily: 'Arial',
+                dropShadow: true,
+                dropShadowAlpha: 0.8,
+                dropShadowAngle: 2.1,
+                dropShadowBlur: 4,
+                dropShadowColor: "0x111111",
+                dropShadowDistance: 10,
+                fill: ['#ffffff'],
+                stroke: '#004620',
+                fontSize: 120,
+                fontWeight: "lighter",
+                lineJoin: "round",
+                strokeThickness: 12
+            }),
+        ];
+        return Label;
+    }(DragableObject));
+    Objects_1.Label = Label;
 })(Objects || (Objects = {}));
 var Services;
 (function (Services) {
@@ -690,6 +727,9 @@ var Services;
                         break;
                     case "Eat":
                         var Obj = new Objects.EatObjects(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, Objects.EatObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                        break;
+                    case "Label":
+                        var Obj = new Objects.Label(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, e.Type, e.State == "Dynamic" ? true : false, e.Variant);
                         break;
                     default:
                         console.error(e);
@@ -825,4 +865,3 @@ var VisualTestsWorker = /** @class */ (function () {
     return VisualTestsWorker;
 }());
 export { VisualTestsWorker };
-//# sourceMappingURL=TestLib.js.map

@@ -1,7 +1,7 @@
 ﻿'use strict'
 export namespace SaveData {
     export namespace Positions {
-        export class Object {
+        export class TObject {
             constructor(x: number, y: number, z: number, s: number, r: number, fx: number = 1, fy: number = 1) {
                 this.X = x;
                 this.Y = y;
@@ -28,10 +28,10 @@ export namespace SaveData {
             public X: number;
             public Y: number;
             public Size: number;
-        }
+        } 
     }
     export namespace Types {
-        export class Object {
+        export class TObject {
             constructor(state, group, type, pos, variant, id, cost) {
                 this.State = state;
                 this.Group = group;
@@ -44,7 +44,7 @@ export namespace SaveData {
             State: string;
             Group: string;
             Type: string;
-            Position: Positions.Object;
+            Position: Positions.TObject;
             Variant: number;
             Id: number;
             Weight: number;
@@ -111,7 +111,7 @@ export namespace SaveData {
             this.TestSettings = TestSettings;
             this.Bg = Bg;
         }
-        public Objects: Array<Types.Object>;
+        public Objects: Array<Types.TObject>;
         public Triggers: Array<Types.Trigger>;
         public Interactive: Array<InteractorTypes.SavedInteractorWorker>;
         public MapType: string;
@@ -150,7 +150,6 @@ export namespace SaveData {
 
     }
 }
-
 namespace Interactive {
     export class InteractorWorker {
         constructor(ids, on, interactor) {
@@ -326,7 +325,6 @@ namespace Interactive {
 
     }
 }
-
 namespace Objects {
     export class Trigger {
         constructor(Size, x, y, visual, magnetic, id, Idt, dt) {
@@ -447,7 +445,10 @@ namespace Objects {
     export class DragableObject {
         static NullTexture = 'TestItems/Prefabs/Shared/Null.png';
         constructor(variants, variant, sx, sy, x, y, r, cc = true, drag = false) {
-            // @ts-ignore */}
+           
+            if (variants[variant] == undefined) this.texture = variants.texture;
+            else
+                 // @ts-ignore */}
             this.texture = PIXI.Texture.from(variants[variant]);
             this.Variant = variant;
             this.Type = variant;
@@ -681,6 +682,39 @@ namespace Objects {
         }
 
     }
+    export class Label extends DragableObject {
+
+        static Variants: Array<any> = [            // @ts-ignore */}
+            new PIXI.TextStyle({ fontFamily: 'Arial',  fill: ['#ffffff'],    fontSize: 120, }), // @ts-ignore */}
+            new PIXI.TextStyle({ fontFamily: 'Arial',  fill: ['#000000'],    fontSize: 120, }), // @ts-ignore */}
+            new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], stroke: '#000000', strokeThickness: 12,   fontSize: 120, }), // @ts-ignore */}
+            new PIXI.TextStyle({
+                fontFamily: 'Arial',
+                dropShadow: true,
+                dropShadowAlpha: 0.8,
+                dropShadowAngle: 2.1,
+                dropShadowBlur: 4,
+                dropShadowColor: "0x111111",
+                dropShadowDistance: 10,
+                fill: ['#ffffff'],
+                stroke: '#004620',
+                fontSize: 120,
+                fontWeight: "lighter",
+                lineJoin: "round",
+                strokeThickness: 12
+            }),
+
+
+        ];
+        constructor(sx, sy, x, y, r, type, isdragable, varitant) {
+            console.log(type, varitant, sx, sy, x, y, r, true, isdragable);
+                // @ts-ignore */}
+            var richText = new PIXI.Text(type, Label.Variants[varitant]);
+            richText.updateText();
+            super(richText, 0, sx, sy, x, y, r, true, isdragable);
+        }
+
+    }
 }
 namespace Services {
     export class VisualMap {
@@ -696,6 +730,9 @@ namespace Services {
                         break;
                     case "Eat":
                         var Obj = new Objects.EatObjects(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, Objects.EatObjects.Types[e.Type], e.State == "Dynamic" ? true : false, e.Variant);
+                        break;
+                    case "Label":
+                        var Obj = new Objects.Label(e.Position.Size * e.Position.FlipX / 100, e.Position.Size * e.Position.FlipY / 100, e.Position.X, e.Position.Y, e.Position.Rotation, e.Type, e.State == "Dynamic" ? true : false, e.Variant);
                         break;
                     default:
                         console.error(e);
