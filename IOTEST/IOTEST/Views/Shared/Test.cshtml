@@ -24,6 +24,9 @@
 @if (IsTestOk)
 {
     <script v-if="false">var NO = false;</script>
+    <script v-if="false">var Prohods = @ViewData["Prohods"].ToString().ToLower();</script>
+    <script v-if="false">var Ended =@ViewData["Ended"].ToString().ToLower();</script>
+    <script v-if="false">var NumLast = @ViewData["NumLast"].ToString().ToLower();</script>
     <script v-if="false">var Test = JSON.parse(decodeURIComponent(atob(('@(Html.Raw(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Uri.EscapeUriString(Test.JsonData.Replace("\n", "\\n"))))))'))).replaceAll("'", '"'));</script>
 }
 else
@@ -41,7 +44,8 @@ else
                         <hr class="bg-light my-2" />
                     </div>
                     <div id="startMain" class="text-center text-light">
-                        <div>
+                        <div> 
+
                             <div id="startTextTitle"><h2>{{PreTestData.Name}}</h2></div>
                             <hr>
                             <div id="startTextOpis"><h6>{{PreTestData.Opis}}</h6></div>

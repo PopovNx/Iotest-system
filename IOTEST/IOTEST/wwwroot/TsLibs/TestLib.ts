@@ -7,12 +7,13 @@ export namespace SaveData {
             this.Rule = Rule;
             this.Settings = Settings;
 
+
         }
         Result;
         Max;
         Rule;
         Settings;
-    } 
+    }
     export namespace Positions {
         export class TObject {
             constructor(x: number, y: number, z: number, s: number, r: number, fx: number = 1, fy: number = 1) {
@@ -162,7 +163,7 @@ export namespace SaveData {
             this.Name = Name;
             this.Opis = Opis;
             this.EndText = EndText;
-            this.OcenType = OcenType;   
+            this.OcenType = OcenType;
             this.DispNowBal = DispNowBal;
             this.MaxBal = MaxBal;
             this.Maps = Maps;
@@ -788,9 +789,16 @@ namespace Services {
         Vmap: VisualMap;
         Canvas;
         SceneSum: number;
-        Pass(max) {
+        Pass(max: number, id: number, isLast: boolean) {
             var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
-            return btoa(JSON.stringify(Result));
+            var data = new FormData();
+            data.append("method", "AcceptResult");
+            data.append("Data", btoa(JSON.stringify(Result)));
+            data.append("Num", id.toString());
+            data.append("Last", isLast.toString());
+            data.append("Test", location.search.split("?")[1].split("&")[0]);
+            // @ts-ignore */}
+            axios.post("/method", data);
         }
         resize(t) {
             let TestWidth = document.getElementById("testMain").clientWidth;
@@ -811,8 +819,8 @@ namespace Services {
             this.PassRule = TestS.PassRule;
             this.Bal = TestS.Bal;
 
-                    this.Work = ((SceneSum) => this.Passed = SceneSum);
-  
+            this.Work = ((SceneSum) => this.Passed = SceneSum);
+
         }
         PassRule;
         Bal;
@@ -853,20 +861,21 @@ export class VisualTestsWorker {
         }
     };
     Pass(tz) {
-        var passData = tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal);
-        console.log(passData);
+        tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId));
         if (++tz.NowTestId >= tz.MaxTestId) tz.EndTest();
         else tz.LoadLvl();
     };
     EndTest() {
-        this.Vtest.destroy();
+        if (this.Vtest!=null) this.Vtest.destroy();
         this.Vtest = null;
         this.EndData = {
             C: true,
+            Bal:1,
         };
         console.log("End");
     }
-    Start(Canvas) {
+    Start(Canvas, Num) {
+        this.NowTestId = Num + 1;
         this.Canvas = Canvas;
         this.LoadLvl();
     }

@@ -11,6 +11,7 @@ let app = new Vue({
         ToTest:"",
     },
     methods: {
+
     },
     watch: {
         "Test.VisualData": function (e) {
@@ -22,12 +23,20 @@ let app = new Vue({
         },
     },
     created() {
+
+
+        
         if(!NO) this.PreTestData = JSON.parse(JSON.stringify(Test));
         if (!NO) this.Test = new VisualTestsWorker(Test, new showdown.Converter());
     },
     mounted() {
-        if (!NO) this.Test.Start(document.getElementById("MT1"));
-        this.PageNow = "Start";
+      
+        if (!Ended)         
+            if (!NO) this.Test.Start(document.getElementById("MT1"), NumLast);
+        if (Ended) this.Test.EndTest();
+        
         if (!NO) Test = undefined;
+        this.PageNow = "Start";
+        if (Ended) this.PageNow = "End";
     }
 })

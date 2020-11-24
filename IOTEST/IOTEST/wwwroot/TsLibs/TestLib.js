@@ -799,9 +799,16 @@ var Services;
             this.Vmap.Work(this.SceneSum);
             this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce(function (a, b) { return a + b; }, 0);
         };
-        VisualTest.prototype.Pass = function (max) {
+        VisualTest.prototype.Pass = function (max, id, isLast) {
             var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
-            return btoa(JSON.stringify(Result));
+            var data = new FormData();
+            data.append("method", "AcceptResult");
+            data.append("Data", btoa(JSON.stringify(Result)));
+            data.append("Num", id.toString());
+            data.append("Last", isLast.toString());
+            data.append("Test", location.search.split("?")[1].split("&")[0]);
+            // @ts-ignore */}
+            axios.post("/method", data);
         };
         VisualTest.prototype.resize = function (t) {
             var TestWidth = document.getElementById("testMain").clientWidth;
@@ -859,8 +866,7 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     ;
     VisualTestsWorker.prototype.Pass = function (tz) {
-        var passData = tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal);
-        console.log(passData);
+        tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId));
         if (++tz.NowTestId >= tz.MaxTestId)
             tz.EndTest();
         else
@@ -868,14 +874,17 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     ;
     VisualTestsWorker.prototype.EndTest = function () {
-        this.Vtest.destroy();
+        if (this.Vtest != null)
+            this.Vtest.destroy();
         this.Vtest = null;
         this.EndData = {
             C: true,
+            Bal: 1,
         };
         console.log("End");
     };
-    VisualTestsWorker.prototype.Start = function (Canvas) {
+    VisualTestsWorker.prototype.Start = function (Canvas, Num) {
+        this.NowTestId = Num + 1;
         this.Canvas = Canvas;
         this.LoadLvl();
     };

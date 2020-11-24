@@ -22,11 +22,23 @@ namespace IOTEST.Controllers
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
             if (!control.IsOk || !(await Database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
-
             var Key = HttpContext.Request.Query.Keys.FirstOrDefault();
             var IsYes = !string.IsNullOrEmpty(Key);
             if (IsYes) IsYes= await Database.Tests.AnyAsync(x => x.KEY == Key);
             if (IsYes)  ViewData.Add("Model",await Database.Tests.Where(x => x.KEY == Key).FirstOrDefaultAsync());
+            var Prohods = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).AnyAsync();
+
+            var Ended = false;
+            if (Prohods) Ended= await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).Where(x => x.IsLast).AnyAsync();
+            var NumLast = -1;
+            if (!Ended&& Prohods) NumLast = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).MaxAsync(x=>x.Num);
+       
+            ViewData.Add("Prohods", Prohods);
+            ViewData.Add("Ended", Ended);
+            ViewData.Add("NumLast", NumLast);
+
+
+
             ViewData.Add("IsOkUrl", IsYes);
             ViewData.Add("Title", "Тест - ");
             ViewData.Add("ParalaxOn", true);

@@ -1,41 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST;
-using IOTEST.Methods;
 using Microsoft.AspNetCore.Mvc;
-
+using static IOTEST.Methods;
 namespace IOTEST.Controllers
 {
-
     [Route("/method")]
-    public class MethodController : Controller
+    public partial class MethodController : Controller
     {
-        private IoContext UserDb;
-
-        public MethodController(IoContext context)
-        {
-            UserDb = context;
-        }
+        private IoContext Database;
+        public MethodController(IoContext context) => Database = context;
         [HttpPost]
         public async Task<string> PostAsync()
         {
-            DataControl control = new DataControl(HttpContext.Request.Cookies);
-
-            var Method = HttpContext.Request.Form["method"];
-            var Return = "";
-            switch (Method)
-            {
-                case "AuchGoogle":
-                    return await ((IMethod)new AuchGoogle()).Invoke(HttpContext, UserDb);
-                default:
-                    break;
-            }
-
-
-            return Return;
+            
+            if (HttpContext.Request.Form == null||!HttpContext.Request.Form.ContainsKey("method")) return "Lol";
+            var theType = GetType().Assembly.GetTypes().FirstOrDefault(x => x.Name == HttpContext.Request.Form["method"]);
+            if (theType == null) return "Not Method";
+            return await ((IMethod)Activator.CreateInstance(theType)).Invoke(HttpContext, Database, new DataControl(HttpContext.Request.Cookies));
         }
     }
 }

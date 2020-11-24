@@ -17,6 +17,7 @@ namespace IOTEST
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Test> Tests { get; set; }
+        public DbSet<AcceptedLvl> AcceptedLvls { get; set; }
         public IoContext(DbContextOptions<IoContext> options) : base(options)
         {
             Database.EnsureCreated();
