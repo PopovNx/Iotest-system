@@ -15,3 +15,6 @@ body, html {
     z-index:200;
     position:relative;
 }
+#dssfdf::-webkit-input-placeholder{
+    color: white;
+}
