@@ -1,0 +1,29 @@
+﻿@model IndexController
+@{
+    @using Microsoft.EntityFrameworkCore;
+    @using Newtonsoft.Json.Linq;
+    var user = ViewData["User"] as IOTEST.IoContext.User;
+}
+<header>
+    <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
+        <div class="container-fluid ">
+            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="#">
+                <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
+                <span>
+                    TEST system
+                </span>
+            </a>
+            <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
+                <span class="mr-1">@user.FirstName</span>
+                <span class="mr-2">@user.FamilyName</span>
+                <img src="@user.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+            </span>
+        </div>
+    </nav>
+</header>
+<div id="Page" class="user-select-none container-fluid  text-light text-center">
+    <div class="row">
+     
+
+    </div>
+</div>
