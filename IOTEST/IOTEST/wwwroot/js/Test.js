@@ -11,6 +11,7 @@ let app = new Vue({
         Key: "",
     },
     methods: {
+
     },
     watch: {
         "Test.VisualData": function (e) {
@@ -24,9 +25,10 @@ let app = new Vue({
     created() {
         this.Key = Key;
         if (!NO) this.PreTestData = JSON.parse(JSON.stringify(Test));
-        if (!NO) this.Test = new VisualTestsWorker(Test, new showdown.Converter(), Key);
+        if (!NO) this.Test = new VisualTestsWorker(Test, new showdown.Converter(),Key);
     },
     mounted() {
+
         if (!Ended)
             if (!NO) this.Test.Start(document.getElementById("MT1"), NumLast);
         if (Ended) this.Test.EndTest();

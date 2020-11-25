@@ -76,6 +76,7 @@
    * --------------------------------------------------------------------------
    */
 
+
   var getUID = function getUID(prefix) {
     do {
       prefix += Math.floor(Math.random() * MAX_UID);
@@ -115,6 +116,7 @@
       return 0;
     } // Get transition-duration of the element
 
+
     var _window$getComputedSt = window.getComputedStyle(element),
         transitionDuration = _window$getComputedSt.transitionDuration,
         transitionDelay = _window$getComputedSt.transitionDelay;
@@ -125,6 +127,7 @@
     if (!floatTransitionDuration && !floatTransitionDelay) {
       return 0;
     } // If multiple durations are defined, take the first
+
 
     transitionDuration = transitionDuration.split(',')[0];
     transitionDelay = transitionDelay.split(',')[0];
@@ -188,6 +191,7 @@
       return null;
     } // Can find the shadow root otherwise it'll return the document
 
+
     if (typeof element.getRootNode === 'function') {
       var root = element.getRootNode();
       return root instanceof ShadowRoot ? root : null;
@@ -196,6 +200,7 @@
     if (element instanceof ShadowRoot) {
       return element;
     } // when we don't find a shadow root
+
 
     if (!element.parentNode) {
       return null;
@@ -433,6 +438,7 @@
         }
       } // To please ESLint
 
+
       return null;
     };
   }
@@ -609,6 +615,7 @@
         });
       } // merge custom information in our event
 
+
       if (typeof args !== 'undefined') {
         Object.keys(args).forEach(function (key) {
           Object.defineProperty(evt, key, {
@@ -675,6 +682,7 @@
         Data.setData(element, DATA_KEY, this);
       }
     } // Getters
+
 
     var _proto = Alert.prototype;
 
@@ -775,6 +783,7 @@
    * ------------------------------------------------------------------------
    */
 
+
   EventHandler.on(document, EVENT_CLICK_DATA_API, SELECTOR_DISMISS, Alert.handleDismiss(new Alert()));
   var $$1 = getjQuery();
   /**
@@ -823,6 +832,7 @@
       Data.setData(element, DATA_KEY$1, this);
     } // Getters
 
+
     var _proto = Button.prototype;
 
     // Public
@@ -869,6 +879,7 @@
    * Data Api implementation
    * ------------------------------------------------------------------------
    */
+
 
   EventHandler.on(document, EVENT_CLICK_DATA_API$1, SELECTOR_DATA_TOGGLE, function (event) {
     event.preventDefault();
@@ -1162,6 +1173,7 @@
       Data.setData(element, DATA_KEY$2, this);
     } // Getters
 
+
     var _proto = Carousel.prototype;
 
     // Public
@@ -1276,6 +1288,7 @@
       if (direction > 0) {
         this.prev();
       } // swipe right
+
 
       if (direction < 0) {
         this.next();
@@ -1631,6 +1644,7 @@
    * ------------------------------------------------------------------------
    */
 
+
   EventHandler.on(document, EVENT_CLICK_DATA_API$2, SELECTOR_DATA_SLIDE, Carousel.dataApiClickHandler);
   EventHandler.on(window, EVENT_LOAD_DATA_API, function () {
     var carousels = SelectorEngine.find(SELECTOR_DATA_RIDE);
@@ -1732,6 +1746,7 @@
 
       Data.setData(element, DATA_KEY$3, this);
     } // Getters
+
 
     var _proto = Collapse.prototype;
 
@@ -2009,6 +2024,7 @@
    * ------------------------------------------------------------------------
    */
 
+
   EventHandler.on(document, EVENT_CLICK_DATA_API$3, SELECTOR_DATA_TOGGLE$1, function (event) {
     // preventDefault only for <a> elements (which change the URL) not inside the collapsible element
     if (event.target.tagName === 'A') {
@@ -2139,6 +2155,7 @@
       Data.setData(element, DATA_KEY$4, this);
     } // Getters
 
+
     var _proto = Dropdown.prototype;
 
     // Public
@@ -2173,6 +2190,7 @@
         return;
       } // Disable totally Popper.js for Dropdown in Navbar
 
+
       if (!this._inNavbar) {
         if (typeof Popper__default['default'] === 'undefined') {
           throw new TypeError('Bootstrap\'s dropdowns require Popper.js (https://popper.js.org)');
@@ -2192,6 +2210,7 @@
         // to allow the menu to "escape" the scroll parent's boundaries
         // https://github.com/twbs/bootstrap/issues/24251
 
+
         if (this._config.boundary !== 'scrollParent') {
           parent.classList.add(CLASS_NAME_POSITION_STATIC);
         }
@@ -2201,6 +2220,7 @@
       // empty mouseover listeners to the body's immediate children;
       // only needed because of broken event delegation on iOS
       // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+
 
       if ('ontouchstart' in document.documentElement && !parent.closest(SELECTOR_NAVBAR_NAV)) {
         var _ref;
@@ -2415,6 +2435,7 @@
         } // If this is a touch-enabled device we remove the extra
         // empty mouseover listeners we added for iOS support
 
+
         if ('ontouchstart' in document.documentElement) {
           var _ref2;
 
@@ -2491,6 +2512,7 @@
         index++;
       } // index is -1 if the first keydown is an ArrowUp
 
+
       index = index === -1 ? 0 : index;
       items[index].focus();
     };
@@ -2523,6 +2545,7 @@
    * Data Api implementation
    * ------------------------------------------------------------------------
    */
+
 
   EventHandler.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_DATA_TOGGLE$2, Dropdown.dataApiKeydownHandler);
   EventHandler.on(document, EVENT_KEYDOWN_DATA_API, SELECTOR_MENU, Dropdown.dataApiKeydownHandler);
@@ -2624,6 +2647,7 @@
       this._scrollbarWidth = 0;
       Data.setData(element, DATA_KEY$5, this);
     } // Getters
+
 
     var _proto = Modal.prototype;
 
@@ -3132,6 +3156,7 @@
    * ------------------------------------------------------------------------
    */
 
+
   EventHandler.on(document, EVENT_CLICK_DATA_API$5, SELECTOR_DATA_TOGGLE$3, function (event) {
     var _this11 = this;
 
@@ -3401,6 +3426,7 @@
         throw new TypeError('Bootstrap\'s tooltips require Popper.js (https://popper.js.org)');
       } // private
 
+
       this._isEnabled = true;
       this._timeout = 0;
       this._hoverState = '';
@@ -3415,6 +3441,7 @@
 
       Data.setData(element, this.constructor.DATA_KEY, this);
     } // Getters
+
 
     var _proto = Tooltip.prototype;
 
@@ -3659,6 +3686,7 @@
         if (content.jquery) {
           content = content[0];
         } // content is a DOM node or a jQuery
+
 
         if (this.config.html) {
           if (content.parentNode !== element) {
@@ -4312,6 +4340,7 @@
       Data.setData(element, DATA_KEY$8, this);
     } // Getters
 
+
     var _proto = ScrollSpy.prototype;
 
     // Public
@@ -4521,6 +4550,7 @@
    * ------------------------------------------------------------------------
    */
 
+
   EventHandler.on(window, EVENT_LOAD_DATA_API$1, function () {
     SelectorEngine.find(SELECTOR_DATA_SPY).forEach(function (spy) {
       return new ScrollSpy(spy, Manipulator.getDataAttributes(spy));
@@ -4585,6 +4615,7 @@
       this._element = element;
       Data.setData(this._element, DATA_KEY$9, this);
     } // Getters
+
 
     var _proto = Tab.prototype;
 
@@ -4745,6 +4776,7 @@
    * ------------------------------------------------------------------------
    */
 
+
   EventHandler.on(document, EVENT_CLICK_DATA_API$6, SELECTOR_DATA_TOGGLE$4, function (event) {
     event.preventDefault();
     var data = Data.getData(this, DATA_KEY$9) || new Tab(this);
@@ -4817,6 +4849,7 @@
 
       Data.setData(element, DATA_KEY$a, this);
     } // Getters
+
 
     var _proto = Toast.prototype;
 
@@ -5015,5 +5048,6 @@
   };
 
   return index_umd;
+
 })));
 //# sourceMappingURL=bootstrap.js.map

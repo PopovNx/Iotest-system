@@ -1,6 +1,7 @@
 ﻿var app = new Vue({
     el: "#app",
     data: {
+
     },
     methods: {
         onSignIn(googleUser) {
@@ -12,12 +13,12 @@
             Data.append('ImageURL', profile.getImageUrl());
             Data.append('Email', profile.getEmail());
             Data.append('IDToken', googleUser.getAuthResponse().id_token);
-            axios.post('/method', Data).then(() => location = location);
+            axios.post('/method', Data).then(() => location = location); 
         }
     },
     mounted() {
         gapi.load('auth2', function () {
-            var auth2 = gapi.auth2.init({
+           var auth2 = gapi.auth2.init({
                 client_id: '568231728412-9mu2l70s8c878a4gn4up9t9qjpgol360.apps.googleusercontent.com',
                 cookiepolicy: 'single_host_origin',
             });

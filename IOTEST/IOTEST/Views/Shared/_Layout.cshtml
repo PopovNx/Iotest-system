@@ -10,6 +10,7 @@
         if (Cookies.get("Web") == "true" && location.pathname == "/install") location.href = "/login";
         if (Pwa == false && location.pathname != "/install" && Cookies.get("Web") != "true") location.href = "/install";
         if (Pwa == true && location.pathname == "/install") location.href = "/login";
+
     </script>
     <style>
         [v-cloak] {
@@ -23,7 +24,7 @@
     <link rel='manifest' href='~/manifest.json' asp-append-version="true">
     <link rel="shortcut icon" href="~/Icons/180x180.png" />
     <link rel="apple-touch-icon" href="~/Icons/1024x1024.png" />
-    <link href="~/favicon.ico" rel="icon" asp-append-version="true" />
+    <link href="~/favicon.ico" rel="icon" asp-append-version="true"/>
     <link href="~/lib/Bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <script src="~/lib/Axios/axios.min.js"></script>
     <link href="~/lib/Bootstrap/css/mdb.min.css" rel="stylesheet" />
@@ -34,7 +35,7 @@
     <script src="~/lib/Vue/vue.min.js"></script>
     @{
         foreach (var item in ViewData["CSS"] as List<string>)
-            WriteLiteral($"<link href=\"{item}?{ver}\" rel='stylesheet' />");
+            WriteLiteral($"<link href=\"{item}?{ver}\" rel='stylesheet'/>");
         foreach (var item in ViewData["JSU"] as List<string>)
             WriteLiteral($"<script src=\"{item}?{ver}\" ></script>");
 

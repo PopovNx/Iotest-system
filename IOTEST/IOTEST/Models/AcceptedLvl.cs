@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,7 +13,6 @@ namespace IOTEST
         {
             [Key]
             public int Id { get; set; }
-
             public string KEY { get; set; }
             public string Email { get; set; }
             public bool IsLast { get; set; }
@@ -28,7 +28,6 @@ namespace IOTEST
             {
                 [Key]
                 public int Id { get; set; }
-
                 public int Max { get; set; }
                 public int Result { get; set; }
                 public int Settings { get; set; }

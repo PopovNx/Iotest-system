@@ -29,6 +29,8 @@
         setTimeout(() => {
             app.InstYet = (app.deferredPrompt == null && !app.IsIphone)
             console.log(app.InstYet);
-        }, 100);
+        },100);
+
     }
 })
+

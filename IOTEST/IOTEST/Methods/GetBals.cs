@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using static IOTEST.IoContext;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using IOTEST;
+using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace IOTEST
 {
@@ -29,6 +36,7 @@ namespace IOTEST
                     {
                         Bal += result.Result * result.Max / result.Settings;
                     }
+
                 }
                 return Bal.ToString();
             }
