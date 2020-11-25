@@ -787,7 +787,7 @@ namespace Services {
         Vmap: VisualMap;
         Canvas;
         SceneSum: number;
-        Pass(max: number, id: number, isLast: boolean, Key:string) {
+        Pass(max: number, id: number, isLast: boolean, Key: string) {
             var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
             var data = new FormData();
             data.append("method", "AcceptResult");
@@ -818,7 +818,6 @@ namespace Services {
             this.Bal = TestS.Bal;
 
             this.Work = ((SceneSum) => this.Passed = SceneSum);
-
         }
         PassRule;
         Bal;
@@ -827,7 +826,7 @@ namespace Services {
     }
 }
 export default class VisualTestsWorker {
-    constructor(Test, MarkdownEng,Key) {
+    constructor(Test, MarkdownEng, Key) {
         this.TestData = Test;
         this.NowTestId = 0;
         this.MaxTestId = Test.Maps.length;
@@ -862,29 +861,28 @@ export default class VisualTestsWorker {
     };
     Pass(tz) {
         tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId), this.Key);
-        
+
         if (++tz.NowTestId >= tz.MaxTestId) tz.EndTest();
         else tz.LoadLvl();
     };
     EndTest() {
-        if (this.Vtest!=null) this.Vtest.destroy();
+        if (this.Vtest != null) this.Vtest.destroy();
         this.Vtest = null;
         var data = new FormData();
         data.append("method", "GetBals");
-        data.append("Key",this.Key);
+        data.append("Key", this.Key);
         this.EndData = {
             C: true,
             Bal: "Загрузка",
         };
         // @ts-ignore */}
-        setTimeout(()=>axios.post("/method", data).then((e) => {
+        setTimeout(() => axios.post("/method", data).then((e) => {
             this.EndData = {
                 C: true,
                 Bal: e.data,
             };
-        }),300)
-        
-        
+        }), 300)
+
         console.log("End");
     }
     Start(Canvas, Num) {
@@ -893,4 +891,3 @@ export default class VisualTestsWorker {
         this.LoadLvl();
     }
 }
- 

@@ -12,10 +12,9 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-Object.defineProperty(exports, "__esModule", { value: true });
 var SaveData;
 (function (SaveData) {
-    var ResultData = /** @class */ (function () {
+    var ResultData = (function () {
         function ResultData(Result, MAX, Rule, Settings) {
             this.Max = MAX;
             this.Result = Result;
@@ -27,7 +26,7 @@ var SaveData;
     SaveData.ResultData = ResultData;
     var Positions;
     (function (Positions) {
-        var TObject = /** @class */ (function () {
+        var TObject = (function () {
             function TObject(x, y, z, s, r, fx, fy) {
                 if (fx === void 0) { fx = 1; }
                 if (fy === void 0) { fy = 1; }
@@ -43,7 +42,7 @@ var SaveData;
             return TObject;
         }());
         Positions.TObject = TObject;
-        var Trigger = /** @class */ (function () {
+        var Trigger = (function () {
             function Trigger(x, y, s) {
                 this.X = x;
                 this.Y = y;
@@ -55,7 +54,7 @@ var SaveData;
     })(Positions = SaveData.Positions || (SaveData.Positions = {}));
     var Types;
     (function (Types) {
-        var TObject = /** @class */ (function () {
+        var TObject = (function () {
             function TObject(state, group, type, pos, variant, id, cost) {
                 this.State = state;
                 this.Group = group;
@@ -68,7 +67,7 @@ var SaveData;
             return TObject;
         }());
         Types.TObject = TObject;
-        var Trigger = /** @class */ (function () {
+        var Trigger = (function () {
             function Trigger(vis, mag, pos, id, idtypes, tdata) {
                 this.Visual = vis;
                 this.Magnetic = mag;
@@ -85,7 +84,7 @@ var SaveData;
     (function (InteractorTypes) {
         var SIWData;
         (function (SIWData) {
-            var On = /** @class */ (function () {
+            var On = (function () {
                 function On(OnName, Data1, Data2, Data3) {
                     this.OnName = OnName;
                     this.Data1 = Data1;
@@ -95,7 +94,7 @@ var SaveData;
                 return On;
             }());
             SIWData.On = On;
-            var Interactor = /** @class */ (function () {
+            var Interactor = (function () {
                 function Interactor(Type, Data) {
                     this.Type = Type;
                     this.Data = Data;
@@ -104,7 +103,7 @@ var SaveData;
             }());
             SIWData.Interactor = Interactor;
         })(SIWData = InteractorTypes.SIWData || (InteractorTypes.SIWData = {}));
-        var SavedInteractorWorker = /** @class */ (function () {
+        var SavedInteractorWorker = (function () {
             function SavedInteractorWorker(ids, on, interactor) {
                 this.Ids = ids;
                 this.On = on;
@@ -115,7 +114,7 @@ var SaveData;
         }());
         InteractorTypes.SavedInteractorWorker = SavedInteractorWorker;
     })(InteractorTypes = SaveData.InteractorTypes || (SaveData.InteractorTypes = {}));
-    var SavedMap = /** @class */ (function () {
+    var SavedMap = (function () {
         function SavedMap(Bg, objs, trgs, inter, type, TestSettings) {
             this.Objects = objs;
             this.Triggers = trgs;
@@ -127,7 +126,7 @@ var SaveData;
         return SavedMap;
     }());
     SaveData.SavedMap = SavedMap;
-    var SavedTestSettings = /** @class */ (function () {
+    var SavedTestSettings = (function () {
         function SavedTestSettings(PassRule, Bal) {
             this.PassRule = PassRule;
             this.Bal = Bal;
@@ -135,7 +134,7 @@ var SaveData;
         return SavedTestSettings;
     }());
     SaveData.SavedTestSettings = SavedTestSettings;
-    var VisualSavedTest = /** @class */ (function () {
+    var VisualSavedTest = (function () {
         function VisualSavedTest(Name, Cond, MaxBal, Smap) {
             this.Name = Name;
             this.Cond = Cond;
@@ -145,7 +144,7 @@ var SaveData;
         return VisualSavedTest;
     }());
     SaveData.VisualSavedTest = VisualSavedTest;
-    var ClassicSavedTest = /** @class */ (function () {
+    var ClassicSavedTest = (function () {
         function ClassicSavedTest(Text, MaxBal, TestBase) {
             this.Text = Text;
             this.MaxBal = MaxBal;
@@ -154,7 +153,7 @@ var SaveData;
         return ClassicSavedTest;
     }());
     SaveData.ClassicSavedTest = ClassicSavedTest;
-    var Test = /** @class */ (function () {
+    var Test = (function () {
         function Test(Name, Opis, EndText, OcenType, DispNowBal, MaxBal, Maps) {
             this.Name = Name;
             this.Opis = Opis;
@@ -170,7 +169,7 @@ var SaveData;
 })(SaveData || (SaveData = {}));
 var Interactive;
 (function (Interactive) {
-    var InteractorWorker = /** @class */ (function () {
+    var InteractorWorker = (function () {
         function InteractorWorker(ids, on, interactor) {
             this.Ids = ids;
             this.On = on;
@@ -182,7 +181,7 @@ var Interactive;
         return InteractorWorker;
     }());
     Interactive.InteractorWorker = InteractorWorker;
-    var Interactor = /** @class */ (function () {
+    var Interactor = (function () {
         function Interactor(Saved) {
             var Data = Saved.Data;
             switch (Saved.Type) {
@@ -242,7 +241,7 @@ var Interactive;
         return Interactor;
     }());
     Interactive.Interactor = Interactor;
-    var OnEvents = /** @class */ (function () {
+    var OnEvents = (function () {
         function OnEvents() {
         }
         OnEvents.Create = function (saved) {
@@ -258,7 +257,7 @@ var Interactive;
                 default:
             }
         };
-        OnEvents.BaseEvent = /** @class */ (function () {
+        OnEvents.BaseEvent = (function () {
             function class_1() {
                 this.Invoked = false;
             }
@@ -274,7 +273,7 @@ var Interactive;
             };
             return class_1;
         }());
-        OnEvents.OnSum = /** @class */ (function (_super) {
+        OnEvents.OnSum = (function (_super) {
             __extends(class_2, _super);
             function class_2(type, agr, ids) {
                 var _this = _super.call(this) || this;
@@ -305,7 +304,7 @@ var Interactive;
             };
             return class_2;
         }(OnEvents.BaseEvent));
-        OnEvents.OnHover = /** @class */ (function (_super) {
+        OnEvents.OnHover = (function (_super) {
             __extends(class_3, _super);
             function class_3(ids) {
                 var _this = _super.call(this) || this;
@@ -323,7 +322,7 @@ var Interactive;
             };
             return class_3;
         }(OnEvents.BaseEvent));
-        OnEvents.OnAlways = /** @class */ (function (_super) {
+        OnEvents.OnAlways = (function (_super) {
             __extends(class_4, _super);
             function class_4(on) {
                 var _this = _super.call(this) || this;
@@ -335,7 +334,7 @@ var Interactive;
             };
             return class_4;
         }(OnEvents.BaseEvent));
-        OnEvents.OnСlick = /** @class */ (function (_super) {
+        OnEvents.OnСlick = (function (_super) {
             __extends(class_5, _super);
             function class_5(ids) {
                 var _this = _super.call(this) || this;
@@ -359,7 +358,7 @@ var Interactive;
 })(Interactive || (Interactive = {}));
 var Objects;
 (function (Objects_1) {
-    var Trigger = /** @class */ (function () {
+    var Trigger = (function () {
         function Trigger(Size, x, y, visual, magnetic, id, Idt, dt) {
             this.color = 0x2600ff;
             this.Funcs = {
@@ -398,7 +397,6 @@ var Objects;
             this.elementcount = 0;
             this.VectorArray = [];
             this.VectorArray.push(this.x - this.Size, this.y - this.Size, this.x + this.Size, this.y - this.Size, this.x + this.Size, this.y + this.Size, this.x - this.Size, this.y + this.Size);
-            // @ts-ignore */}
             this.graphics = new PIXI.Graphics();
         }
         Trigger.prototype.Draw = function () {
@@ -461,7 +459,7 @@ var Objects;
         return Trigger;
     }());
     Objects_1.Trigger = Trigger;
-    var DragableObject = /** @class */ (function () {
+    var DragableObject = (function () {
         function DragableObject(variants, variant, sx, sy, x, y, r, cc, drag) {
             var _this = this;
             if (cc === void 0) { cc = true; }
@@ -469,7 +467,6 @@ var Objects;
             if (variants[variant] == undefined)
                 this.texture = variants.texture;
             else
-                // @ts-ignore */}
                 this.texture = PIXI.Texture.from(variants[variant]);
             this.Variant = variant;
             this.Type = variant;
@@ -477,7 +474,6 @@ var Objects;
             this.Rotation = r;
             this.MouseOnThis = false;
             this.Visible = true;
-            // @ts-ignore */}
             this.sprite = new PIXI.Sprite(this.texture);
             this.sprite.x = x || 1;
             this.sprite.y = y || 1;
@@ -539,7 +535,6 @@ var Objects;
             if (this.Variant == variant)
                 return;
             this.Variant = variant;
-            // @ts-ignore */}
             this.sprite.texture = this.texture = PIXI.Texture.from(this.Variants[variant]);
         };
         DragableObject.prototype.SetRotation = function (rotation) {
@@ -584,7 +579,7 @@ var Objects;
         return DragableObject;
     }());
     Objects_1.DragableObject = DragableObject;
-    var ElectronsObjects = /** @class */ (function (_super) {
+    var ElectronsObjects = (function (_super) {
         __extends(ElectronsObjects, _super);
         function ElectronsObjects(sx, sy, x, y, r, type, isdragable, varitant) {
             return _super.call(this, type.textures, varitant, sx, sy, x, y, r, true, isdragable) || this;
@@ -624,7 +619,7 @@ var Objects;
         return ElectronsObjects;
     }(DragableObject));
     Objects_1.ElectronsObjects = ElectronsObjects;
-    var CustumObject = /** @class */ (function (_super) {
+    var CustumObject = (function (_super) {
         __extends(CustumObject, _super);
         function CustumObject(sx, sy, x, y, r, type, isdragable, varitant) {
             return _super.call(this, type, varitant, sx, sy, x, y, r, true, isdragable) || this;
@@ -632,7 +627,7 @@ var Objects;
         return CustumObject;
     }(DragableObject));
     Objects_1.CustumObject = CustumObject;
-    var EatObjects = /** @class */ (function (_super) {
+    var EatObjects = (function (_super) {
         __extends(EatObjects, _super);
         function EatObjects(sx, sy, x, y, r, type, isdragable, varitant) {
             return _super.call(this, type.textures, varitant, sx, sy, x, y, r, true, isdragable) || this;
@@ -697,11 +692,10 @@ var Objects;
         return EatObjects;
     }(DragableObject));
     Objects_1.EatObjects = EatObjects;
-    var Label = /** @class */ (function (_super) {
+    var Label = (function (_super) {
         __extends(Label, _super);
         function Label(sx, sy, x, y, r, type, isdragable, varitant) {
             var _this = this;
-            // @ts-ignore */}
             var richText = new PIXI.Text(type, Label.Variants[varitant]);
             richText.updateText();
             _this = _super.call(this, richText, 0, sx, sy, x, y, r, true, isdragable) || this;
@@ -733,7 +727,7 @@ var Objects;
 })(Objects || (Objects = {}));
 var Services;
 (function (Services) {
-    var VisualMap = /** @class */ (function () {
+    var VisualMap = (function () {
         function VisualMap(smap) {
             var _this = this;
             this.Objects = [];
@@ -773,14 +767,12 @@ var Services;
         return VisualMap;
     }());
     Services.VisualMap = VisualMap;
-    var VisualTest = /** @class */ (function () {
+    var VisualTest = (function () {
         function VisualTest(smap, display) {
             var _this = this;
             this.Canvas = display;
-            // @ts-ignore */}
             this.VDisplay = new PIXI.Application({ width: 750, height: 500, view: this.Canvas, transparent: true, antialias: false, });
             this.Twork = new TestWorker(smap.TestSettings);
-            // @ts-ignore */}
             this.VDisplayContainer = new PIXI.Container();
             this.VDisplay.stage.addChild(this.VDisplayContainer);
             this.Canvas.style.background = "url('/TestItems/Prefabs/Backgrounds/" + smap.Bg + ".jpg')";
@@ -808,7 +800,6 @@ var Services;
             data.append("Num", id.toString());
             data.append("Last", isLast.toString());
             data.append("Test", Key);
-            // @ts-ignore */}
             axios.post("/method", data);
         };
         VisualTest.prototype.resize = function (t) {
@@ -826,7 +817,7 @@ var Services;
         return VisualTest;
     }());
     Services.VisualTest = VisualTest;
-    var TestWorker = /** @class */ (function () {
+    var TestWorker = (function () {
         function TestWorker(TestS) {
             var _this = this;
             this.Passed = false;
@@ -838,7 +829,7 @@ var Services;
     }());
     Services.TestWorker = TestWorker;
 })(Services || (Services = {}));
-var VisualTestsWorker = /** @class */ (function () {
+var VisualTestsWorker = (function () {
     function VisualTestsWorker(Test, MarkdownEng, Key) {
         this.VisualData = {};
         this.EndData = {};
@@ -887,7 +878,6 @@ var VisualTestsWorker = /** @class */ (function () {
             C: true,
             Bal: "Загрузка",
         };
-        // @ts-ignore */}
         setTimeout(function () { return axios.post("/method", data).then(function (e) {
             _this.EndData = {
                 C: true,
@@ -903,5 +893,4 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     return VisualTestsWorker;
 }());
-exports.default = VisualTestsWorker;
-//# sourceMappingURL=TestLib.js.map
+export default VisualTestsWorker;
