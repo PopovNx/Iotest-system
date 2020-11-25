@@ -36,7 +36,6 @@ namespace IOTEST
                     {
                         Bal += result.Result * result.Max / result.Settings;
                     }
-
                 }
                 return Bal.ToString();
             }

@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace IOTEST
 {
@@ -16,9 +10,10 @@ namespace IOTEST
         public static void Log(object l)
         {
             var Pach = "D:\\ConsoleOutput.txt";
-            File.WriteAllText(Pach, File.ReadAllText(Pach)+"\n"+ JsonConvert.SerializeObject(l));
+            File.WriteAllText(Pach, File.ReadAllText(Pach) + "\n" + JsonConvert.SerializeObject(l));
         }
     }
+
     public class Program
     {
         public static void Main(string[] args)
@@ -31,7 +26,6 @@ namespace IOTEST
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>().UseIIS();
-            
                 });
     }
 }

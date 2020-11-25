@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 
 namespace IOTEST.Controllers
 {
@@ -12,10 +10,12 @@ namespace IOTEST.Controllers
     public class IndexController : Controller
     {
         private IoContext Database;
+
         public IndexController(IoContext userContext)
         {
             Database = userContext;
         }
+
         public async Task<IActionResult> IndexAsync()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
@@ -25,12 +25,11 @@ namespace IOTEST.Controllers
 
             if (UserHaveAcceptedTest)
                 Tests = await Database.AcceptedLvls.Where(x => x.Email == control.UserData.Gmail).ToListAsync();
-            
-          
-            ViewData.Add("Tests", Tests); 
-            ViewData.Add("DataBase", Database); 
-            ViewData.Add("Control", control); 
-            ViewData.Add("UserHaveAcceptedTest", UserHaveAcceptedTest); 
+
+            ViewData.Add("Tests", Tests);
+            ViewData.Add("DataBase", Database);
+            ViewData.Add("Control", control);
+            ViewData.Add("UserHaveAcceptedTest", UserHaveAcceptedTest);
             ViewData.Add("Title", "IOTEST - Main");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Index.css" });

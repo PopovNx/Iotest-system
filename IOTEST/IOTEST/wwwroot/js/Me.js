@@ -3,9 +3,7 @@
     data: {
     },
     methods: {
-  
     },
     mounted() {
-        
     }
 })

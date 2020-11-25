@@ -2,14 +2,13 @@
     el: "#app",
     data: {
         needRegister: false,
-        code:"",
+        code: "",
     },
     methods: {
         GotoModel() {
-            location.href = "/test?" + this.    code;
+            location.href = "/test?" + this.code;
         }
     },
     mounted() {
-        
     }
 })

@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using IOTEST;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IOTEST
 {
     public class AuchMiddleware
     {
         private readonly RequestDelegate _next;
+
         public AuchMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -19,7 +17,7 @@ namespace IOTEST
 
         public async Task Invoke(HttpContext context, IoContext userContext)
         {
-           // await _next(context);return;
+            // await _next(context);return;
             var Pach = context.Request.Path;
 
             DataControl control = new DataControl(context.Request.Cookies);
