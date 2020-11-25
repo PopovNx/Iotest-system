@@ -25,7 +25,7 @@ namespace IOTEST.Controllers
             if (IsYes) IsYes = await Database.Tests.AnyAsync(x => x.KEY == Key);
             if (IsYes) ViewData.Add("Model", await Database.Tests.Where(x => x.KEY == Key).FirstOrDefaultAsync());
             var Prohods = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).AnyAsync();
-
+            if (Key == null)Key = "error";
             var Ended = false;
             if (Prohods) Ended = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).Where(x => x.IsLast).AnyAsync();
             var NumLast = -1;

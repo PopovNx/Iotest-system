@@ -1,19 +1,19 @@
 ﻿'use strict';
-import VisualTestsWorker from "./TestLib.js";
+import VisualTestsWorker  from "./TestLb.js";
 let app = new Vue({
     el: "#app",
-    data: {
-        Test: {},
-        DblockNow: 0,
+    data: { 
+        Test: {},  
+        DblockNow: 0,  
         PageNow: "Test",
         PreTestData: {},
-        ToTest: "",
+        ToTest: "", 
         Key: "",
     },
     methods: {
     },
     watch: {
-        "Test.VisualData": function (e) {
+        "Test.VisualData": function (e) {  
             this.DblockNow = 0;
         },
         "Test.EndData": function (e) {
