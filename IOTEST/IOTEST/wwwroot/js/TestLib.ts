@@ -1,13 +1,11 @@
 ﻿'use strict'
-export namespace SaveData {
+namespace SaveData {
     export class ResultData {
         constructor(Result: any, MAX: number, Rule: any, Settings: any) {
             this.Max = MAX;
             this.Result = Result;
             this.Rule = Rule;
             this.Settings = Settings;
-
-
         }
         Result;
         Max;
@@ -789,14 +787,14 @@ namespace Services {
         Vmap: VisualMap;
         Canvas;
         SceneSum: number;
-        Pass(max: number, id: number, isLast: boolean) {
+        Pass(max: number, id: number, isLast: boolean, Key:string) {
             var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
             var data = new FormData();
             data.append("method", "AcceptResult");
             data.append("Data", btoa(JSON.stringify(Result)));
             data.append("Num", id.toString());
             data.append("Last", isLast.toString());
-            data.append("Test", location.search.split("?")[1].split("&")[0]);
+            data.append("Test", Key);
             // @ts-ignore */}
             axios.post("/method", data);
         }
@@ -828,13 +826,15 @@ namespace Services {
         Work;
     }
 }
-export class VisualTestsWorker {
-    constructor(Test, MarkdownEng) {
+export default class VisualTestsWorker {
+    constructor(Test, MarkdownEng,Key) {
         this.TestData = Test;
         this.NowTestId = 0;
         this.MaxTestId = Test.Maps.length;
         this.MarkdownEngine = MarkdownEng;
+        this.Key = Key;
     }
+    private Key: string;
     private Vtest;
     private TestData;
     public Canvas;
@@ -861,17 +861,30 @@ export class VisualTestsWorker {
         }
     };
     Pass(tz) {
-        tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId));
+        tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId), this.Key);
+        
         if (++tz.NowTestId >= tz.MaxTestId) tz.EndTest();
         else tz.LoadLvl();
     };
     EndTest() {
         if (this.Vtest!=null) this.Vtest.destroy();
         this.Vtest = null;
+        var data = new FormData();
+        data.append("method", "GetBals");
+        data.append("Key",this.Key);
         this.EndData = {
             C: true,
-            Bal:1,
+            Bal: "Загрузка",
         };
+        // @ts-ignore */}
+        setTimeout(()=>axios.post("/method", data).then((e) => {
+            this.EndData = {
+                C: true,
+                Bal: e.data,
+            };
+        }),300)
+        
+        
         console.log("End");
     }
     Start(Canvas, Num) {
@@ -880,3 +893,4 @@ export class VisualTestsWorker {
         this.LoadLvl();
     }
 }
+ 

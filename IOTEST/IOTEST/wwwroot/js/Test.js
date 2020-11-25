@@ -1,6 +1,5 @@
 ﻿'use strict';
-import { SaveData, VisualTestsWorker } from "/TsLibs/TestLib.js";
-
+import VisualTestsWorker from "./TestLib.js";
 let app = new Vue({
     el: "#app",
     data: {
@@ -8,7 +7,8 @@ let app = new Vue({
         DblockNow: 0,
         PageNow: "Test",
         PreTestData: {},
-        ToTest:"",
+        ToTest: "",
+        Key: "",
     },
     methods: {
 
@@ -23,18 +23,16 @@ let app = new Vue({
         },
     },
     created() {
-
-
-        
-        if(!NO) this.PreTestData = JSON.parse(JSON.stringify(Test));
-        if (!NO) this.Test = new VisualTestsWorker(Test, new showdown.Converter());
+        this.Key = Key;
+        if (!NO) this.PreTestData = JSON.parse(JSON.stringify(Test));
+        if (!NO) this.Test = new VisualTestsWorker(Test, new showdown.Converter(),Key);
     },
     mounted() {
-      
-        if (!Ended)         
+
+        if (!Ended)
             if (!NO) this.Test.Start(document.getElementById("MT1"), NumLast);
         if (Ended) this.Test.EndTest();
-        
+
         if (!NO) Test = undefined;
         this.PageNow = "Start";
         if (Ended) this.PageNow = "End";

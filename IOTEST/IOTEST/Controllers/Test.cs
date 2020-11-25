@@ -36,6 +36,7 @@ namespace IOTEST.Controllers
             ViewData.Add("Prohods", Prohods);
             ViewData.Add("Ended", Ended);
             ViewData.Add("NumLast", NumLast);
+            ViewData.Add("Key", Key);
 
 
 

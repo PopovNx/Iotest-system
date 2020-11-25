@@ -21,12 +21,14 @@
         </div>
     </nav>
 </header>
+<script v-if="false">var Key = '@ViewData["Key"]';</script>
+<script v-if="false">var Prohods = @ViewData["Prohods"].ToString().ToLower();</script>
+<script v-if="false">var Ended =@ViewData["Ended"].ToString().ToLower();</script>
+<script v-if="false">var NumLast = @ViewData["NumLast"].ToString().ToLower();</script>
 @if (IsTestOk)
 {
     <script v-if="false">var NO = false;</script>
-    <script v-if="false">var Prohods = @ViewData["Prohods"].ToString().ToLower();</script>
-    <script v-if="false">var Ended =@ViewData["Ended"].ToString().ToLower();</script>
-    <script v-if="false">var NumLast = @ViewData["NumLast"].ToString().ToLower();</script>
+
     <script v-if="false">var Test = JSON.parse(decodeURIComponent(atob(('@(Html.Raw(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Uri.EscapeUriString(Test.JsonData.Replace("\n", "\\n"))))))'))).replaceAll("'", '"'));</script>
 }
 else
@@ -44,15 +46,15 @@ else
                         <hr class="bg-light my-2" />
                     </div>
                     <div id="startMain" class="text-center text-light">
-                        <div> 
+                        <div>
 
                             <div id="startTextTitle"><h2>{{PreTestData.Name}}</h2></div>
                             <hr>
                             <div id="startTextOpis"><h6>{{PreTestData.Opis}}</h6></div>
                             <hr>
                             <div id="startParams" class="row">
-                                <span class="list-group-item bg-dark col-4">Максимальный бал: {{PreTestData.MaxBal}}</span>
-                                <button class="btn btn-outline-light col-4 offset-4" v-on:click="PageNow='Test'">Приступить</button>
+                                <span class="list-group-item bg-dark  col-6 col-md-4">Максимальный бал: {{PreTestData.MaxBal}}</span>
+                                <button class="btn btn-outline-light  col-6 col-md-4 offset-md-4 offset-0" v-on:click="PageNow='Test'">Приступить</button>
                             </div>
                         </div>
                     </div>
@@ -69,8 +71,8 @@ else
                             <div id="endTextOpis"><h6 v-for="c in PreTestData.EndText">{{c}}</h6></div>
                             <hr>
                             <div id="endParams" class="row">
-                                <span class="list-group-item bg-dark col-4">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
-                                <button class="btn btn-outline-light col-4 offset-4" v-on:click="locarion='/'">На главную</button>
+                                <span class="list-group-item bg-dark col-6 col-md-4">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
+                                <button class="btn btn-outline-light col-6 col-md-4 offset-md-4 offset-0" v-on:click="locarion='/'">На главную</button>
                             </div>
                         </div>
                     </div>
@@ -93,10 +95,10 @@ else
                             <canvas id="MT1"></canvas>
                         </div>
                     </div>
-                    <div id="testfooter" class="text-left  pt-2 mt-0">
+                    <div id="testfooter" class="text-left  pt-2 mt-0  row">
                         <hr class="bg-light md-2 mt-0" />
-                        <button class="btn btn-outline-light" v-on:click="Test.Pass(Test)">Сдать</button>
-                        <button class="btn btn-outline-light float-right" v-on:click="DblockNow = !DblockNow">{{DblockNow?"Условие":"К выполнению"}}</button>
+                        <button class="btn btn-outline-light col-6 col-md-4" v-on:click="Test.Pass(Test)">Сдать</button>
+                        <button class="btn btn-outline-light col-6 col-md-4 offset-md-4" v-on:click="DblockNow = !DblockNow">{{DblockNow?"Условие":"К выполнению"}}</button>
                     </div>
                 </div>
             }
@@ -104,15 +106,15 @@ else
             {
                 <div class="mt-3">
                     <div id="startMain" class="text-center text-light">
-                        <div>                 
+                        <div>
                             <div id="startTextTitle"><h2>Тест не найден</h2></div>
                             <hr>
                             <form class="row">
-                                <div class="col-sm-4 offset-4">                                   
+                                <div class="col-sm-4 offset-4">
                                     <input v-model="ToTest" class="form-control form-control-sm text-center bg-transparent text-light" id="dssfdf" placeholder="Попрбуйте другой код">
                                 </div>
                             </form>
-                  
+
                             <hr>
                             <div id="startParams" class="row">
                                 <button class="btn btn-outline-light col-4 " v-on:click="location.href='/'">Главная</button>

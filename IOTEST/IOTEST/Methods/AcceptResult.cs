@@ -19,7 +19,7 @@ namespace IOTEST
         {
             public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
             {
-
+                if (!control.IsOk || !context.Request.Form.ContainsKey("Test")|| !context.Request.Form.ContainsKey("Num")|| !context.Request.Form.ContainsKey("Last")|| !context.Request.Form.ContainsKey("Data")) return "error";
                 var Res = new AcceptedLvl
                 {
                     Email = control.UserData.Gmail,

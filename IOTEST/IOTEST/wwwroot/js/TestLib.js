@@ -12,7 +12,8 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-export var SaveData;
+Object.defineProperty(exports, "__esModule", { value: true });
+var SaveData;
 (function (SaveData) {
     var ResultData = /** @class */ (function () {
         function ResultData(Result, MAX, Rule, Settings) {
@@ -799,14 +800,14 @@ var Services;
             this.Vmap.Work(this.SceneSum);
             this.SceneSum = this.Vmap.Triggers.map(function (item) { return item.Sum; }).reduce(function (a, b) { return a + b; }, 0);
         };
-        VisualTest.prototype.Pass = function (max, id, isLast) {
+        VisualTest.prototype.Pass = function (max, id, isLast, Key) {
             var Result = new SaveData.ResultData(this.Twork.Passed, max, this.Twork.PassRule, this.Twork.Bal);
             var data = new FormData();
             data.append("method", "AcceptResult");
             data.append("Data", btoa(JSON.stringify(Result)));
             data.append("Num", id.toString());
             data.append("Last", isLast.toString());
-            data.append("Test", location.search.split("?")[1].split("&")[0]);
+            data.append("Test", Key);
             // @ts-ignore */}
             axios.post("/method", data);
         };
@@ -838,13 +839,14 @@ var Services;
     Services.TestWorker = TestWorker;
 })(Services || (Services = {}));
 var VisualTestsWorker = /** @class */ (function () {
-    function VisualTestsWorker(Test, MarkdownEng) {
+    function VisualTestsWorker(Test, MarkdownEng, Key) {
         this.VisualData = {};
         this.EndData = {};
         this.TestData = Test;
         this.NowTestId = 0;
         this.MaxTestId = Test.Maps.length;
         this.MarkdownEngine = MarkdownEng;
+        this.Key = Key;
     }
     VisualTestsWorker.prototype.LoadLvl = function () {
         if (this.Vtest != null) {
@@ -866,7 +868,7 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     ;
     VisualTestsWorker.prototype.Pass = function (tz) {
-        tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId));
+        tz.Vtest.Pass(tz.TestData.Maps[tz.NowTestId].MaxBal, tz.NowTestId, ((tz.NowTestId + 1) >= tz.MaxTestId), this.Key);
         if (++tz.NowTestId >= tz.MaxTestId)
             tz.EndTest();
         else
@@ -874,13 +876,24 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     ;
     VisualTestsWorker.prototype.EndTest = function () {
+        var _this = this;
         if (this.Vtest != null)
             this.Vtest.destroy();
         this.Vtest = null;
+        var data = new FormData();
+        data.append("method", "GetBals");
+        data.append("Key", this.Key);
         this.EndData = {
             C: true,
-            Bal: 1,
+            Bal: "Загрузка",
         };
+        // @ts-ignore */}
+        setTimeout(function () { return axios.post("/method", data).then(function (e) {
+            _this.EndData = {
+                C: true,
+                Bal: e.data,
+            };
+        }); }, 300);
         console.log("End");
     };
     VisualTestsWorker.prototype.Start = function (Canvas, Num) {
@@ -890,4 +903,5 @@ var VisualTestsWorker = /** @class */ (function () {
     };
     return VisualTestsWorker;
 }());
-export { VisualTestsWorker };
+exports.default = VisualTestsWorker;
+//# sourceMappingURL=TestLib.js.map
