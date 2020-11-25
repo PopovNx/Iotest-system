@@ -378,8 +378,6 @@
 
   /*  */
 
-
-
   var config = ({
     /**
      * Option merge strategies (used in core/util/options)
@@ -1602,8 +1600,6 @@
 
   /*  */
 
-
-
   function validateProp (
     key,
     propOptions,
@@ -2490,8 +2486,6 @@
   }
 
   /*  */
-
-
 
   /**
    * Runtime helper for resolving raw children VNodes into a slot object.
@@ -4407,8 +4401,6 @@
 
   /*  */
 
-
-
   var uid$2 = 0;
 
   /**
@@ -5240,8 +5232,6 @@
   }
 
   /*  */
-
-
 
   function getComponentName (opts) {
     return opts && (opts.Ctor.options.name || opts.tag)
@@ -6922,8 +6912,6 @@
 
   /*  */
 
-
-
   /* eslint-disable no-unused-vars */
   function baseWarn (msg, range) {
     console.error(("[Vue compiler]: " + msg));
@@ -7214,8 +7202,6 @@
    */
 
   var len, str, chr, index$1, expressionPos, expressionEndPos;
-
-
 
   function parseModel (val) {
     // Fix https://github.com/vuejs/vue/pull/7730
@@ -7662,7 +7648,6 @@
   }
 
   // check platforms/web/util/attrs.js acceptValue
-
 
   function shouldUpdateValue (elm, checkVal) {
     return (!elm.composing && (
@@ -9081,8 +9066,6 @@
     return new RegExp(open + '((?:.|\\n)+?)' + close, 'g')
   });
 
-
-
   function parseText (
     text,
     delimiters
@@ -10015,8 +9998,6 @@
     }
   }
 
-
-
   function parseFor (exp) {
     var inMatch = exp.match(forAliasRE);
     if (!inMatch) { return }
@@ -10914,10 +10895,6 @@
 
   /*  */
 
-
-
-
-
   var CodegenState = function CodegenState (options) {
     this.options = options;
     this.warn = options.warn || baseWarn;
@@ -10930,8 +10907,6 @@
     this.staticRenderFns = [];
     this.pre = false;
   };
-
-
 
   function generate (
     ast,
@@ -11461,8 +11436,6 @@
 
   /*  */
 
-
-
   // these keywords should not appear inside expressions, but operators like
   // typeof, instanceof and in are allowed
   var prohibitedKeywordRE = new RegExp('\\b' + (
@@ -11641,8 +11614,6 @@
   }
 
   /*  */
-
-
 
   function createFunction (code, errors) {
     try {
@@ -11961,5 +11932,4 @@
   Vue.compile = compileToFunctions;
 
   return Vue;
-
 }));

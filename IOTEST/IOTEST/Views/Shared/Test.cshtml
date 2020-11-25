@@ -27,103 +27,103 @@
 <script v-if="false">var NumLast = @ViewData["NumLast"].ToString().ToLower();</script>
 @if (IsTestOk)
 {
-<script v-if="false">var NO = false;</script>
+    <script v-if="false">var NO = false;</script>
 
-<script v-if="false">var Test = JSON.parse(decodeURIComponent(atob(('@(Html.Raw(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Uri.EscapeUriString(Test.JsonData.Replace("\n", "\\n"))))))'))).replaceAll("'", '"'));</script>
+    <script v-if="false">var Test = JSON.parse(decodeURIComponent(atob(('@(Html.Raw(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Uri.EscapeUriString(Test.JsonData.Replace("\n", "\\n"))))))'))).replaceAll("'", '"'));</script>
 }
 else
 {
-<script v-if="false">var NO = true;</script>
+    <script v-if="false">var NO = true;</script>
 }
 <div id="Page" class="user-select-none container-fluid" v-cloak>
     <div class="row mt-1">
         <div class="col-12 offset-0 col-sm-10 offset-sm-1 mt-3 col-lg-8 offset-lg-2 offset-xl-3 col-xl-6   DOB" style="background-color:rgba(45, 51, 51, 0.50)">
             @if (IsTestOk)
             {
-            <div v-show="PageNow=='Start'">
-                <div id="starthead" class="text-left row pt-2">
-                    <h4 class="text-light mt-2 col-8">Тестирование</h4>
-                    <hr class="bg-light my-2" />
-                </div>
-                <div id="startMain" class="text-center text-light">
-                    <div>
+                <div v-show="PageNow=='Start'">
+                    <div id="starthead" class="text-left row pt-2">
+                        <h4 class="text-light mt-2 col-8">Тестирование</h4>
+                        <hr class="bg-light my-2" />
+                    </div>
+                    <div id="startMain" class="text-center text-light">
+                        <div>
 
-                        <div id="startTextTitle"><h2>{{PreTestData.Name}}</h2></div>
-                        <hr>
-                        <div id="startTextOpis"><h6>{{PreTestData.Opis}}</h6></div>
-                        <hr>
-                        <div id="startParams" class="row">
-                            <button class="btn btn-outline-light col-12 col-sm-4 col-md-4 order-md-0 order-2 offset-sm-4 offset-md-0" v-on:click="location.href='/'">На главную</button>
-                            <span class="list-group-item bg-dark col-12 col-md-4 order-md-1 order-1 order-sm-0">Максимальный бал: {{PreTestData.MaxBal}}</span>
-                            <button class="btn btn-outline-light col-12 col-sm-4 col-md-4 order-md-2 order-0" v-on:click="PageNow='Test'">Приступить</button>
+                            <div id="startTextTitle"><h2>{{PreTestData.Name}}</h2></div>
+                            <hr>
+                            <div id="startTextOpis"><h6>{{PreTestData.Opis}}</h6></div>
+                            <hr>
+                            <div id="startParams" class="row">
+                                <button class="btn btn-outline-light col-12 col-sm-4 col-md-4 order-md-0 order-2 offset-sm-4 offset-md-0" v-on:click="location.href='/'">На главную</button>
+                                <span class="list-group-item bg-dark col-12 col-md-4 order-md-1 order-1 order-sm-0">Максимальный бал: {{PreTestData.MaxBal}}</span>
+                                <button class="btn btn-outline-light col-12 col-sm-4 col-md-4 order-md-2 order-0" v-on:click="PageNow='Test'">Приступить</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-show="PageNow=='End'">
-                <div id="endhead" class="text-left row pt-2">
-                    <h4 class="text-light mt-2 col-8">Результаты</h4>
-                    <hr class="bg-light my-2" />
-                </div>
-                <div id="endMain" class="text-center text-light">
-                    <div>
-                        <div id="endTextTitle"><h2>Тест пройден</h2></div>
-                        <hr>
-                        <div id="endTextOpis"><h6 v-for="c in PreTestData.EndText">{{c}}</h6></div>
-                        <hr>
-                        <div id="endParams" class="row">
-                            <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-0">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
-                            <button class="btn btn-outline-light col-12 col-sm-6 col-md-4 offset-md-4 " v-on:click="location.href='/'">На главную</button>
+                <div v-show="PageNow=='End'">
+                    <div id="endhead" class="text-left row pt-2">
+                        <h4 class="text-light mt-2 col-8">Результаты</h4>
+                        <hr class="bg-light my-2" />
+                    </div>
+                    <div id="endMain" class="text-center text-light">
+                        <div>
+                            <div id="endTextTitle"><h2>Тест пройден</h2></div>
+                            <hr>
+                            <div id="endTextOpis"><h6 v-for="c in PreTestData.EndText">{{c}}</h6></div>
+                            <hr>
+                            <div id="endParams" class="row">
+                                <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-0">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
+                                <button class="btn btn-outline-light col-12 col-sm-6 col-md-4 offset-md-4 " v-on:click="location.href='/'">На главную</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-show="PageNow=='Test'">
-                <div id="testhead" class="text-left row pt-2">
-                    <h4 class="text-light mt-2 text-center text-md-left">{{Test.VisualData.Title}}</h4>
-                    <hr class="bg-light my-2" />
-                </div>
-                <div id="testMain" class="text-center text-light  DOB">
-                    <div v-show="DblockNow==0" id="ConditionBlock">
-                        <div id="ConditionText" v-html="Test.VisualData.Condition"></div>
-                        <hr>
-                        <div id="ConditionParams" class="row">
-                            <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-0">Максимальный бал: {{Test.VisualData.MaxBal}}</span>
-                            <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-4">Тип оценивания: {{Test.VisualData.OcenType=="SumPass"?"Зачёт":"Бал"}}</span>
+                <div v-show="PageNow=='Test'">
+                    <div id="testhead" class="text-left row pt-2">
+                        <h4 class="text-light mt-2 text-center text-md-left">{{Test.VisualData.Title}}</h4>
+                        <hr class="bg-light my-2" />
+                    </div>
+                    <div id="testMain" class="text-center text-light  DOB">
+                        <div v-show="DblockNow==0" id="ConditionBlock">
+                            <div id="ConditionText" v-html="Test.VisualData.Condition"></div>
+                            <hr>
+                            <div id="ConditionParams" class="row">
+                                <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-0">Максимальный бал: {{Test.VisualData.MaxBal}}</span>
+                                <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-4">Тип оценивания: {{Test.VisualData.OcenType=="SumPass"?"Зачёт":"Бал"}}</span>
+                            </div>
+                        </div>
+                        <div v-show="DblockNow==1" id="InteractiveBlock">
+                            <canvas id="MT1"></canvas>
                         </div>
                     </div>
-                    <div v-show="DblockNow==1" id="InteractiveBlock">
-                        <canvas id="MT1"></canvas>
+                    <div id="testfooter" class="text-left  pt-2 mt-0  row">
+                        <hr class="bg-light md-2 mt-0" />
+                        <button class="btn btn-outline-light offset-0 my-0 order-1 col-12 col-sm-4 my-sm-0 order-sm-0 offset-sm-0" v-on:click="Test.Pass(Test)">Сдать</button>
+                        <button class="btn btn-outline-light offset-0 my-5 order-0 col-12 col-sm-4 my-sm-0 order-sm-1 offset-sm-4" v-on:click="DblockNow = !DblockNow">{{DblockNow?"Условие":"К выполнению"}}</button>
                     </div>
                 </div>
-                <div id="testfooter" class="text-left  pt-2 mt-0  row">
-                    <hr class="bg-light md-2 mt-0" />
-                    <button class="btn btn-outline-light offset-0 my-0 order-1 col-12 col-sm-4 my-sm-0 order-sm-0 offset-sm-0" v-on:click="Test.Pass(Test)">Сдать</button>
-                    <button class="btn btn-outline-light offset-0 my-5 order-0 col-12 col-sm-4 my-sm-0 order-sm-1 offset-sm-4" v-on:click="DblockNow = !DblockNow">{{DblockNow?"Условие":"К выполнению"}}</button>
-                </div>
-            </div>
             }
             else
             {
-            <div class="mt-3">
-                <div id="startMain" class="text-center text-light">
-                    <div>
-                        <div id="startTextTitle"><h2>Тест не найден</h2></div>
-                        <hr>
-                        <form class="row">
-                            <div class="col-12 offset-0 col-sm-6 offset-sm-3">
-                                <input v-model="ToTest" class="my-2 form-control text-center bg-dark text-light border-2 border-light" id="dssfdf" placeholder="Попрбуйте другой код">
-                            </div>
-                        </form>
+                <div class="mt-3">
+                    <div id="startMain" class="text-center text-light">
+                        <div>
+                            <div id="startTextTitle"><h2>Тест не найден</h2></div>
+                            <hr>
+                            <form class="row">
+                                <div class="col-12 offset-0 col-sm-6 offset-sm-3">
+                                    <input v-model="ToTest" class="my-2 form-control text-center bg-dark text-light border-2 border-light" id="dssfdf" placeholder="Попрбуйте другой код">
+                                </div>
+                            </form>
 
-                        <hr>
-                        <div id="startParams" class="row">
-                            <button class="btn btn-outline-light col-12 order-1 offset-0 my-5 col-sm-6 order-sm-0 my-sm-0 col-md-4 offset-md-0" v-on:click="location.href='/'">Главная</button>
-                            <button class="btn btn-outline-light col-12 order-0 offset-0 my-0 col-sm-6 order-sm-1 my-sm-0 col-md-4 offset-md-4" v-on:click="location.href='/test?'+ToTest">Перейти</button>
+                            <hr>
+                            <div id="startParams" class="row">
+                                <button class="btn btn-outline-light col-12 order-1 offset-0 my-5 col-sm-6 order-sm-0 my-sm-0 col-md-4 offset-md-0" v-on:click="location.href='/'">Главная</button>
+                                <button class="btn btn-outline-light col-12 order-0 offset-0 my-0 col-sm-6 order-sm-1 my-sm-0 col-md-4 offset-md-4" v-on:click="location.href='/test?'+ToTest">Перейти</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
             }
         </div>

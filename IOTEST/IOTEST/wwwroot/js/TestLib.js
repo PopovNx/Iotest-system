@@ -878,12 +878,14 @@ var VisualTestsWorker = (function () {
             C: true,
             Bal: "Загрузка",
         };
-        setTimeout(function () { return axios.post("/method", data).then(function (e) {
-            _this.EndData = {
-                C: true,
-                Bal: e.data,
-            };
-        }); }, 300);
+        setTimeout(function () {
+            return axios.post("/method", data).then(function (e) {
+                _this.EndData = {
+                    C: true,
+                    Bal: e.data,
+                };
+            });
+        }, 300);
         console.log("End");
     };
     VisualTestsWorker.prototype.Start = function (Canvas, Num) {

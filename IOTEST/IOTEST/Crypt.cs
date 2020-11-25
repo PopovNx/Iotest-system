@@ -10,7 +10,6 @@ namespace IOTEST
 {
     public static class Crypt
     {
-
         static public string GetHash(string input)
         {
             byte[] hash = Encoding.UTF8.GetBytes(input);
@@ -23,7 +22,9 @@ namespace IOTEST
             }
             return result;
         }
+
         private static string Key = "9519F155D2EC132F18319EBAF522A806";
+
         private static string CreateMD5(string input)
         {
             using (MD5 md5 = MD5.Create())
@@ -38,6 +39,7 @@ namespace IOTEST
                 return sb.ToString();
             }
         }
+
         private static class AesOperation
         {
             public static string EncryptString(string key, string plainText)
@@ -93,11 +95,13 @@ namespace IOTEST
                 }
             }
         }
+
         static public string Code(string str)
         {
             var T1 = AesOperation.EncryptString(Key, str);
             return T1 + CreateMD5(T1);
         }
+
         static public string Decode(string str)
         {
             var T1 = str.Substring(0, str.Length - 32);
@@ -110,11 +114,9 @@ namespace IOTEST
             {
                 return null;
             }
-
-
         }
-
     }
+
     public class DataControl
     {
         private bool _active;
@@ -123,6 +125,7 @@ namespace IOTEST
         static public readonly string CookieName = "Session_Data";
         public bool IsOk { get { return _active; } }
         public User UserData { get { return _data; } set { _data = value; _CryptStr = Crypt.Code(JsonConvert.SerializeObject(_data)); } }
+
         public DataControl(IRequestCookieCollection cookies)
         {
             _active = cookies.ContainsKey(CookieName);
@@ -141,6 +144,7 @@ namespace IOTEST
                 }
             }
         }
+
         public DataControl(User data)
         {
             _data = data;
@@ -153,6 +157,5 @@ namespace IOTEST
 
             return _CryptStr;
         }
-
     }
 }

@@ -1,14 +1,9 @@
-﻿using static IOTEST.IoContext;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
+using static IOTEST.IoContext;
 
 namespace IOTEST
 {
@@ -42,6 +37,5 @@ namespace IOTEST
                 return "OK";
             }
         }
-
     }
 }

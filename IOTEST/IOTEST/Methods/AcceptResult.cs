@@ -1,15 +1,9 @@
-﻿using static IOTEST.IoContext;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using IOTEST;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
 using System.Text;
+using System.Threading.Tasks;
+using static IOTEST.IoContext;
 
 namespace IOTEST
 {
@@ -19,7 +13,7 @@ namespace IOTEST
         {
             public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
             {
-                if (!control.IsOk || !context.Request.Form.ContainsKey("Test")|| !context.Request.Form.ContainsKey("Num")|| !context.Request.Form.ContainsKey("Last")|| !context.Request.Form.ContainsKey("Data")) return "error";
+                if (!control.IsOk || !context.Request.Form.ContainsKey("Test") || !context.Request.Form.ContainsKey("Num") || !context.Request.Form.ContainsKey("Last") || !context.Request.Form.ContainsKey("Data")) return "error";
                 var Res = new AcceptedLvl
                 {
                     Email = control.UserData.Gmail,
@@ -29,13 +23,12 @@ namespace IOTEST
                     Result = JsonConvert.DeserializeObject<AcceptedLvl.ResultData>(Encoding.UTF8.GetString(Convert.FromBase64String(context.Request.Form["Data"])))
                 };
                 await userContext.AcceptedLvls.AddAsync(Res);
-                
+
                 Console.WriteLine(JsonConvert.SerializeObject(Res));
 
                 await userContext.SaveChangesAsync();
                 return "OK";
             }
-
         }
     }
 }
