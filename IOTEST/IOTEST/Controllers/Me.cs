@@ -24,8 +24,8 @@ namespace IOTEST.Controllers
             ViewData.Add("Title", $"Тест - Личный кабинет");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Test.css" });
-            ViewData.Add("JSU", new List<string> { "lib/Showdown/showdown.min.js", "lib/Pixijs/pixi.min.js", "js/VueComp.js" });
-            ViewData.Add("JSD", new List<string> { "js/Test.js" });
+            ViewData.Add("JSU", new List<string> {  "js/VueComp.js" });
+            ViewData.Add("JSD", new List<string> { "js/Me.js" });
             ViewData.Add("User", control.UserData);
 
             return View("Me");
