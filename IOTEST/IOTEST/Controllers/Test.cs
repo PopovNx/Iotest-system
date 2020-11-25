@@ -41,7 +41,7 @@ namespace IOTEST.Controllers
 
 
             ViewData.Add("IsOkUrl", IsYes);
-            ViewData.Add("Title", "Тест - ");
+            ViewData.Add("Title", $"Тест - {(Key.Length>1? Key:"error")}");
             ViewData.Add("ParalaxOn", true);
             ViewData.Add("CSS", new List<string> { "css/Test.css" });
             ViewData.Add("JSU", new List<string> { "lib/Showdown/showdown.min.js", "lib/Pixijs/pixi.min.js", "js/VueComp.js" });

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,12 @@ namespace IOTEST
             public bool IsLast { get; set; }
             public int Num { get; set; }
             public ResultData Result { get; set; }
+
+            public static implicit operator List<object>(AcceptedLvl v)
+            {
+                throw new NotImplementedException();
+            }
+
             public class ResultData
             {
                 [Key]

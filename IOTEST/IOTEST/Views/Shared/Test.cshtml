@@ -72,8 +72,8 @@ else
                         <div id="endTextOpis"><h6 v-for="c in PreTestData.EndText">{{c}}</h6></div>
                         <hr>
                         <div id="endParams" class="row">
-                            <span class="list-group-item bg-dark col-6 col-md-4">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
-                            <button class="btn btn-outline-light col-6 col-md-4 offset-md-4 offset-0" v-on:click="locarion='/'">На главную</button>
+                            <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-0">Текущий бал: {{PreTestData.DispNowBal?Test.EndData.Bal:"Отображение отключено"}}</span>
+                            <button class="btn btn-outline-light col-12 col-sm-6 col-md-4 offset-md-4 " v-on:click="location.href='/'">На главную</button>
                         </div>
                     </div>
                 </div>
@@ -111,15 +111,15 @@ else
                         <div id="startTextTitle"><h2>Тест не найден</h2></div>
                         <hr>
                         <form class="row">
-                            <div class="col-sm-4 offset-4">
+                            <div class="col-12 offset-0 col-sm-6 offset-sm-3">
                                 <input v-model="ToTest" class="my-2 form-control text-center bg-dark text-light border-2 border-light" id="dssfdf" placeholder="Попрбуйте другой код">
                             </div>
                         </form>
 
                         <hr>
                         <div id="startParams" class="row">
-                            <button class="btn btn-outline-light col-4 " v-on:click="location.href='/'">Главная</button>
-                            <button class="btn btn-outline-light col-4 offset-4" v-on:click="location.href='/test?'+ToTest">Перейти</button>
+                            <button class="btn btn-outline-light col-12 order-1 offset-0 my-5 col-sm-6 order-sm-0 my-sm-0 col-md-4 offset-md-0" v-on:click="location.href='/'">Главная</button>
+                            <button class="btn btn-outline-light col-12 order-0 offset-0 my-0 col-sm-6 order-sm-1 my-sm-0 col-md-4 offset-md-4" v-on:click="location.href='/test?'+ToTest">Перейти</button>
                         </div>
                     </div>
                 </div>

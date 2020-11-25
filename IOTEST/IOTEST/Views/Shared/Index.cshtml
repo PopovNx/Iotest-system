@@ -1,11 +1,14 @@
 ﻿@model IndexController
 @{
+    @using Microsoft.EntityFrameworkCore;
+    @using Newtonsoft.Json.Linq;
     var user = ViewData["User"] as IOTEST.IoContext.User;
-
+    var DataBase = ViewData["DataBase"] as IoContext;
+    var Control = ViewData["Control"] as DataControl;
 }
 <header>
     <script>
-           app.needRegister =@((user.UserProf== IOTEST.IoContext.UserProfType.Unset).ToString().ToLower());
+           app.needRegister =@((user.UserProf == IOTEST.IoContext.UserProfType.Unset).ToString().ToLower());
     </script>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
@@ -15,7 +18,7 @@
                     TEST system
                 </span>
             </a>
-            <span class="DOB navbar-brand float-left ml-auto">
+            <span class="DOB navbar-brand float-left ml-auto user-select-none"v-on:click="location.href='/me'">
                 <span class="mr-1">@user.FirstName</span>
                 <span class="mr-2">@user.FamilyName</span>
                 <img src="@user.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
@@ -25,15 +28,40 @@
 </header>
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
     <div class="row">
-        <div id="LeftBlock" class="col-12 col-md-4 order-2 order-md-0">
-            <h3>Продам гараж</h3>
-            <h3>Продам гараж</h3>
-            <h3>Продам гараж</h3>
-            <h3>Продам гараж</h3>
-            <h3>Продам гараж</h3>
-            <h3>Продам гараж</h3>
+        <div id="LeftBlock" class="col-12 col-md-4 order-2 order-md-0 DOB">
+            @{
+                var NotZaver = (ViewData["Tests"] as List<IoContext.AcceptedLvl>).GroupBy(x => x.KEY).Where(x => !x.Any(y => y.IsLast));
+                if (NotZaver.Any())
+                {<h4 class="mt-3">Не завершенные тесты</h4>}
+                foreach (var item in NotZaver)
+                {
+                    var d = new Dictionary<string, string>();
+                    d["Key"] = item.Key;
+                    d["Gmail"] = Control.UserData.Gmail;
+                    <div class="bg-dark my-3">
+                        <div>@(JObject.Parse((await DataBase.Tests.FirstOrDefaultAsync(x => x.KEY == item.Key)).JsonData)["Name"])</div>
+                        <div>Ключ: @item.Key</div>
+                        <div><button class="btn btn-outline-light mt-1 my-2" v-on:click="location.href='/test?@item.Key'">Перейти</button></div>
+                    </div>
+                }
+            }
+            @{
+                var Zaver = (ViewData["Tests"] as List<IoContext.AcceptedLvl>).Where(x => x.IsLast);
+                if (Zaver.Any())
+                {<h4 class="mt-3">Завершенные тесты</h4>}
+                foreach (var item in Zaver)
+                {
+                    var d = new Dictionary<string, string>();
+                    d["Key"] = item.KEY;
+                    d["Gmail"] = Control.UserData.Gmail;
+                    <div class="bg-dark my-3">
+                        <div>@(JObject.Parse((await DataBase.Tests.FirstOrDefaultAsync(x => x.KEY == item.KEY)).JsonData)["Name"])</div>
+                        <div>Оценка: @(await (new Methods.GetBals()).InvokeInside(DataBase, d))</div>
+                        <div>Ключ: @item.KEY</div>
+                    </div>
+                }
+            }
         </div>
-
         <div id="LeftBlock" class="col-12 col-md-4 order-0 order-md-1">
             <div class="bg-dark mt-4 rounded ">
 
