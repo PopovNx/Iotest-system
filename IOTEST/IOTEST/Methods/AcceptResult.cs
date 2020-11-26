@@ -20,7 +20,8 @@ namespace IOTEST
                     KEY = context.Request.Form["Test"],
                     Num = int.Parse(context.Request.Form["Num"]),
                     IsLast = bool.Parse(context.Request.Form["Last"]),
-                    Result = JsonConvert.DeserializeObject<AcceptedLvl.ResultData>(Encoding.UTF8.GetString(Convert.FromBase64String(context.Request.Form["Data"])))
+                    Result = JsonConvert.DeserializeObject<AcceptedLvl.ResultData>(Encoding.UTF8.GetString(Convert.FromBase64String(context.Request.Form["Data"]))),
+                    Created = DateTime.Now
                 };
                 await userContext.AcceptedLvls.AddAsync(Res);
 

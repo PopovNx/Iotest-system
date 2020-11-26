@@ -18,12 +18,7 @@ namespace IOTEST
             public bool IsLast { get; set; }
             public int Num { get; set; }
             public ResultData Result { get; set; }
-
-            public static implicit operator List<object>(AcceptedLvl v)
-            {
-                throw new NotImplementedException();
-            }
-
+            public DateTime Created { get; set; }
             public class ResultData
             {
                 [Key]

@@ -23,6 +23,8 @@ namespace IOTEST
                 }
                 else
                 {
+
+                    User.Created = DateTime.Now;
                     User.FirstName = context.Request.Form["GivenName"];
                     User.FamilyName = context.Request.Form["FamilyName"];
                     User.Image = context.Request.Form["ImageURL"];

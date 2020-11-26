@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,6 @@ namespace IOTEST.Controllers
             if (!control.IsOk || !(await Database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
             var UserHaveAcceptedTest = await Database.AcceptedLvls.AnyAsync(x => x.Email == control.UserData.Gmail);
             var Tests = new List<IoContext.AcceptedLvl>();
-
             if (UserHaveAcceptedTest)
                 Tests = await Database.AcceptedLvls.Where(x => x.Email == control.UserData.Gmail).ToListAsync();
 
