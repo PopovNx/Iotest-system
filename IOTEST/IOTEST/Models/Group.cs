@@ -18,6 +18,7 @@ namespace IOTEST
             public DateTime Created { get; set; }
             public List<GroupUser> Users { get; set; }
             public List<GroupTest> Tests { get; set; }
+            public string Key { get; set; }
             public class GroupUser
             {
                 [Key]
