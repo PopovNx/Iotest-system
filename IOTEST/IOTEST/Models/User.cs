@@ -18,6 +18,13 @@ namespace IOTEST
             public string Image { get; set; }
             public string Token { get; set; }
             public UserProfType UserProf { get; set; }
+            public enum UserProfType
+            {
+                Unset,
+                User,
+                Teacher,
+                Scholar
+            }
         }
     }
 }

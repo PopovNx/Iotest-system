@@ -16,21 +16,10 @@ namespace IOTEST
             public string Name { get; set; }
             public string Admin { get; set; }
             public DateTime Created { get; set; }
-            public List<GroupUser> Users { get; set; }
-            public List<GroupTest> Tests { get; set; }
+            public List<string> Users { get; set; }
+            public List<string> Tests { get; set; }
             public string Key { get; set; }
-            public class GroupUser
-            {
-                [Key]
-                public int Id { get; set; }
-                public string Mail { get; set; }
-            }
-            public class GroupTest
-            {
-                [Key]
-                public int Id { get; set; }
-                public string Key { get; set; }
-            }
+
         }
     }
 }

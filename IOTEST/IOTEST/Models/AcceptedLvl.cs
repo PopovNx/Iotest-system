@@ -23,7 +23,6 @@ namespace IOTEST
             {
                 [Key]
                 public int Id { get; set; }
-
                 public int Max { get; set; }
                 public int Result { get; set; }
                 public int Settings { get; set; }

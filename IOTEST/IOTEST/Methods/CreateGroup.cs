@@ -30,8 +30,8 @@ namespace IOTEST
                     Created = DateTime.Now,
                     Admin = control.UserData.Gmail,
                     Name = context.Request.Form["Name"],
-                    Tests = new List<Group.GroupTest>(),
-                    Users = new List<Group.GroupUser>(),
+                    Tests = new List<string>(),
+                    Users = new List<string>(),
                     Key = KeyGen()
 
                 };
