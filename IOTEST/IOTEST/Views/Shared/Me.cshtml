@@ -5,7 +5,7 @@
 <header>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
-            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="/">
+            <a class="navbar-brand user-select-none DOB" href="/">
                 <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
                 <span>
                     TEST system
@@ -15,8 +15,8 @@
     </nav>
 </header>
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
-    <div class="row d-flex justify-content-center mt-5">
-        <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-5 ">
+    <div class="row d-flex justify-content-center mt-sm-5">
+        <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
             <div class="bg-dark">
                 <div>
                     <div class="row">
@@ -54,7 +54,7 @@
                                         <hr />
                                         <div>
                                             <div class="row">
-                                                <div class="col-5 row">
+                                                <div class="col-12 col-sm-5">
                                                     <div class="input-group mb-3 ">
                                                         <input type="text" v-model="ConnectGroupKey" class="form-control dssfdf text-center bg-dark text-light border-2 border-light" placeholder="Код группы">
                                                         <div class="input-group-append">
@@ -63,7 +63,7 @@
                                                     </div>
                                                     <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreatGroupModal">Создать</button>
                                                 </div>
-                                                <div class="col-7 overflow-auto" style="height:250px">
+                                                <div class="col-sm-7 overflow-auto" style="height:250px">
                                                     @foreach (var item in (ViewData["Groups"] as List<IoContext.Group>))
                                                     {
                                                         <div class="bg-dark p-2 col-6 rounded offset-3">
@@ -89,12 +89,12 @@
                                         <hr />
                                         <div>
                                             <div class="row">
-                                                <div class="col-5 row">
+                                                <div class="col-sm-5">
 
 
                                                     <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreateTest">Создать</button>
                                                 </div>
-                                                <div class="col-7 overflow-auto" style="height:250px">
+                                                <div class="col-sm-7 overflow-auto" style="height:250px">
                                                     @foreach (var item in (ViewData["Tests"] as List<IoContext.Test>))
                                                     {
                                                         <div class="bg-dark p-2 col-6 rounded offset-3">
