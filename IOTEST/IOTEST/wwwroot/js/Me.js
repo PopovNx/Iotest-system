@@ -5,13 +5,21 @@
         ConnectGroupKey: "",
         GroupSelectedData: {},
         TestData: {},
-
+        TestAddKey: "",
+        SelectedGroup:"",
     },
     methods: {
         ConnectToGroup() {
             var Data = new FormData();
             Data.append('method', 'ConnectToGroup');
             Data.append('Key', this.ConnectGroupKey);
+            axios.post('/method', Data).then(() => location = location);
+        },
+        ConnectTest() {
+            var Data = new FormData();
+            Data.append('method', 'ConnectTest');
+            Data.append('TKey', this.TestAddKey);
+            Data.append('GKey', this.SelectedGroup);
             axios.post('/method', Data).then(() => location = location);
         },
         CreateGroup() {
@@ -28,6 +36,7 @@
                 this.GroupSelectedData = x.data;
                 var Modal = new bootstrap.Modal(document.getElementById('AboutGroup'), {});
                 Modal.show();
+                this.SelectedGroup = e;
             });
         },
         CreateTest(e) {

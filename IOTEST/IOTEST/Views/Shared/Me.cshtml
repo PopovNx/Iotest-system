@@ -5,7 +5,7 @@
 <header>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
-            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="#">
+            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="/">
                 <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
                 <span>
                     TEST system
@@ -63,7 +63,7 @@
                                                     </div>
                                                     <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreatGroupModal">Создать</button>
                                                 </div>
-                                                <div class="col-7 overflow-auto"style="height:250px">
+                                                <div class="col-7 overflow-auto" style="height:250px">
                                                     @foreach (var item in (ViewData["Groups"] as List<IoContext.Group>))
                                                     {
                                                         <div class="bg-dark p-2 col-6 rounded offset-3">
@@ -75,7 +75,7 @@
                                                                 else
                                                                 {<span>Учасник</span>}
                                                             </div>
-                                                           
+
                                                         </div>
                                                     }
                                                 </div>
@@ -90,12 +90,18 @@
                                         <div>
                                             <div class="row">
                                                 <div class="col-5 row">
-                                               
-                                                    
+
+
                                                     <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreateTest">Создать</button>
                                                 </div>
                                                 <div class="col-7 overflow-auto" style="height:250px">
-                                                   
+                                                    @foreach (var item in (ViewData["Tests"] as List<IoContext.Test>))
+                                                    {
+                                                        <div class="bg-dark p-2 col-6 rounded offset-3">
+                                                            <div><h4>@Newtonsoft.Json.Linq.JObject.Parse(item.JsonData)["Name"]</h4></div>
+                                                            <div class="user-select-all">@item.KEY</div>
+                                                        </div>
+                                                    }
 
                                                 </div>
                                             </div>
@@ -157,7 +163,18 @@
                                     </span>
                                 </div>
                             </div>
-
+                            <div>
+                                <hr />
+                                <h5>Добавление теста</h5>
+                                <div>
+                                    <div class="input-group mb-3 ">
+                                        <input type="text" v-model="TestAddKey" class="form-control dssfdf text-center bg-dark text-light border-2 border-light" placeholder="Код Теста">
+                                        <div class="input-group-append">
+                                            <button type="button" v-on:click="ConnectTest" class="text-light  btn btn-outline-light">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -205,7 +222,7 @@
                                 <textarea type="text" v-model="TestData.Mapss" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Код теста" style="min-height:300px"></textarea>
                             </div>
                         </div>
-                       
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Закрыть</button>

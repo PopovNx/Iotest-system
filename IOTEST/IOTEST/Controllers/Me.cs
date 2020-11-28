@@ -22,8 +22,9 @@ namespace IOTEST.Controllers
             DataControl control = new DataControl(HttpContext.Request.Cookies);
             if (!control.IsOk || !(await Database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
             var allGroup = (await Database.Groups.ToListAsync()).OrderByDescending(x => x.Admin == control.UserData.Gmail).ToList();
+            var allTests = await Database.Tests.ToListAsync();
            var Groups = allGroup.Where(x => x.Users.Any(y => y == control.UserData.Gmail) || x.Admin == control.UserData.Gmail).ToList();
-
+            ViewData.Add("Tests", allTests);
             ViewData.Add("Title", $"Тест - Личный кабинет");
             ViewData.Add("Groups", Groups);
             ViewData.Add("ParalaxOn", true);
