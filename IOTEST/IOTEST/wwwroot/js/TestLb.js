@@ -1,5 +1,5 @@
 'use strict';
-var SaveData;
+export var SaveData;
 (function (SaveData) {
     class ResultData {
         constructor(Result, MAX, Rule, Settings) {
@@ -547,7 +547,10 @@ var Objects;
             ]
         },
         Battery: {
-            textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
+            textures: [
+                'TestItems/Prefabs/Electrons/Galvanics/1.png',
+                'TestItems/Prefabs/Electrons/Galvanics/2.png',
+            ]
         },
         Capacitor: {
             textures: ['TestItems/Prefabs/Electrons/Capacitor.png']
@@ -556,10 +559,14 @@ var Objects;
             textures: [
                 'TestItems/Prefabs/Electrons/Wires/1.png',
                 'TestItems/Prefabs/Electrons/Wires/2.png',
+                'TestItems/Prefabs/Electrons/Wires/3.png',
             ]
         },
         Reostat: {
             textures: ['TestItems/Prefabs/Electrons/Reostat.png']
+        },
+        Engine: {
+            textures: ['TestItems/Prefabs/Electrons/Engine.png']
         },
     };
     Objects_1.ElectronsObjects = ElectronsObjects;

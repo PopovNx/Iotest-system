@@ -1,5 +1,5 @@
 ﻿'use strict'
-namespace SaveData {
+export namespace SaveData {
     export class ResultData {
         constructor(Result: any, MAX: number, Rule: any, Settings: any) {
             this.Max = MAX;
@@ -600,7 +600,11 @@ namespace Objects {
                 ]
             },
             Battery: {
-                textures: ['TestItems/Prefabs/Electrons/Galvanic.png']
+                textures: [
+                    'TestItems/Prefabs/Electrons/Galvanics/1.png',
+                    'TestItems/Prefabs/Electrons/Galvanics/2.png',
+
+                ]
             },
             Capacitor: {
                 textures: ['TestItems/Prefabs/Electrons/Capacitor.png']
@@ -609,10 +613,14 @@ namespace Objects {
                 textures: [
                     'TestItems/Prefabs/Electrons/Wires/1.png',
                     'TestItems/Prefabs/Electrons/Wires/2.png',
+                    'TestItems/Prefabs/Electrons/Wires/3.png',
                 ]
             },
             Reostat: {
                 textures: ['TestItems/Prefabs/Electrons/Reostat.png']
+            },
+            Engine: {
+                textures: ['TestItems/Prefabs/Electrons/Engine.png']
             },
         }
         constructor(sx, sy, x, y, r, type, isdragable, varitant) {
