@@ -6,7 +6,8 @@
         GroupSelectedData: {},
         TestData: {},
         TestAddKey: "",
-        SelectedGroup:"",
+        SelectedGroup: "",
+        TestResultt: {}
     },
     methods: {
         ConnectToGroup() {
@@ -48,6 +49,16 @@
             Data.append('Data', encodeURIComponent(Data2));
             axios.post('/method', Data).then((x) => {
                 console.log(x.data);
+            });
+        },
+        GetTestData(e) {
+            var Data = new FormData();
+            Data.append('method', 'GetTestResult');
+            Data.append('Key', e);
+            axios.post('/method', Data).then((x) => {
+                var Modal = new bootstrap.Modal(document.getElementById('TestResults'), {});
+                Modal.show();
+                this.TestResultt = x.data;
             });
         }
     },

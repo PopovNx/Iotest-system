@@ -29,7 +29,7 @@
 {
     <script v-if="false">var NO = false;</script>
 
-    <script v-if="false">var Test = JSON.parse(decodeURIComponent(atob(('@(Html.Raw(System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(Uri.EscapeUriString(Test.JsonData.Replace("\n", "\\n"))))))'))).replaceAll("'", '"'));</script>
+    <script v-if="false">var Test = JSON.parse(decodeURIComponent(decodeURIComponent(('@(Html.Raw(Uri.EscapeDataString((Uri.EscapeUriString(Test.JsonData.Replace("\n", "\\n"))))))'))));</script>
 }
 else
 {

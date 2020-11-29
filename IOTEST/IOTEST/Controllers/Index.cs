@@ -30,13 +30,13 @@ namespace IOTEST.Controllers
                 Tests = await Database.AcceptedLvls.Where(x => x.Email == control.UserData.Gmail).ToListAsync();
 
 
-            var UserInGroups = (await Database.Groups.ToListAsync()).Any(x => x.Users.Contains(control.UserData.Gmail));
-            var TestsToProh = new List<string>();
+            var UserInGroups = (await Database.Groups.ToListAsync()).Any(x => x.Users.Contains(control.UserData.Gmail)||x.Admin== control.UserData.Gmail);
+            var TestsToProh = new List<List<string>>();
             if (UserInGroups)
-                TestsToProh = (await Database.Groups.ToListAsync()).Where(x => x.Users.Contains(control.UserData.Gmail)).Select(x => x.Key).ToList();
+                TestsToProh = (await Database.Groups.ToListAsync()).Where(x => x.Users.Contains(control.UserData.Gmail) || x.Admin == control.UserData.Gmail).Select(x => x.Tests).ToList();
 
             NTests = (await Database.Tests.ToListAsync());
-            NTests = NTests.Where(x => !Tests.Any(y => y.KEY == x.KEY)).ToList();
+            NTests = NTests.Where(x => !Tests.Any(y => y.KEY == x.KEY)).Where(x => TestsToProh.Any(y => y.Contains(x.KEY))).ToList();
 
 
             ViewData.Add("Tests", Tests);
