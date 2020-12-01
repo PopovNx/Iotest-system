@@ -70,10 +70,10 @@
         },
         "TestData.Mapss": function (e) {
             if ((typeof e) == "string")
-                this.TestData.Maps = JSON.parse(e.replaceAll("'", '"'));
+                this.TestData.Maps = JSON.parse(e);
         },
     },
     mounted() {
     }
 })
-console.log(app);
+//console.log(app);

@@ -1,5 +1,5 @@
 ﻿'use strict';
-import VisualTestsWorker  from "./TestLbv3.js";
+import VisualTestsWorker  from "./TestLbv7.js";
 let app = new Vue({
     el: "#app",
     data: { 
