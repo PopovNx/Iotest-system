@@ -10,38 +10,44 @@ namespace IOTEST.Controllers
     [Route("/")]
     public class IndexController : Controller
     {
-        private IoContext Database;
-
-        public IndexController(IoContext userContext)
-        {
-            Database = userContext;
-        }
+        private readonly IoContext _database;
+        public IndexController(IoContext userContext) => _database = userContext;
 
         public async Task<IActionResult> IndexAsync()
         {
-            DataControl control = new DataControl(HttpContext.Request.Cookies);
-            if (!control.IsOk || !(await Database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
-            var UserHaveAcceptedTest = await Database.AcceptedLvls.AnyAsync(x => x.Email == control.UserData.Gmail);
+            var control = new DataControl(HttpContext.Request.Cookies);
+            
+            if (!control.IsOk || !(await _database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync()))
+            {
+                HttpContext.Response.Redirect("/login");
+                return View("Empty");
+            }
+
+            var UserHaveAcceptedTest = await _database.AcceptedLvls.AnyAsync(x => x.Email == control.UserData.Gmail);
 
             var Tests = new List<IoContext.AcceptedLvl>();
             var NTests = new List<IoContext.Test>();
 
             if (UserHaveAcceptedTest)
-                Tests = await Database.AcceptedLvls.Where(x => x.Email == control.UserData.Gmail).ToListAsync();
+                Tests = await _database.AcceptedLvls.Where(x => x.Email == control.UserData.Gmail).ToListAsync();
 
 
-            var UserInGroups = (await Database.Groups.ToListAsync()).Any(x => x.Users.Contains(control.UserData.Gmail)||x.Admin== control.UserData.Gmail);
+            var UserInGroups = (await _database.Groups.ToListAsync()).Any(x =>
+                x.Users.Contains(control.UserData.Gmail) || x.Admin == control.UserData.Gmail);
             var TestsToProh = new List<List<string>>();
             if (UserInGroups)
-                TestsToProh = (await Database.Groups.ToListAsync()).Where(x => x.Users.Contains(control.UserData.Gmail) || x.Admin == control.UserData.Gmail).Select(x => x.Tests).ToList();
+                TestsToProh = (await _database.Groups.ToListAsync())
+                    .Where(x => x.Users.Contains(control.UserData.Gmail) || x.Admin == control.UserData.Gmail)
+                    .Select(x => x.Tests).ToList();
 
-            NTests = (await Database.Tests.ToListAsync());
-            NTests = NTests.Where(x => !Tests.Any(y => y.KEY == x.KEY)).Where(x => TestsToProh.Any(y => y.Contains(x.KEY))).ToList();
+            NTests = (await _database.Tests.ToListAsync());
+            NTests = NTests.Where(x => !Tests.Any(y => y.KEY == x.KEY))
+                .Where(x => TestsToProh.Any(y => y.Contains(x.KEY))).ToList();
 
 
             ViewData.Add("Tests", Tests);
             ViewData.Add("NTests", NTests);
-            ViewData.Add("DataBase", Database);
+            ViewData.Add("DataBase", _database);
             ViewData.Add("Control", control);
             ViewData.Add("UserHaveAcceptedTest", UserHaveAcceptedTest);
             ViewData.Add("Title", "IOTEST - Main");

@@ -7,6 +7,7 @@ namespace IOTEST
     public partial class IoContext
     {
         [Table("Users")]
+        [Serializable]
         public class User
         {
             [Key]
@@ -20,10 +21,8 @@ namespace IOTEST
             public UserProfType UserProf { get; set; }
             public enum UserProfType
             {
-                Unset,
                 User,
-                Teacher,
-                Scholar
+                Teacher
             }
         }
     }

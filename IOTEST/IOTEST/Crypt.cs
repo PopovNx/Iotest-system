@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using static IOTEST.IoContext;
@@ -10,152 +11,105 @@ namespace IOTEST
 {
     public static class Crypt
     {
-        static public string GetHash(string input)
+        public static string GetHash(string input)
         {
-            byte[] hash = Encoding.UTF8.GetBytes(input);
+            var hash = Encoding.UTF8.GetBytes(input);
             MD5 md5 = new MD5CryptoServiceProvider();
-            byte[] hashenc = md5.ComputeHash(hash);
-            string result = "";
-            foreach (var b in hashenc)
-            {
-                result += b.ToString("x2");
-            }
-            return result;
+            var hashing = md5.ComputeHash(hash);
+            return hashing.Aggregate("", (current, b) => current + b.ToString("x2"));
         }
 
-        private static string Key = "9519F155D2EC132F18319EBAF522A806";
+        private const string Key = "9519F155D2EC132F18319EBAF522A806";
 
-        private static string CreateMD5(string input)
+        private static string CreateMd5(string input)
         {
-            using (MD5 md5 = MD5.Create())
-            {
-                byte[] inputBytes = Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
-            }
+            using var md5 = MD5.Create();
+            var inputBytes = Encoding.ASCII.GetBytes(input);
+            var hashBytes = md5.ComputeHash(inputBytes);
+            var sb = new StringBuilder();
+            foreach (var T in hashBytes) sb.Append(T.ToString("X2"));
+            return sb.ToString();
         }
 
-        private static class AesOperation
+        private static string EncryptString(string key, string plainText)
         {
-            public static string EncryptString(string key, string plainText)
+            var iv = new byte[16];
+            byte[] array;
+            using (var aes = Aes.Create())
             {
-                byte[] iv = new byte[16];
-                byte[] array;
-
-                using (Aes aes = Aes.Create())
+                aes.Key = Encoding.UTF8.GetBytes(key);
+                aes.IV = iv;
+                var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+                using (var memoryStream = new MemoryStream())
                 {
-                    aes.Key = Encoding.UTF8.GetBytes(key);
-                    aes.IV = iv;
-
-                    ICryptoTransform encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
-
-                    using (MemoryStream memoryStream = new MemoryStream())
+                    using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
                     {
-                        using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, encryptor, CryptoStreamMode.Write))
-                        {
-                            using (StreamWriter streamWriter = new StreamWriter((Stream)cryptoStream))
-                            {
-                                streamWriter.Write(plainText);
-                            }
-
-                            array = memoryStream.ToArray();
-                        }
-                    }
-                }
-
-                return Convert.ToBase64String(array);
-            }
-
-            public static string DecryptString(string key, string cipherText)
-            {
-                byte[] iv = new byte[16];
-                byte[] buffer = Convert.FromBase64String(cipherText);
-
-                using (Aes aes = Aes.Create())
-                {
-                    aes.Key = Encoding.UTF8.GetBytes(key);
-                    aes.IV = iv;
-                    ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
-
-                    using (MemoryStream memoryStream = new MemoryStream(buffer))
-                    {
-                        using (CryptoStream cryptoStream = new CryptoStream((Stream)memoryStream, decryptor, CryptoStreamMode.Read))
-                        {
-                            using (StreamReader streamReader = new StreamReader((Stream)cryptoStream))
-                            {
-                                return streamReader.ReadToEnd();
-                            }
-                        }
+                        using (var streamWriter = new StreamWriter(cryptoStream))
+                            streamWriter.Write(plainText);
+                        array = memoryStream.ToArray();
                     }
                 }
             }
+            return Convert.ToBase64String(array);
         }
 
-        static public string Code(string str)
+        private static string DecryptString(string key, string cipherText)
         {
-            var T1 = AesOperation.EncryptString(Key, str);
-            return T1 + CreateMD5(T1);
+            var iv = new byte[16];
+            var buffer = Convert.FromBase64String(cipherText);
+            using var aes = Aes.Create();
+            aes.Key = Encoding.UTF8.GetBytes(key);
+            aes.IV = iv;
+            var decrypt = aes.CreateDecryptor(aes.Key, aes.IV);
+            using var memoryStream = new MemoryStream(buffer);
+            using var cryptoStream = new CryptoStream(memoryStream, decrypt, CryptoStreamMode.Read);
+            using var streamReader = new StreamReader(cryptoStream);
+            return streamReader.ReadToEnd();
         }
 
-        static public string Decode(string str)
+        public static string Code(string str)
         {
-            var T1 = str.Substring(0, str.Length - 32);
-            var MD5ha = str.Substring(str.Length - 32);
-            if (MD5ha == CreateMD5(T1))
-            {
-                return AesOperation.DecryptString(Key, T1);
-            }
-            else
-            {
-                return null;
-            }
+            var T1 = EncryptString(Key, str);
+            return T1 + CreateMd5(T1);
+        }
+        public static string Decode(string str)
+        {
+            var hs = str[..^32];
+            string rt = null;
+            if (str[^32..] == CreateMd5(hs)) rt = DecryptString(Key, hs);
+            return rt;
+            
         }
     }
 
     public class DataControl
     {
-        private bool _active;
-        private string _CryptStr;
-        private User _data;
-        static public readonly string CookieName = "Session_Data";
-        public bool IsOk { get { return _active; } }
-        public User UserData { get { return _data; } set { _data = value; _CryptStr = Crypt.Code(JsonConvert.SerializeObject(_data)); } }
-
+        private string _cryptStr;
+        public const string CookieName = "Session_Data";
+        public bool IsOk { get; }
+        public User UserData { get; }
         public DataControl(IRequestCookieCollection cookies)
         {
-            _active = cookies.ContainsKey(CookieName);
-            if (_active)
-            {
-                _active = !string.IsNullOrEmpty(cookies[CookieName]);
-                if (_active) _CryptStr = cookies[CookieName];
-                if (_active)
-                {
-                    var JsonStr = Crypt.Decode(_CryptStr);
-                    _active = !string.IsNullOrEmpty(JsonStr);
-                    if (_active)
-                    {
-                        _data = JsonConvert.DeserializeObject<User>(JsonStr);
-                    }
-                }
-            }
+            IsOk = cookies.ContainsKey(CookieName);
+            if (!IsOk) return;
+            IsOk = !string.IsNullOrEmpty(cookies[CookieName]);
+            if (!IsOk) return;
+            _cryptStr = cookies[CookieName];
+            var JsonStr = Crypt.Decode(_cryptStr);
+            IsOk = !string.IsNullOrEmpty(JsonStr);
+            if (IsOk) UserData = JsonConvert.DeserializeObject<User>(JsonStr!);
         }
 
         public DataControl(User data)
         {
-            _data = data;
-            _CryptStr = Crypt.Code(JsonConvert.SerializeObject(_data));
+            UserData = data;
+            _cryptStr = Crypt.Code(JsonConvert.SerializeObject(UserData));
         }
 
         public override string ToString()
         {
-            _CryptStr = Crypt.Code(JsonConvert.SerializeObject(_data));
-
-            return _CryptStr;
+            _cryptStr = Crypt.Code(JsonConvert.SerializeObject(UserData));
+            return _cryptStr;
         }
     }
 }

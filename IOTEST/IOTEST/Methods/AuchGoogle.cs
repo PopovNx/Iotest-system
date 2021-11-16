@@ -31,7 +31,7 @@ namespace IOTEST
                     User.Image = context.Request.Form["ImageURL"];
                     User.Gmail = Mail;
                     User.Token = context.Request.Form["IDToken"];
-                    User.UserProf = UserProfType.Unset;
+                    User.UserProf = UserProfType.User;
                     await userContext.AddAsync(User);
                     await userContext.SaveChangesAsync();
                 }
