@@ -1,17 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using static IOTEST.IoContext;
+using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
-namespace IOTEST
+namespace IOTEST.Methods
 {
-    public partial class Methods
-    {
+   
+    [UsedImplicitly]
         public class ConnectToGroup : IMethod
         {
 
@@ -29,4 +25,3 @@ namespace IOTEST
             }
         }
     }
-}

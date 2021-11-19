@@ -1,4 +1,12 @@
-﻿@model InstallController
+﻿
+@{
+    ViewData["Title"] = "IOTEST Install";
+}
+@section ScriptsAfter
+{
+    <script src="js/Install.js" asp-append-version="true" type="module"></script>
+}
+
 <div id="Page" class="user-select-none">
     <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
         <div class="d-flex justify-content-center align-items-center h-75">

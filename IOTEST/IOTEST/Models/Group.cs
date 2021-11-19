@@ -5,14 +5,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IOTEST
 {
-    public partial class IoContext
+    public sealed partial class IoContext
     {
+        [Serializable]
         [Table("Groups")]
         public class Group
         {
             [Key]
             public int Id { get; set; }
-
             public string Name { get; set; }
             public string Admin { get; set; }
             public DateTime Created { get; set; }

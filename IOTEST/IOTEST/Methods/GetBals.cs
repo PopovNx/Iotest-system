@@ -1,20 +1,12 @@
-﻿using static IOTEST.IoContext;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IOTEST;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
 
-namespace IOTEST
+namespace IOTEST.Methods
 {
-    public partial class Methods
-    {
+  
         public class GetBals : IMethod
 
         {
@@ -51,6 +43,6 @@ namespace IOTEST
                         Bal += result.Result * result.Max / result.Settings;
                 return Bal.ToString();
             }
-        }
+        
     }
 }

@@ -7,7 +7,7 @@
 .*/
 
 # FuelPHP
-/fuel/vendor
+/fuel/vendor 
 /docs/
 /fuel/app/logs/*/*/*
 /fuel/app/cache/*/*

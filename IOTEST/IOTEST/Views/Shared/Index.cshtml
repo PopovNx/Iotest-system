@@ -1,15 +1,22 @@
 ﻿@using Newtonsoft.Json.Linq
 @using Microsoft.EntityFrameworkCore
 
+@model IOTEST.IoContext.User
 @{
-
-    var user = ViewData["User"] as IoContext.User;
-    var DataBase = ViewData["DataBase"] as IoContext;
+    ViewData["Title"] = "IOTEST - Main";
 }
+
+@section ScriptsBefore
+{
+    <link href="css/Index.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+@section ScriptsAfter
+{
+    <script src="js/Index.js" asp-append-version="true" type="module"></script>
+}
+
 <header>
-    <script>
-           
-    </script>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
             <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="#">
@@ -19,9 +26,9 @@
                 </span>
             </a>
             <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
-                <span class="mr-1">@user.FirstName</span>
-                <span class="mr-2">@user.FamilyName</span>
-                <img src="@user.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+                <span class="mr-1">@Model.FirstName</span>
+                <span class="mr-2">@Model.FamilyName</span>
+                <img src="@Model.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
             </span>
         </div>
     </nav>
@@ -29,67 +36,22 @@
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
     <div class="row">
         <div id="LeftBlock" class="col-12 col-md-4 order-2 order-md-0 DOB">
-            @{
-                var NotZaver = (ViewData["Tests"] as List<IoContext.AcceptedLvl>).GroupBy(x => x.KEY).Where(x => !x.Any(y => y.IsLast));
-                if (NotZaver.Any())
-                {<h4 class="mt-3">Не завершенные тесты</h4>}
-                foreach (var item in NotZaver)
-                {
-                    var d = new Dictionary<string, string>();
-                    d["Key"] = item.Key;
-                    d["Gmail"] = user.Gmail;
-                    <div class="bg-dark my-3">
-                        <div>@(JObject.Parse((await DataBase.Tests.FirstOrDefaultAsync(x => x.KEY == item.Key)).JsonData)["Name"])</div>
-                        <div>Ключ: @item.Key</div>
-                        <div><button class="btn btn-outline-light mt-1 my-2" v-on:click="location.href='/test?@item.Key'">Перейти</button></div>
-                    </div>
-                }
-            }
-            @{
-                var Zaver = (ViewData["Tests"] as List<IoContext.AcceptedLvl>).Where(x => x.IsLast);
-                if (Zaver.Any())
-                {<h4 class="mt-3">Завершенные тесты</h4>}
-                foreach (var item in Zaver)
-                {
-                    var d = new Dictionary<string, string>();
-                    d["Key"] = item.KEY;
-                    d["Gmail"] = user.Gmail;
-                    <div class="bg-dark my-3">
-                        <div>@(JObject.Parse((await DataBase.Tests.FirstOrDefaultAsync(x => x.KEY == item.KEY)).JsonData)["Name"])</div>
-                        <div>Оценка: @(await (new Methods.GetBals()).InvokeInside(DataBase, d))</div>
-                        <div>Ключ: @item.KEY</div>
-                    </div>
-                }
-            }
+            123
         </div>
-        <div id="LeftBlock" class="col-12 col-md-4 order-0 order-md-1">
+        <div class="col-12 col-md-4 order-0 order-md-1">
             <div class="bg-dark mt-4 rounded ">
 
                 <div class="form-group  DOB p-2 row d-flex   justify-content-center">
                     <label for="InputCodeTest">Введите код теста</label>
                     <div class="px-5">
-                        <input type="text" v-model="code" value="" id="InputCodeTest" class="my-2 form-control text-center bg-dark text-light border-2 border-light" />
+                        <input type="text" v-model="code" value="" id="InputCodeTest" class="my-2 form-control text-center bg-dark text-light border-2 border-light"/>
                     </div>
                     <button v-on:click="GotoModel" class="btn btn-outline-light my-3 col-6">Перейти</button>
-                </div> 
+                </div>
             </div>
-        </div> 
-        <div id="LeftBlock" class="col-12 col-md-4 order-1 order-md-2">
-            @{
-                var NTests = (ViewData["NTests"] as List<IoContext.Test>);
-                if (NTests.Any())
-                {<h4 class="mt-3">Тесты к прохождению</h4>}
-                foreach (var item in NTests)
-                {
-                    var d = new Dictionary<string, string>();
-                    d["Key"] = item.KEY;
-                    d["Gmail"] = user.Gmail;
-                    <div class="bg-dark my-3 DOB" v-on:click="location.href='/test?@item.KEY'">
-                        <div>@(JObject.Parse((await DataBase.Tests.FirstOrDefaultAsync(x => x.KEY == item.KEY)).JsonData)["Name"])</div>
-                        <div>Ключ: @item.KEY</div>
-                    </div>
-                }
-            }
+        </div>
+        <div class="col-12 col-md-4 order-1 order-md-2">
+            123
         </div>
     </div>
 </div>

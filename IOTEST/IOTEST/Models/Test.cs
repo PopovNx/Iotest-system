@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IOTEST
 {
-    public partial class IoContext
+    public sealed partial class IoContext
     {
         [Table("Tests")]
         public class Test

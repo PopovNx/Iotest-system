@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace IOTEST
+namespace IOTEST.Methods
 {
-    public partial class Methods
-    {
+    
         public interface IMethod
         {
-            public Task<string> Invoke(HttpContext Context, IoContext userContext, DataControl control);
+            public Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control);
         }
-    }
+    
 }

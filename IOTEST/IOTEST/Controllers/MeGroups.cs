@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace IOTEST.Controllers
 {
-    [Route("/me")]
-    public class MeController : Controller
+    [Route("/meGroups")]
+    public class MeGroupsController : Controller
     {
         private readonly IoContext _database;
 
-        public MeController(IoContext userContext) => _database = userContext;
+        public MeGroupsController(IoContext userContext) => _database = userContext;
 
         public async Task<ActionResult> IndexAsync()
         {
@@ -22,8 +22,8 @@ namespace IOTEST.Controllers
                 HttpContext.Response.Redirect("/login");
                 return View("Empty");
             }
-            var user = await _database.Users.FirstAsync(x => x.Id == control.UserData.Id);
-            return View("Me", user);
+              var user = await _database.Users.FirstAsync(x => x.Id == control.UserData.Id);
+              return View("MeGroups", user);
         }
     }
 }

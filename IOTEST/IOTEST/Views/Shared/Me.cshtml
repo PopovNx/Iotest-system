@@ -1,16 +1,32 @@
-﻿@model MeController
+﻿@model IoContext.User
 @{
-    var user = ViewData["User"] as IOTEST.IoContext.User;
+    ViewData["Title"] = "IOTEST - Me";
+
 }
+@section ScriptsBefore
+{
+    <link href="css/Test.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+@section ScriptsAfter
+{
+    <script src="js/Me.js" asp-append-version="true" type="module"></script>
+}
+
 <header>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
-            <a class="navbar-brand user-select-none DOB" href="/">
+            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="#">
                 <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
                 <span>
                     TEST system
                 </span>
             </a>
+            <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
+                <span class="mr-1">@Model.FirstName</span>
+                <span class="mr-2">@Model.FamilyName</span>
+                <img src="@Model.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+            </span>
         </div>
     </nav>
 </header>
@@ -25,15 +41,15 @@
                                 <hr class="d-sm-none" />
                                 <nav class="navbar">
                                     <span class="navbar-brand px-4 DOB">
-                                        <img src="@user.Image" width="35" height="35" class="d-inline-block align-top rounded-circle mx-1">
-                                        <span class="mr-1 mx-1">@user.FirstName</span>
-                                        <span class="mr-2">@user.FamilyName</span>
+                                        <img src="@Model.Image" width="35" height="35" class="d-inline-block align-top rounded-circle mx-1" alt="">
+                                        <span class="mr-1 mx-1">@Model.FirstName</span>
+                                        <span class="mr-2">@Model.FamilyName</span>
                                     </span>
                                 </nav>
                             </div>
                             <div class="nav flex-column nav-pills " id="tabs" role="tablist" aria-orientation="vertical">
-                                <a class="m-3 btn btn-outline-light active" id="pill-profile" data-toggle="pill" href="#v-pill-profile" role="tab" aria-controls="v-pill-profile" aria-selected="true">Профиль</a>
-                                <a class="m-3 btn btn-outline-light" id="pill-groups" data-toggle="pill" href="#v-pill-groups" role="tab" aria-controls="v-pill-groups" aria-selected="false">Группы</a>
+                                <a class="m-3 btn btn-outline-light active" id="pill-profile" data-toggle="pill" href="#v-pill-profile" role="tab" aria-controls="v-pill-profile" aria-selected="true">Информация</a>
+                                <a class="m-3 btn btn-outline-light" id="pill-groups" data-toggle="pill" href="#v-pill-groups" role="tab" aria-controls="v-pill-groups" aria-selected="false">Курсы</a>
                                 <a class="m-3 btn btn-outline-light" id="pill-tests" data-toggle="pill" href="#v-pill-tests" role="tab" aria-controls="v-pill-tests" aria-selected="false">Мои тесты</a>
                             </div>
                         </div>
@@ -41,11 +57,11 @@
                             <div class="tab-content mt-3" id="tabContent">
                                 <div class="tab-pane fade show active" id="v-pill-profile" role="tabpanel" aria-labelledby="pill-profile">
                                     <div class="DOB">
-                                        <h4>Профиль</h4>
-                                        <hr />
-                                        <h6>Имя @user.FirstName</h6>
-                                        <h6>Фамилия: @user.FamilyName</h6>
-                                        <h6>Почта: @user.Gmail</h6>
+                                        <h4>Информация</h4>
+                                        <hr/>
+                                        <h6>@Model.Gmail</h6>
+                                        <br>
+                                        <h6>Статус: @(Model.UserProf == IoContext.User.UserProfType.User?"Ученик":"Учитель")</h6>
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="v-pill-groups" role="tabpanel" aria-labelledby="pill-groups">
@@ -64,20 +80,8 @@
                                                     <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreatGroupModal">Создать</button>
                                                 </div>
                                                 <div class="col-sm-7 overflow-auto order-0 order-sm-1" style="height:250px">
-                                                    @foreach (var item in (ViewData["Groups"] as List<IoContext.Group>))
-                                                    {
-                                                        <div class="bg-dark p-2 rounded">
-                                                            <div v-on:click="AboutGroup('@item.Key')"><h4>@item.Name</h4></div>
-                                                            <div class="user-select-all">@item.Key</div>
-                                                            <div v-on:click="AboutGroup('@item.Key')">
-                                                                @if (item.Admin == user.Gmail)
-                                                                {<span>Пренадлежит мне</span>}
-                                                                else
-                                                                {<span>Учасник</span>}
-                                                            </div>
-
-                                                        </div>
-                                                    }
+                                                    
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -93,14 +97,7 @@
                                                     <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreateTest">Создать</button>
                                                 </div>
                                                 <div class="col-sm-7 overflow-auto order-0 order-sm-1" style="height:250px">
-                                                    @foreach (var item in (ViewData["Tests"] as List<IoContext.Test>))
-                                                    {
-                                                        <div class="bg-dark p-2 rounded">
-                                                            <div v-on:click="GetTestData('@item.KEY')"><h4>@Newtonsoft.Json.Linq.JObject.Parse(item.JsonData)["Name"]</h4></div>
-                                                            <div class="user-select-all">@item.KEY</div>
-                                                        </div>
-                                                    }
-
+                                                   
                                                 </div>
                                             </div>
                                         </div>
@@ -156,7 +153,7 @@
                                 </tr>
                             </thead>
                             <tbody >
-                                <tr v-for="item in TestResultt">
+                                <tr v-for="item in TestResult">
                                     <th scope="row">{{item.Item1.Id}}</th>
                                     <td>
                                         {{item.Item1.Email}}

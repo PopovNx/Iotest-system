@@ -5,7 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using static IOTEST.IoContext;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace IOTEST
 {
@@ -81,13 +82,12 @@ namespace IOTEST
             
         }
     }
-
     public class DataControl
     {
         private string _cryptStr;
         public const string CookieName = "Session_Data";
         public bool IsOk { get; }
-        public User UserData { get; }
+        public IoContext.User UserData { get; }
         public DataControl(IRequestCookieCollection cookies)
         {
             IsOk = cookies.ContainsKey(CookieName);
@@ -97,15 +97,20 @@ namespace IOTEST
             _cryptStr = cookies[CookieName];
             var JsonStr = Crypt.Decode(_cryptStr);
             IsOk = !string.IsNullOrEmpty(JsonStr);
-            if (IsOk) UserData = JsonConvert.DeserializeObject<User>(JsonStr!);
+            if (IsOk) UserData = JsonConvert.DeserializeObject<IoContext.User>(JsonStr!);
         }
 
-        public DataControl(User data)
+        public async Task<bool> Exist(IoContext context)
+        {
+            if (!IsOk) return false;
+            var ex = await context.Users.Where(x => x.Id == UserData.Id).AnyAsync();
+            return ex;
+        }
+        public DataControl(IoContext.User data)
         {
             UserData = data;
             _cryptStr = Crypt.Code(JsonConvert.SerializeObject(UserData));
         }
-
         public override string ToString()
         {
             _cryptStr = Crypt.Code(JsonConvert.SerializeObject(UserData));

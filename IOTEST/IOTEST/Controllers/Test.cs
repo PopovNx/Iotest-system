@@ -9,27 +9,27 @@ namespace IOTEST.Controllers
     [Route("/test")]
     public class TestController : Controller
     {
-        private IoContext Database;
+        private readonly IoContext _database;
 
         public TestController(IoContext userContext)
         {
-            Database = userContext;
+            _database = userContext;
         }
 
         public async Task<IActionResult> IndexAsync()
         {
             DataControl control = new DataControl(HttpContext.Request.Cookies);
-            if (!control.IsOk || !(await Database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
+            if (!control.IsOk || !(await _database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
             var Key = HttpContext.Request.Query.Keys.FirstOrDefault();
             var IsYes = !string.IsNullOrEmpty(Key);
-            if (IsYes) IsYes = await Database.Tests.AnyAsync(x => x.KEY == Key);
-            if (IsYes) ViewData.Add("Model", await Database.Tests.Where(x => x.KEY == Key).FirstOrDefaultAsync());
-            var Prohods = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).AnyAsync();
+            if (IsYes) IsYes = await _database.Tests.AnyAsync(x => x.KEY == Key);
+            if (IsYes) ViewData.Add("Model", await _database.Tests.Where(x => x.KEY == Key).FirstOrDefaultAsync());
+            var Prohods = await _database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).AnyAsync();
             if (Key == null)Key = "error";
             var Ended = false;
-            if (Prohods) Ended = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).Where(x => x.IsLast).AnyAsync();
+            if (Prohods) Ended = await _database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).Where(x => x.IsLast).AnyAsync();
             var NumLast = -1;
-            if (!Ended && Prohods) NumLast = await Database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).MaxAsync(x => x.Num);
+            if (!Ended && Prohods) NumLast = await _database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).MaxAsync(x => x.Num);
 
             ViewData.Add("Prohods", Prohods);
             ViewData.Add("Ended", Ended);

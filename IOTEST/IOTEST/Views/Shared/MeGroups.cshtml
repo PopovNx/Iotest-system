@@ -1,0 +1,63 @@
+﻿@model IOTEST.IoContext.User
+@{
+    ViewData["Title"] = "IOTEST - Groups";
+}
+
+@section ScriptsAfter
+{
+    <script src="js/MeGroups.js" asp-append-version="true" type="module"></script>
+}
+
+<header>
+    <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
+        <div class="container-fluid ">
+            <a class="navbar-brand user-select-none DOB d-none d-sm-block" href="/">
+                <img src="~/Icons/144x144.png" alt="" width="35" height="35" class="d-inline-block align-top">
+                <span>
+                    TEST system
+                </span>
+            </a>
+            <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
+                <span class="mr-1">@Model.FirstName</span>
+                <span class="mr-2">@Model.FamilyName</span>
+                <img src="@Model.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+            </span>
+        </div>
+    </nav>
+</header>
+
+<div id="Page" class="user-select-none container-fluid text-light text-center">
+    <div class="row d-flex justify-content-center mt-sm-5">
+        <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
+            <div class="bg-dark">
+                <div class="row">
+                    <div class="DOB mt-2">
+                        <h4>Курсы</h4>
+                        <hr class="m-0"/>
+                        <div class="m-3">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="bg-transparent overflow-auto">
+
+                                        <div class="list-group" style="max-height: 40vh">
+                                            <div v-for="i in AllGroups">
+                                                <div class="m-1">
+                                                    <div class="list-group-item bg-transparent">{{i}}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

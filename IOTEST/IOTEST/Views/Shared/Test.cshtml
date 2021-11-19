@@ -1,7 +1,6 @@
-﻿@model TestController
-@{
-    var user = ViewData["User"] as IOTEST.IoContext.User;
-    var Test = ViewData["Model"] as IOTEST.IoContext.Test;
+﻿@{
+    var user = ViewData["User"] as IoContext.User;
+    var Test = ViewData["Model"] as IoContext.Test;
     var IsTestOk = (bool)ViewData["IsOkUrl"];
 }
 <header>

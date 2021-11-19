@@ -1,20 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
-namespace IOTEST
+
+namespace IOTEST.Methods
 {
-    public partial class Methods
+    [UsedImplicitly]
+    public class AboutGroup : IMethod
     {
-        public class AboutGroup : IMethod
+        public async Task<string> Invoke(HttpContext context, IoContext dataBase, DataControl control)
         {
-            public async Task<string> Invoke(HttpContext context, IoContext DataBase, DataControl control)
-            {
-                if (!control.IsOk || !context.Request.Form.ContainsKey("Key")) return "error";
-                var Key = context.Request.Form["Key"].ToString();
-                var Group =await DataBase.Groups.FirstOrDefaultAsync(x => x.Key == Key);
-                return JsonConvert.SerializeObject(Group);
-            }
+            if (!control.IsOk || !context.Request.Form.ContainsKey("Key")) return "error";
+            var Key = context.Request.Form["Key"].ToString();
+            var Group = await dataBase.Groups.FirstOrDefaultAsync(x => x.Key == Key);
+            return JsonConvert.SerializeObject(Group);
         }
     }
 }

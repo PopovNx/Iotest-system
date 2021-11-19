@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using static IOTEST.IoContext;
-using static IOTEST.IoContext.User;
-
-namespace IOTEST
+using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+namespace IOTEST.Methods
 {
-    public partial class Methods
-    {
+    [UsedImplicitly]
         public class AuchGoogle : IMethod
         {
             public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
@@ -17,7 +14,7 @@ namespace IOTEST
                 var Mail = context.Request.Form["Email"].ToString();
                 if (string.IsNullOrEmpty(Mail)) return "NotOk";
                 var IsAny = await userContext.Users.AnyAsync(x => x.Gmail == Mail);
-                var User = new User();
+                var User = new IoContext.User();
                 if (IsAny)
                 {
                     User = await userContext.Users.Where(x => x.Gmail == Mail).FirstOrDefaultAsync();
@@ -31,7 +28,7 @@ namespace IOTEST
                     User.Image = context.Request.Form["ImageURL"];
                     User.Gmail = Mail;
                     User.Token = context.Request.Form["IDToken"];
-                    User.UserProf = UserProfType.User;
+                    User.UserProf = IoContext.User.UserProfType.User;
                     await userContext.AddAsync(User);
                     await userContext.SaveChangesAsync();
                 }
@@ -40,5 +37,5 @@ namespace IOTEST
                 return "OK";
             }
         }
-    }
+    
 }

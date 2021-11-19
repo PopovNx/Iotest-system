@@ -1,7 +1,7 @@
-﻿var app = new Vue({
+﻿const app = new Vue({
     el: "#app",
     data: {
-        deferredPrompt: null,
+        deferredPrompt: -1,
         IsIphone: /iPhone|iPad|iPod/i.test(navigator.userAgent),
         InstYet: false,
     },
@@ -11,7 +11,7 @@
             else this.deferredPrompt.prompt();
         },
         ToWeb() {
-            Cookies.set("Web", true, { expires: 228 });
+            Cookies.set("Web", true, {expires: 228});
             location.href = "/login";
         }
     },
@@ -19,16 +19,17 @@
         window.addEventListener("beforeinstallprompt", e => {
             e.preventDefault();
             this.deferredPrompt = e;
+            app.InstYet = false;
         });
-        window.addEventListener("appinstalled", () => {
+        window.addEventListener("appinstalled", (e) => {
             location.href = "/login";
             this.deferredPrompt = null;
+            app.InstYet = true;
         });
     },
     mounted() {
         setTimeout(() => {
-            app.InstYet = (app.deferredPrompt == null && !app.IsIphone)
-            console.log(app.InstYet);
+            app.InstYet = (app.deferredPrompt ===-1 && !app.IsIphone)
         }, 100);
     }
-})
+});

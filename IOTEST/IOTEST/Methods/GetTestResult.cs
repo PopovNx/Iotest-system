@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-namespace IOTEST
+using JetBrains.Annotations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+
+namespace IOTEST.Methods
 {
-    public partial class Methods
-    {
+  
+    [UsedImplicitly]
         public class GetTestResult : IMethod
         {
             public async Task<string> Invoke(HttpContext context, IoContext DataBase, DataControl control)
@@ -27,6 +29,6 @@ namespace IOTEST
                 }
                 return JsonConvert.SerializeObject(Data);
             }
-        }
+        
     }
 }

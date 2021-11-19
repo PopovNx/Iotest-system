@@ -5,14 +5,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IOTEST
 {
-    public partial class IoContext
+    public sealed partial class IoContext
     {
         [Table("AcceptedLvls")]
         public class AcceptedLvl
         {
             [Key]
             public int Id { get; set; }
-
             public string KEY { get; set; }
             public string Email { get; set; }
             public bool IsLast { get; set; }
