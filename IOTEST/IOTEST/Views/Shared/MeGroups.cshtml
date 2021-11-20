@@ -25,35 +25,114 @@
         </div>
     </nav>
 </header>
-
+<script >
+const MyMail = "@Model.Gmail";
+</script>
 <div id="Page" class="user-select-none container-fluid text-light text-center">
     <div class="row d-flex justify-content-center mt-sm-5">
         <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
             <div class="bg-dark">
                 <div class="row">
                     <div class="DOB mt-2">
-                        <h4>Курсы</h4>
-                        <hr class="m-0"/>
-                        <div class="m-3">
-                            <div class="container">
+                        <div>
+                            <span v-if="ShowMode==0">
                                 <div class="row">
-                                    <div class="bg-transparent overflow-auto">
+                                    <div class="col-4 offset-4">
+                                        <h4>Курсы</h4>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" id="SwT" type="checkbox" v-model="AllCourses">
+                                            <label class="form-check-label" for="SwT">
+                                                <span v-if="AllCourses">
+                                                    <h6>Мои курсы</h6>
+                                                </span>
+                                                <span v-else>
+                                                    <h6>Все курсы</h6>
+                                                </span>
+                                            </label>
 
-                                        <div class="list-group" style="max-height: 40vh">
-                                            <div v-for="i in AllGroups">
-                                                <div class="m-1">
-                                                    <div class="list-group-item bg-transparent">{{i}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                            <span v-else-if="ShowMode==1">
+                                <div class="container">
+                                    <h4>Создание курса</h4>
+                                </div>
+                            </span>
+                            <span v-else-if="ShowMode==2">
+                                <div class="container">
+                                    <h4 style="user-select: text">{{EditGroupLabel}}</h4>
+                                </div>
+                            </span>
+                        </div>
+                        <hr class="m-0"/>
+                        <div>
+                            <span v-if="ShowMode==0">
+                                <div class="m-3">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="bg-transparent overflow-auto">
+                                                <div class="list-group" style="max-height: 40vh" v-if="LoadedGroups">
+                                                    <div v-for="i in ShowedGroups" v-if="ShowedGroups.length!=0">
+                                                        <div class="m-1">
+                                                            <div class="list-group-item bg-dark">
+                                                                <div v-on:mouseleave="MouseOverGroup =null">
+                                                                    <h5 class="gdd" style="user-select: all" v-if="MouseOverGroup == i">{{i.Key}}</h5>
+                                                                    <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
+                                                                </div>
+                                                                <div>
+                                                                    <p>Пользователей: {{i.Users.length}}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div v-if="ShowedGroups.length==0">
+                                                        <h4 v-if="AllCourses">Вы не создали курсы</h4>
+                                                        <h4 v-else>Вы не участник курсов</h4>
+                                                    </div>
                                                 </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </span>
+                            <span v-else-if="ShowMode==1">
+                                <div class="row">
+                                    <div>
+                                        <div class="form-group col-6 offset-3 p-1">
+                                            <h5>Название</h5>
+                                            <input v-bind:class="{'is-invalid':NewGroupNameInvalid}" v-model="NewGroupName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                                            <div class="invalid-feedback">{{NewGroupNameInvalid}}</div>
+                                        </div>
+                                        <div class="form-group col-6 offset-3 p-1">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" id="SwX" type="checkbox" v-model="NewGroupOpen">
+                                                <label class="form-check-label" for="SwX">
+                                                    <h5 v-if="NewGroupOpen">Открытый курс</h5>
+                                                    <h5 v-else>Закрытый курс</h5>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
-                            </div>
-
+                            </span>
+                            
                         </div>
-
-
+                        <hr class="m-0"/>
+                        <div>
+                            <span v-if="ShowMode==0">
+                                <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ShowMode=1">Создать курс</a>
+                                <a class="m-3 btn btn-outline-light" v-else>Присоедениться к крусу</a>
+                            </span>
+                            <span v-if="ShowMode==1">
+                                <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
+                                <a class="m-3 btn btn-outline-light" v-on:click="CreateGroup">Создать</a>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

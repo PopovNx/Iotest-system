@@ -21,14 +21,21 @@ namespace IOTEST.Methods
                 .Select(s => s[Random.Next(s.Length)]).ToArray());
         }
 
-        internal static string KeyGen() => (RandomString(3) + "-" + RandomString(3) + "-" + RandomString(3));
+        internal static string KeyGen(bool group = false) =>
+            $"{RandomString(3)}-{RandomString(3)}-{RandomString(3)}{(@group ? ("-" + RandomString(3)) : "")}";
 
         public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
         {
-            if (!control.IsOk || !context.Request.Form.ContainsKey("Name")) return "error";
+            if (!control.IsOk || !context.Request.Form.ContainsKey("Name") ||
+                !context.Request.Form.ContainsKey("IsOpen")) return "error";
             var groupName = context.Request.Form["Name"].ToString();
-            if (groupName.Length < 3) return "error";
-            if (await userContext.Groups.AnyAsync(x => x.Name == groupName)) return "exist";
+            var isOpen = context.Request.Form["IsOpen"].ToString().ToLower();
+
+            if (isOpen is not ("true" or "false")) return "Is Open Error";
+            if (groupName.Length < 3) return "Name Error";
+
+            if (await userContext.Groups.AnyAsync(x => x.Name == groupName && x.Admin == control.UserData.Gmail))
+                return "exist";
             var Res = new IoContext.Group
             {
                 Created = DateTime.Now,
@@ -36,11 +43,13 @@ namespace IOTEST.Methods
                 Name = context.Request.Form["Name"],
                 Tests = new List<string>(),
                 Users = new List<string>(),
-                Key = KeyGen()
+                InvitedUsers = new List<string>(),
+                Open = isOpen == "true",
+                Key = KeyGen(true)
             };
             await userContext.Groups.AddAsync(Res);
             await userContext.SaveChangesAsync();
-            return "OK";
+            return Res.Key;
         }
     }
 }

@@ -15,9 +15,10 @@ namespace IOTEST.Methods
             public async Task<string> Invoke(HttpContext context, IoContext dataBase, DataControl control)
             {
                 if (!control.IsOk) return "error";
-                var Result = await dataBase.Groups.Select(x => x).ToArrayAsync();
-
-                return JsonConvert.SerializeObject(Result);
+                var gmail = control.UserData.Gmail;
+                var Result = await dataBase.Groups.Select(x=>x).ToArrayAsync();
+                var data = Result.Where(x => x.Admin == gmail || x.Users.Contains(gmail)).ToList();
+                return JsonConvert.SerializeObject(data);
             }
         
     }
