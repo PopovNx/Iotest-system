@@ -51,6 +51,13 @@
                 console.log(x.data);
             });
         },
+        ChangeUserStatus(e) {
+            const Data = new FormData();
+            Data.append('method', 'ChangeUserStatus');
+            axios.post('/method', Data).then((x) => {
+              location.reload();
+            });
+        },
         GetTestData(e) {
             const Data = new FormData();
             Data.append('method', 'GetTestResult');

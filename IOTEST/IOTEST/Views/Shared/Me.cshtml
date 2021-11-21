@@ -46,7 +46,13 @@
                                     <br>
                                     <h6>Статус: @(Model.UserProf == IoContext.User.UserProfType.User ? "Ученик" : "Учитель")</h6>
                                     <hr/>
-                                    
+                                    <a class="m-3 btn btn-outline-light" href="/">Назад</a>
+                                    <a class="m-3 btn btn-outline-light" href="/megroups">Группы</a>
+                                    @if (Model.UserProf == IoContext.User.UserProfType.Teacher)
+                                    {
+                                        <a class="m-3 btn btn-outline-light" href="/tests">Тесты</a> 
+                                    }
+                                    <a class="m-3 btn btn-outline-light" v-on:click="ChangeUserStatus">@(Model.UserProf == IoContext.User.UserProfType.User ? "Стать учителем" : "Стать учеником") </a>
                                 </div>
                             </div>
                         </div>

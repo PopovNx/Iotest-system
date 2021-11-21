@@ -760,7 +760,6 @@ namespace Objects {
             super(type.textures, varitant, sx, sy, x, y, r, true, isdragable);
         }
     }
-
     export class Label extends DragableObject {
         static Variants: Array<any> = [            // @ts-ignore */}
             new PIXI.TextStyle({ fontFamily: 'Arial', fill: ['#ffffff'], fontSize: 120, }), // @ts-ignore */}
