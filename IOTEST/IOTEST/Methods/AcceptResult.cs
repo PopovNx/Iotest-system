@@ -10,7 +10,7 @@ namespace IOTEST.Methods
     [UsedImplicitly]
         public class AcceptResult : IMethod
         {
-            public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
+            public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
                 if (!control.IsOk || !context.Request.Form.ContainsKey("Test") || !context.Request.Form.ContainsKey("Num") || !context.Request.Form.ContainsKey("Last") || !context.Request.Form.ContainsKey("Data")) return "error";
                 var Res = new IoContext.AcceptedLvl
@@ -22,11 +22,11 @@ namespace IOTEST.Methods
                     Result = JsonConvert.DeserializeObject<IoContext.AcceptedLvl.ResultData>(Encoding.UTF8.GetString(Convert.FromBase64String(context.Request.Form["Data"]))),
                     Created = DateTime.Now
                 };
-                await userContext.AcceptedLvls.AddAsync(Res);
+                await db.AcceptedLvls.AddAsync(Res);
 
                 Console.WriteLine(JsonConvert.SerializeObject(Res));
 
-                await userContext.SaveChangesAsync();
+                await db.SaveChangesAsync();
                 return "OK";
             }
         

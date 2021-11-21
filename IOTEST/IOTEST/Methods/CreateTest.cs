@@ -8,7 +8,7 @@ namespace IOTEST.Methods
     [UsedImplicitly]
     public class CreateTest : IMethod
     {
-        public async Task<string> Invoke(HttpContext context, IoContext dataBase, DataControl control)
+        public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
         {
             if (!control.IsOk || !context.Request.Form.ContainsKey("Data")) return "error";
             var Data = (Uri.UnescapeDataString(context.Request.Form["Data"].ToString()));
@@ -19,8 +19,8 @@ namespace IOTEST.Methods
                 JsonData = Data,
                 Created = DateTime.Now
             };
-            await dataBase.Tests.AddAsync(Test);
-            await dataBase.SaveChangesAsync();
+            await db.Tests.AddAsync(Test);
+            await db.SaveChangesAsync();
             Console.WriteLine(Data);
             return "Ok";
         }

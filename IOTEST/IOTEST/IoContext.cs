@@ -30,10 +30,7 @@ namespace IOTEST
                 .Property(x => x.Users)
                 .HasConversion(v => string.Join(',', v),
                     v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
-            modelBuilder.Entity<Group>()
-                .Property(x => x.InvitedUsers)
-                .HasConversion(v => string.Join(',', v),
-                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
+          
             modelBuilder
                 .Entity<Group>()
                 .Property(e => e.Users)
@@ -42,11 +39,6 @@ namespace IOTEST
             modelBuilder
                 .Entity<Group>()
                 .Property(e => e.Tests)
-                .Metadata
-                .SetValueComparer(valueComparer);
-            modelBuilder
-                .Entity<Group>()
-                .Property(e => e.InvitedUsers)
                 .Metadata
                 .SetValueComparer(valueComparer);
         }

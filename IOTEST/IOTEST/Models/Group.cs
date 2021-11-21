@@ -20,7 +20,6 @@ namespace IOTEST
             public List<string> Tests { get; set; }
             public string Key { get; set; }
             public bool Open { get; set; }
-            public List<string> InvitedUsers { get; set; }
 
         }
     }

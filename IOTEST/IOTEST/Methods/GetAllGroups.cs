@@ -12,11 +12,11 @@ namespace IOTEST.Methods
         [UsedImplicitly]
         public class GetAllGroups : IMethod
         {
-            public async Task<string> Invoke(HttpContext context, IoContext dataBase, DataControl control)
+            public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
                 if (!control.IsOk) return "error";
                 var gmail = control.UserData.Gmail;
-                var Result = await dataBase.Groups.Select(x=>x).ToArrayAsync();
+                var Result = await db.Groups.Select(x=>x).ToArrayAsync();
                 var data = Result.Where(x => x.Admin == gmail || x.Users.Contains(gmail)).ToList();
                 return JsonConvert.SerializeObject(data);
             }

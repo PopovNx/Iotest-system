@@ -63,7 +63,7 @@ const MyMail = "@Model.Gmail";
                             </span>
                             <span v-else-if="ShowMode==2">
                                 <div class="container">
-                                    <h4 style="user-select: text">{{EditGroupLabel}}</h4>
+                                    <h4>Пользователи</h4>
                                 </div>
                             </span>
                         </div>
@@ -82,9 +82,15 @@ const MyMail = "@Model.Gmail";
                                                                     <h5 class="gdd" style="user-select: all" v-if="MouseOverGroup == i">{{i.Key}}</h5>
                                                                     <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
                                                                 </div>
-                                                                <div>
-                                                                    <p>Пользователей: {{i.Users.length}}</p>
+                                                                <div class="row">
+                                                                    <div class="col-4 offset-4">  
+                                                                        <p>Пользователей: {{i.Users.length}}</p>
+                                                                    </div>
+                                                                    <div class="col-4" v-if="MyMail==i.Admin">
+                                                                        <a class="btn btn-outline-light" v-on:click="OpenGroupEdit(i.Key)">Редактировать</a>
+                                                                    </div>
                                                                 </div>
+                                                                
                                                             </div>
                                                         </div>
                                                     </div>
@@ -120,7 +126,26 @@ const MyMail = "@Model.Gmail";
                                     </div>
                                 </div>
                             </span>
-                            
+                            <span v-else-if="ShowMode==2">
+                                <div class="row" v-if="EditGroup!=null">
+                                    <div>
+                                        <div class="form-group col-6 offset-3 p-1">
+                                            <h4>{{EditGroup.Name}}</h4>
+                                            <small style="user-select: text">{{EditGroup.Key}}</small>
+                                        </div>
+                                        <div class="form-group col-6 offset-3 p-1">
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" id="SwX2" type="checkbox" v-model="EditGroupOpen">
+                                                <label class="form-check-label" for="SwX2">
+                                                    <h5 v-if="EditGroupOpen">Открытый курс</h5>
+                                                    <h5 v-else>Закрытый курс</h5>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+
                         </div>
                         <hr class="m-0"/>
                         <div>
@@ -131,6 +156,9 @@ const MyMail = "@Model.Gmail";
                             <span v-if="ShowMode==1">
                                 <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
                                 <a class="m-3 btn btn-outline-light" v-on:click="CreateGroup">Создать</a>
+                            </span>
+                            <span v-if="ShowMode==2">
+                                <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
                             </span>
                         </div>
                     </div>

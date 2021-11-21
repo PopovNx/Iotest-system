@@ -10,16 +10,16 @@ namespace IOTEST.Methods
         public class ConnectTest : IMethod
         {
 
-            public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
+            public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
                 if (!control.IsOk || !context.Request.Form.ContainsKey("GKey") || !context.Request.Form.ContainsKey("TKey")) return "error";
-                if (!await userContext.Groups.AnyAsync(x => x.Key == context.Request.Form["GKey"].ToString())) return "No";
-                var Group = await userContext.Groups.FirstAsync(x => x.Key == context.Request.Form["GKey"].ToString());
+                if (!await db.Groups.AnyAsync(x => x.Key == context.Request.Form["GKey"].ToString())) return "No";
+                var Group = await db.Groups.FirstAsync(x => x.Key == context.Request.Form["GKey"].ToString());
                 if (Group.Tests.Contains(context.Request.Form["TKey"].ToString())) return "Contains";
-                if (!await userContext.Tests.AnyAsync(x => x.KEY == context.Request.Form["TKey"].ToString())) return "NoTest";
+                if (!await db.Tests.AnyAsync(x => x.KEY == context.Request.Form["TKey"].ToString())) return "NoTest";
                 Group.Tests.Add(context.Request.Form["TKey"].ToString());
-                userContext.Groups.Update(Group);
-                await userContext.SaveChangesAsync();
+                db.Groups.Update(Group);
+                await db.SaveChangesAsync();
                 return "OK";
             }
         }

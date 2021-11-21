@@ -24,7 +24,7 @@ namespace IOTEST.Methods
         internal static string KeyGen(bool group = false) =>
             $"{RandomString(3)}-{RandomString(3)}-{RandomString(3)}{(@group ? ("-" + RandomString(3)) : "")}";
 
-        public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
+        public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
         {
             if (!control.IsOk || !context.Request.Form.ContainsKey("Name") ||
                 !context.Request.Form.ContainsKey("IsOpen")) return "error";
@@ -34,7 +34,7 @@ namespace IOTEST.Methods
             if (isOpen is not ("true" or "false")) return "Is Open Error";
             if (groupName.Length < 3) return "Name Error";
 
-            if (await userContext.Groups.AnyAsync(x => x.Name == groupName && x.Admin == control.UserData.Gmail))
+            if (await db.Groups.AnyAsync(x => x.Name == groupName && x.Admin == control.UserData.Gmail))
                 return "exist";
             var Res = new IoContext.Group
             {
@@ -43,12 +43,11 @@ namespace IOTEST.Methods
                 Name = context.Request.Form["Name"],
                 Tests = new List<string>(),
                 Users = new List<string>(),
-                InvitedUsers = new List<string>(),
                 Open = isOpen == "true",
                 Key = KeyGen(true)
             };
-            await userContext.Groups.AddAsync(Res);
-            await userContext.SaveChangesAsync();
+            await db.Groups.AddAsync(Res);
+            await db.SaveChangesAsync();
             return Res.Key;
         }
     }

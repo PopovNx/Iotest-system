@@ -10,13 +10,13 @@ namespace IOTEST.Methods
         public class GetBals : IMethod
 
         {
-            public async Task<string> Invoke(HttpContext context, IoContext DataBase, DataControl control)
+            public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
                 if (!control.IsOk) return "error";
 
                 var key = context.Request.Form["Key"].ToString();
                 var Mail = control.UserData.Gmail;
-                var Results = await DataBase.AcceptedLvls.Where(x => x.KEY == key).Where(x => x.Email == Mail).Select(x => x.Result).ToListAsync();
+                var Results = await db.AcceptedLvls.Where(x => x.KEY == key).Where(x => x.Email == Mail).Select(x => x.Result).ToListAsync();
                 var Bal = 0;
                 foreach (var result in Results)
                 {

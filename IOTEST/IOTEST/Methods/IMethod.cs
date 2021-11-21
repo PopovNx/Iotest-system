@@ -6,7 +6,7 @@ namespace IOTEST.Methods
     
         public interface IMethod
         {
-            public Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control);
+            public Task<string> Invoke(HttpContext context, IoContext db, DataControl control);
         }
     
 }

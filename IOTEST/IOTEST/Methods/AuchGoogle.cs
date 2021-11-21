@@ -9,15 +9,15 @@ namespace IOTEST.Methods
     [UsedImplicitly]
         public class AuchGoogle : IMethod
         {
-            public async Task<string> Invoke(HttpContext context, IoContext userContext, DataControl control)
+            public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
                 var Mail = context.Request.Form["Email"].ToString();
                 if (string.IsNullOrEmpty(Mail)) return "NotOk";
-                var IsAny = await userContext.Users.AnyAsync(x => x.Gmail == Mail);
+                var IsAny = await db.Users.AnyAsync(x => x.Gmail == Mail);
                 var User = new IoContext.User();
                 if (IsAny)
                 {
-                    User = await userContext.Users.Where(x => x.Gmail == Mail).FirstOrDefaultAsync();
+                    User = await db.Users.Where(x => x.Gmail == Mail).FirstOrDefaultAsync();
                 }
                 else
                 {
@@ -29,8 +29,8 @@ namespace IOTEST.Methods
                     User.Gmail = Mail;
                     User.Token = context.Request.Form["IDToken"];
                     User.UserProf = IoContext.User.UserProfType.User;
-                    await userContext.AddAsync(User);
-                    await userContext.SaveChangesAsync();
+                    await db.AddAsync(User);
+                    await db.SaveChangesAsync();
                 }
                 var DataC = new DataControl(User);
                 context.Response.Cookies.Append(DataControl.CookieName, DataC.ToString(), new CookieOptions { Path = "/", Expires = DateTime.Now.AddYears(1) });

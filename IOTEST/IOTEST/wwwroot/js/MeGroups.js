@@ -5,7 +5,7 @@
         MouseOverGroup:null,
         AllCourses: true,
         LoadedGroups: false,
-        ShowMode: 1,
+        ShowMode: 0,
         //0 Basic Menu
         //1 Create Group
         //2 Group Edit
@@ -13,7 +13,8 @@
         NewGroupOpen: true,
         NewGroupNameInvalid: null,
         
-        GroupEditId:null
+        GroupEditId:null,
+        EditGroupOpen: true,
     },
     methods: {
         GetGroups: function () {
@@ -44,24 +45,40 @@
                         this.ShowMode = 2;
                         this.GroupEditId = e.data;
                         this.GetGroups();
+                    }else{
+                        this.NewGroupNameInvalid = "Неизвестная ошибка";
                     }
                 }
             });
+        },
+        OpenGroupEdit: function (e ){
+            this.GroupEditId = e;
+            this.ShowMode = 2;
         }
     },
     watch:{
-
+        GroupEditId: function () {            
+            this.EditGroupOpen = this.EditGroup.Open;
+        },
+        EditGroupOpen:function (e) {
+            const data = new FormData();
+            data.append('method', 'OpenGroupChange');
+            data.append('Key', this.GroupEditId);
+            data.append('State', e.toString());
+            console.log(e)            
+            axios.post('/method', data).then((e) => {               
+                        this.GetGroups();                  
+            console.log(e.data)    
+            });
+        }
     },
     computed:{
         ShowedGroups: function () {
 
             return this.AllGroups.filter(x=>!(x.Admin===MyMail^this.AllCourses));
         },
-        EditGroupLabel: function () {
-            const group = this.AllGroups.find(x=>x.Key===this.GroupEditId);
-
-            if(group==null) return;
-            return group.Name;
+        EditGroup: function () {
+            return this.AllGroups.find(x=>x.Key===this.GroupEditId);
         }
     },
     mounted() {
