@@ -27,6 +27,7 @@
 </header>
 <script >
 const MyMail = "@Model.Gmail";
+const UserType = "@Model.UserProf";
 </script>
 <div id="Page" class="user-select-none container-fluid text-light text-center">
     <div class="row d-flex justify-content-center mt-sm-5">
@@ -36,11 +37,11 @@ const MyMail = "@Model.Gmail";
                     <div class="DOB mt-2">
                         <div>
                             <span v-if="ShowMode==0">
-                                <div class="row">
+                                <div class="row" >
                                     <div class="col-4 offset-4">
                                         <h4>Курсы</h4>
                                     </div>
-                                    <div class="col-4">
+                                    <div class="col-4" v-if="UserType == 'Teacher'">
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" id="SwT" type="checkbox" v-model="AllCourses">
                                             <label class="form-check-label" for="SwT">
@@ -63,7 +64,12 @@ const MyMail = "@Model.Gmail";
                             </span>
                             <span v-else-if="ShowMode==2">
                                 <div class="container">
-                                    <h4>Пользователи</h4>
+                                    <h4>{{EditGroup.Name}}</h4>
+                                </div>
+                            </span>
+                            <span v-else-if="ShowMode==10">
+                                <div class="container">
+                                    <h4>Присоедениться</h4>
                                 </div>
                             </span>
                         </div>
@@ -83,14 +89,14 @@ const MyMail = "@Model.Gmail";
                                                                     <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-4 offset-4">  
+                                                                    <div class="col-4 offset-4">
                                                                         <p>Пользователей: {{i.Users.length}}</p>
                                                                     </div>
                                                                     <div class="col-4" v-if="MyMail==i.Admin">
                                                                         <a class="btn btn-outline-light" v-on:click="OpenGroupEdit(i.Key)">Редактировать</a>
                                                                     </div>
                                                                 </div>
-                                                                
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -130,8 +136,9 @@ const MyMail = "@Model.Gmail";
                                 <div class="row" v-if="EditGroup!=null">
                                     <div>
                                         <div class="form-group col-6 offset-3 p-1">
-                                            <h4>{{EditGroup.Name}}</h4>
-                                            <small style="user-select: text">{{EditGroup.Key}}</small>
+
+                                            <h5 style="user-select: text">{{EditGroup.Key}}</h5>
+                                            <hr class="p-0">
                                         </div>
                                         <div class="form-group col-6 offset-3 p-1">
                                             <div class="form-check form-switch">
@@ -142,23 +149,66 @@ const MyMail = "@Model.Gmail";
                                                 </label>
                                             </div>
                                         </div>
+                                        <div class="form-group col-6 offset-3 p-1">
+                                            <hr class="p-0">
+                                            <h4>Пользователи:</h4>
+
+                                            <div class="overflow-auto" style="max-height: 30vh">
+                                                <div>
+                                                    <span v-if="EditGroup.Users.length!=0">
+                                                        <div v-for="i in EditGroup.Users">
+                                                            <div class="m-1">
+                                                                <div class="list-group-item bg-dark">
+                                                                    <h5 >{{i}}</h5>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                    <span v-else>
+                                                        <h6>Пригласите пользователей</h6>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                             </span>
-
+                            <span v-else-if="ShowMode==10">
+                                <div class="row">
+                                    <div>
+                                        <div class="form-group col-6 offset-3 p-3">
+                                            <h5>Код группы</h5>
+                                            <input v-bind:class="{'is-invalid':ConnectGroupKeyInvalid}" v-model="ConnectGroupKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                                            <div class="invalid-feedback">{{ConnectGroupKeyInvalid}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
                         </div>
                         <hr class="m-0"/>
                         <div>
                             <span v-if="ShowMode==0">
                                 <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ShowMode=1">Создать курс</a>
-                                <a class="m-3 btn btn-outline-light" v-else>Присоедениться к крусу</a>
+                                <a class="m-3 btn btn-outline-light" v-else v-on:click="ShowMode=10">Присоедениться к крусу</a>
                             </span>
                             <span v-if="ShowMode==1">
                                 <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
                                 <a class="m-3 btn btn-outline-light" v-on:click="CreateGroup">Создать</a>
                             </span>
                             <span v-if="ShowMode==2">
+                                <div class="row">
+                                    <div class="col-4 offset-4">
+                                        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
+                                    </div>
+                                    <div class="col-4">
+                                        <a class="m-3 btn btn-outline-danger" v-on:click="RmSelectedCourse">Удалить курс</a>
+                                    </div>
+                                </div>
+                            </span>
+                            <span v-if="ShowMode==10">
                                 <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
+                                <a class="m-3 btn btn-outline-light" v-on:click="ConnectToGroup">Присоедениться </a>
                             </span>
                         </div>
                     </div>

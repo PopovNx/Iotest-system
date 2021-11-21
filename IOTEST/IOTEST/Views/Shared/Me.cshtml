@@ -3,6 +3,7 @@
     ViewData["Title"] = "IOTEST - Me";
 
 }
+
 @section ScriptsBefore
 {
     <link href="css/Test.css" rel="stylesheet" asp-append-version="true"/>
@@ -22,7 +23,7 @@
                     TEST system
                 </span>
             </a>
-            <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
+            <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/'">
                 <span class="mr-1">@Model.FirstName</span>
                 <span class="mr-2">@Model.FamilyName</span>
                 <img src="@Model.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
@@ -36,227 +37,19 @@
             <div class="bg-dark">
                 <div>
                     <div class="row">
-                        <div class="col-12 col-sm-4 col-lg-3 DOB order-1 order-sm-0">
-                            <div>
-                                <hr class="d-sm-none" />
-                                <nav class="navbar">
-                                    <span class="navbar-brand px-4 DOB">
-                                        <img src="@Model.Image" width="35" height="35" class="d-inline-block align-top rounded-circle mx-1" alt="">
-                                        <span class="mr-1 mx-1">@Model.FirstName</span>
-                                        <span class="mr-2">@Model.FamilyName</span>
-                                    </span>
-                                </nav>
-                            </div>
-                            <div class="nav flex-column nav-pills " id="tabs" role="tablist" aria-orientation="vertical">
-                                <a class="m-3 btn btn-outline-light active" id="pill-profile" data-toggle="pill" href="#v-pill-profile" role="tab" aria-controls="v-pill-profile" aria-selected="true">Информация</a>
-                                <a class="m-3 btn btn-outline-light" id="pill-groups" data-toggle="pill" href="#v-pill-groups" role="tab" aria-controls="v-pill-groups" aria-selected="false">Курсы</a>
-                                <a class="m-3 btn btn-outline-light" id="pill-tests" data-toggle="pill" href="#v-pill-tests" role="tab" aria-controls="v-pill-tests" aria-selected="false">Мои тесты</a>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-8 col-lg-9 order-0 order-sm-1">
-                            <div class="tab-content mt-3" id="tabContent">
-                                <div class="tab-pane fade show active" id="v-pill-profile" role="tabpanel" aria-labelledby="pill-profile">
-                                    <div class="DOB">
-                                        <h4>Информация</h4>
-                                        <hr/>
-                                        <h6>@Model.Gmail</h6>
-                                        <br>
-                                        <h6>Статус: @(Model.UserProf == IoContext.User.UserProfType.User?"Ученик":"Учитель")</h6>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="v-pill-groups" role="tabpanel" aria-labelledby="pill-groups">
-                                    <div class="DOB">
-                                        <h4>Группы</h4>
-                                        <hr />
-                                        <div>
-                                            <div class="row">
-                                                <div class="col-12 col-sm-5 order-1 order-sm-0">
-                                                    <div class="input-group mb-3 ">
-                                                        <input type="text" v-model="ConnectGroupKey" class="form-control dssfdf text-center bg-dark text-light border-2 border-light" placeholder="Код группы">
-                                                        <div class="input-group-append">
-                                                            <button type="button" v-on:click="ConnectToGroup" class="text-light  btn btn-outline-light">+</button>
-                                                        </div>
-                                                    </div>
-                                                    <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreatGroupModal">Создать</button>
-                                                </div>
-                                                <div class="col-sm-7 overflow-auto order-0 order-sm-1" style="height:250px">
-                                                    
-                                                   
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="v-pill-tests" role="tabpanel" aria-labelledby="pill-tests">
-                                    <div class="DOB">
-                                        <h4>Тесты</h4>
-                                        <hr />
-                                        <div>
-                                            <div class="row">
-                                                <div class="col-sm-5 order-1 order-sm-0">
-                                                    <button style="height:40px" type="button" class="text-light btn  btn-outline-light col-12" data-toggle="modal" data-target="#CreateTest">Создать</button>
-                                                </div>
-                                                <div class="col-sm-7 overflow-auto order-0 order-sm-1" style="height:250px">
-                                                   
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
+                        <div class="mt-3">
+                            <div class="tab-pane fade show active" id="v-pill-profile" role="tabpanel" aria-labelledby="pill-profile">
+                                <div class="DOB">
+                                    <h4>Информация</h4>
+                                    <hr/>
+                                    <h6>@Model.Gmail</h6>
+                                    <br>
+                                    <h6>Статус: @(Model.UserProf == IoContext.User.UserProfType.User ? "Ученик" : "Учитель")</h6>
+                                    <hr/>
+                                    
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div>
-        <!-- modals-->
-        <div class="modal fade" id="CreatGroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content  bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Создание группы</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3 ">
-                            <input type="text" v-model="NewGroupName" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Название группы">
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-outline-success" v-on:click="CreateGroup">Создать</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="TestResults" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content  bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Результаты теста</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <table class="table table-dark">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Пользователь</th>
-                                    <th scope="col">Оценка</th>
-                                </tr>
-                            </thead>
-                            <tbody >
-                                <tr v-for="item in TestResult">
-                                    <th scope="row">{{item.Item1.Id}}</th>
-                                    <td>
-                                        {{item.Item1.Email}}
-                                    </td>
-                                    <td>{{item.Item2}}</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="AboutGroup" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content  bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Информация о группе "{{GroupSelectedData.Name}}"</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-</div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3 ">
-                            <div>
-                                <span>Администратор: </span> <span>{{GroupSelectedData.Admin}}</span>
-                            </div>
-                            <hr />
-                            <div>
-                                <span>Пользователи:</span>
-                                <div v-for="user in GroupSelectedData.Users">
-                                    <span>
-                                        {{user}}
-                                    </span>
-                                </div>
-                            </div>
-                            <div>
-                                <hr />
-                                <h5>Добавление теста</h5>
-                                <div>
-                                    <div class="input-group mb-3 ">
-                                        <input type="text" v-model="TestAddKey" class="form-control dssfdf text-center bg-dark text-light border-2 border-light" placeholder="Код Теста">
-                                        <div class="input-group-append">
-                                            <button type="button" v-on:click="ConnectTest" class="text-light  btn btn-outline-light">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Закрыть</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal fade" id="CreateTest" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen" role="document">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Создание Теста</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="input-group mb-3 ">
-                                <input v-model="TestData.Name" type="text" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Название теста">
-                            </div>
-                            <div class="input-group mb-3 ">
-                                <input v-model="TestData.Opis" type="text" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Описание теста">
-                            </div>
-                            <div class="input-group mb-3 ">
-                                <textarea v-model="TestData.EndText" type="text" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Конец теста"></textarea>
-                            </div>
-                            <div class="input-group mb-3">
-                                <select v-model="TestData.OcenType" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Тип оценивания">
-                                    <option value="value">Sum</option>
-                                    <option value="value">Средний балл</option>
-                                </select>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input v-model="TestData.DispNowBal" type="checkbox" name="name" id="Check1" class="form-check-input" />
-
-                                <label class="form-check-label" for="Check1">Отображение результата</label>
-                            </div>
-                            <div class="input-group mb-3 ">
-                                <input type="number" v-model="TestData.MaxBal" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" value="12" placeholder="Максимальный бал">
-                            </div>
-                            <div class="input-group mb-3 ">
-                                <textarea type="text" v-model="TestData.Mapss" class="form-control text-center dssfdf bg-dark text-light border-2 border-light" placeholder="Код теста" style="min-height:300px"></textarea>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-outline-success" v-on:click="CreateTest">Создать</button>
                     </div>
                 </div>
             </div>

@@ -2,8 +2,8 @@
     el: "#app",
     data: {
         AllGroups: [],
-        MouseOverGroup:null,
-        AllCourses: true,
+        MouseOverGroup: null,
+        AllCourses: false,
         LoadedGroups: false,
         ShowMode: 0,
         //0 Basic Menu
@@ -12,17 +12,20 @@
         NewGroupName: "",
         NewGroupOpen: true,
         NewGroupNameInvalid: null,
-        
-        GroupEditId:null,
+
+        GroupEditId: null,
         EditGroupOpen: true,
+
+        ConnectGroupKey: null,
+        ConnectGroupKeyInvalid: null
     },
     methods: {
         GetGroups: function () {
-            const data = new FormData( );
+            const data = new FormData();
             data.append('method', 'GetAllGroups');
             axios.post('/method', data).then((e) => {
                 this.AllGroups = e.data;
-                if(this.GroupEditId ==null&&e.data.length>0)
+                if (this.GroupEditId == null && e.data.length > 0)
                     this.GroupEditId = e.data[0].Key;
                 this.LoadedGroups = true;
             });
@@ -32,7 +35,7 @@
             data.append('method', 'CreateGroup');
             data.append('Name', this.NewGroupName);
             data.append('IsOpen', this.NewGroupOpen.toString());
-            if (this.NewGroupName.length < 4 || this.NewGroupName.length > 16) {
+            if (this.NewGroupName.length < 4 || this.NewGroupName.length > 32) {
                 this.NewGroupNameInvalid = "Неверное название";
                 return
             }
@@ -45,40 +48,76 @@
                         this.ShowMode = 2;
                         this.GroupEditId = e.data;
                         this.GetGroups();
-                    }else{
+                    } else {
                         this.NewGroupNameInvalid = "Неизвестная ошибка";
                     }
                 }
             });
         },
-        OpenGroupEdit: function (e ){
+        OpenGroupEdit: function (e) {
             this.GroupEditId = e;
             this.ShowMode = 2;
-        }
+        },
+        RmSelectedCourse: function () {
+            const data = new FormData();
+            data.append('method', 'RemoveGroup');
+            data.append('Key', this.EditGroup.Key);
+
+            axios.post('/method', data).then((e) => {
+                console.log(e);
+                this.ShowMode = 0;
+                this.GetGroups();
+            });
+        },
+        ConnectToGroup: function () {
+            this.ConnectGroupKeyInvalid = null;
+            const Data = new FormData();
+            Data.append('method', 'ConnectToGroup');
+            Data.append('Key', this.ConnectGroupKey);
+            axios.post('/method', Data).then((e) => {
+                if (e.data === "invalid" || e.data === "not found") {
+                    this.ConnectGroupKeyInvalid = "Курс не найден";
+                } else if (e.data === "adm") {
+                    this.ConnectGroupKeyInvalid = "Вы администратор курса";
+                } else if (e.data === "contains") {
+                    this.ConnectGroupKeyInvalid = "Вы уже участник курса";
+                } else if (e.data === "close") {
+                    this.ConnectGroupKeyInvalid = "Закрытый курс";
+                }  else if (e.data === "OK") {
+                    this.ConnectGroupKeyInvalid = null;
+                    this.ShowMode = 0;
+                    this.GetGroups();
+                } else {
+                    this.ConnectGroupKeyInvalid = "Неизвестная ошибка";
+                }
+            });
+
+        },
     },
-    watch:{
-        GroupEditId: function () {            
+    watch: {
+        GroupEditId: function () {
+            if (this.EditGroup == null) return;
             this.EditGroupOpen = this.EditGroup.Open;
         },
-        EditGroupOpen:function (e) {
+        EditGroupOpen: function (e) {
             const data = new FormData();
             data.append('method', 'OpenGroupChange');
             data.append('Key', this.GroupEditId);
             data.append('State', e.toString());
-            console.log(e)            
-            axios.post('/method', data).then((e) => {               
-                        this.GetGroups();                  
-            console.log(e.data)    
+            console.log(e)
+            axios.post('/method', data).then((e) => {
+                this.GetGroups();
+                console.log(e.data)
             });
         }
     },
-    computed:{
+    computed: {
         ShowedGroups: function () {
 
-            return this.AllGroups.filter(x=>!(x.Admin===MyMail^this.AllCourses));
+            return this.AllGroups.filter(x => !(x.Admin === MyMail ^ this.AllCourses));
         },
         EditGroup: function () {
-            return this.AllGroups.find(x=>x.Key===this.GroupEditId);
+            return this.AllGroups.find(x => x.Key === this.GroupEditId);
         }
     },
     mounted() {
