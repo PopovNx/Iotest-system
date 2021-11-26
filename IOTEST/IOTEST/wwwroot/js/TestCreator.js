@@ -4,16 +4,19 @@
         Core:null,
     },
     methods: {
-        Init: function () {
-            const canvas = document.getElementById("TestCanvas");
-            const parent = document.getElementById("TestMain");
+        Init: function () {           
             const Data = new FormData();
             Data.append('method', 'GetTest');
-            axios.post('/method', Data).then((test) => {
-                this.Core = new TestCore(canvas, parent,test.data);
-                console.log(this.Core)
-            });        
-
+            axios.post('/method', Data).then(test => this.TestLoad(test));
+        },
+        TestLoad(test){
+            const canvas = document.getElementById("TestCanvas");
+            const parent = document.getElementById("TestMain");            
+            this.Core = new TestCore(canvas, parent,test.data);
+            console.log(this.Core)
+        },
+        AddElement(){
+            this.Core.Request(); 
         }
     },
     watch: {
