@@ -97,6 +97,26 @@ class Trigger {
         return c;
     }
 }
+
+class NewObject {
+    X;
+    Y;
+    ScaleX;
+    ScaleY;
+    Rotation;
+    Draggable;
+    ButtonMode;
+    constructor() {
+        this.X = 100;
+        this.Y= 100;
+        this.ScaleX = 0.1;
+        this.ScaleY = 0.1;
+        this.Rotation = 0;
+        this.Draggable = true;
+        this.ButtonMode = true;
+    }
+}
+
 class DraggableObject {
     Id;
     Weight;
@@ -443,27 +463,39 @@ class TestCore {
         core.Display.renderer.resize(w, h);
         core.Display.stage.scale.set(testWidth / 1000, testWidth / 1000);
     }
-    Request(){
+    
+    AddElement(data){
         let maxId = 0;
         for (const t in this.DraggableObjects)
             if (maxId < t.Id)
                 maxId = t.Id;
-
         const res = this.Resources[0];
-        const obj = {
-            Id: maxId,
-            X:400,
-            Y: 400,
-            ScaleX: 0.2,
-            ScaleY: 0.2,
-            Rotation: 50,
-            Draggable: false,
-            ButtonMode: true
-            
-        }       
-        const nob = new DraggableObject(res,obj )
+        data.Id = maxId;
+        const nob = new DraggableObject(res,data )
         this.DraggableObjects.push(nob);
         this.DisplayContainer.addChild(nob.Sprite)
+    }
+    AddResource(data){
+        const loader = PIXI.Loader.shared;
+        data.forEach((e) => loader.add(e.Url));        
+        loader.load((loader, res) => {
+            for (const e of data){
+                e.Loaded = res[e.Url].texture;
+                e.__proto__ = Resource.prototype;
+                this.Resources.push(e);
+            }
+        });
+    }
+    Request(request, data){
+        switch (request) {
+            case "add":
+                this.AddElement(data);
+                break;
+            case "resAdd":
+                this.AddResource(data);
+                break;
+        }
+       
     }
 
 }
