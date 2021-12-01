@@ -106,7 +106,8 @@ class NewObject {
     Rotation;
     Draggable;
     ButtonMode;
-    constructor() {
+    Recourse;
+    constructor(res) {
         this.X = 100;
         this.Y= 100;
         this.ScaleX = 0.1;
@@ -114,6 +115,7 @@ class NewObject {
         this.Rotation = 0;
         this.Draggable = true;
         this.ButtonMode = true;
+        this.Recourse = res;
     }
 }
 
@@ -462,15 +464,14 @@ class TestCore {
         const h = testWidth / 3 * 2;
         core.Display.renderer.resize(w, h);
         core.Display.stage.scale.set(testWidth / 1000, testWidth / 1000);
-    }
-    
+    }    
     AddElement(data){
         let maxId = 0;
-        for (const t in this.DraggableObjects)
+        for (const t of this.DraggableObjects)
             if (maxId < t.Id)
                 maxId = t.Id;
         const res = this.Resources[0];
-        data.Id = maxId;
+        data.Id = maxId+1;
         const nob = new DraggableObject(res,data )
         this.DraggableObjects.push(nob);
         this.DisplayContainer.addChild(nob.Sprite)
@@ -486,14 +487,22 @@ class TestCore {
             }
         });
     }
+    RemoveObject(obj){
+        this.DisplayContainer.removeChild(obj.Sprite);        
+        this.DraggableObjects =  this.DraggableObjects.filter(x=>x!==obj);      
+        
+    }
     Request(request, data){
         switch (request) {
             case "add":
-                this.AddElement(data);
-                break;
+                return this.AddElement(data);
             case "resAdd":
-                this.AddResource(data);
-                break;
+                return this.AddResource(data);
+            case "getObjects":
+                return this.DraggableObjects;
+            case "removeObj":
+                return this.RemoveObject(data);
+                
         }
        
     }
