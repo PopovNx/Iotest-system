@@ -23,7 +23,6 @@ namespace IOTEST.Models
                 Loaded = null;
             }
         }
-
         [Serializable]
         public class DraggableObject
         {
@@ -51,7 +50,6 @@ namespace IOTEST.Models
                 Id = id;
             }
         }
-
         [Serializable]
         public class Trigger
         {
@@ -75,7 +73,6 @@ namespace IOTEST.Models
             public int Id { get; set; }
             public List<int> Accepted { get; set; }
         }
-
         [Serializable]
         public class Animation
         {
@@ -114,13 +111,11 @@ namespace IOTEST.Models
             public List<EventActivator> Activators { get; set; }
             public List<EventAction> EventActions { get; set; }
         }
-
         public string Name { get; set; }
         public List<Resource> Resources { get; set; }
         public List<DraggableObject> DraggableObjects { get; set; }
         public List<Trigger> Triggers { get; set; }
         public List<Animation> Animations { get; set; }
-
         public TestX()
         {
             Name = "Test";

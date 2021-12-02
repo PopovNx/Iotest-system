@@ -98,7 +98,6 @@ const MyMail = "@Model.Gmail";
                                         <div class="p-1">
                                             <div class="row">
                                                 <a class="btn btn-outline-light col-10 offset-1" v-on:click="AddResources()">Добавить</a>
-
                                             </div>
                                         </div>
                                     </div>
@@ -121,6 +120,9 @@ const MyMail = "@Model.Gmail";
                         </div>
                         <div v-if="MenuMode == 20">
                             <div class="p-3 row">
+                                <div>
+                                                        
+                                </div>
                                 <div class="col-4">
                                     <h3 class="text-light text-center">X:</h3>
                                 </div>
@@ -174,7 +176,7 @@ const MyMail = "@Model.Gmail";
                         <hr class="bg-light my-2"/>
                     </div>
                     <div>
-                        <div>
+                        <div style="overflow-x: hidden; overflow-y: auto; max-height: 400px">
                             <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
                                 <div class="p-1 row">
                                     <div class="col-12">
