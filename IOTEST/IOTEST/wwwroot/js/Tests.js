@@ -8,7 +8,7 @@
         TestNameInvalid: null,
         TestDescription: "",
         TestEndDescription: "",
-        EditedTest:null
+        EditedTest: null
     },
     methods: {
         CreateTest: async function () {
@@ -31,17 +31,41 @@
             Data.append('method', 'GetAllTest');
             await axios.post('/method', Data).then(x => this.LoadedTests = x.data);
         },
-        EditTest(i){
+        EditTest(i) {
             this.ShowMode = 11;
-            this.EditedTest = i;            
+            this.EditedTest = i;
         },
-        AddTask(){
-            location.href=`https://iotest.pp.ua/testCreator?test=${this.EditedTest.Key}&id=${Math.random().toString().split(".")[1].slice(0,8)}`;
+        AddTask: function (i, e) {
+            let id = Math.random().toString().split(".")[1].slice(0, 8);
+            if (e === true) {
+                id = i.Id;
+            }
+            location.href = `https://iotest.pp.ua/testCreator?test=${this.EditedTest.Key}&id=${id}`;
+        },
+        async RemoveTask(task) {
+            console.log(task);
+            const enTestKey = this.EditedTest.Key;
+            const Data = new FormData();
+            Data.append('method', 'RemoveTestX');
+            Data.append('TaskId', task.Id);
+            Data.append('TestKey', enTestKey);
+            axios.post('/method', Data).then(x => {
+                this.LoadTests().then(y => {
+                    this.EditTest(this.LoadedTests.find(x => x.Key === enTestKey));
+                })
+
+            });
+
         }
 
     },
     watch: {},
-    computed: {},
+    computed: {
+        EditedLevelsList() {
+            return JSON.parse(this.EditedTest.JsonData).Levels;
+        }
+
+    },
     async mounted() {
         await this.LoadTests();
     }
