@@ -15,6 +15,10 @@ namespace IOTEST.Models
             public dynamic Loaded { get; set; }
             public int Id { get; set; }
 
+            public Resource()
+            {
+                
+            }
             public Resource(string name, string url)
             {
                 Url = url;
@@ -36,6 +40,10 @@ namespace IOTEST.Models
             public int ResourceId { get; set; }
             public int Id { get; set; }
 
+            public DraggableObject()
+            {
+                
+            }
             public DraggableObject(Resource rex, double x, double y, double sx = 0.1, double sy = 0.1, double r = 0,
                 bool draggable = false, bool btn = true, int id = -1)
             {
@@ -53,6 +61,10 @@ namespace IOTEST.Models
         [Serializable]
         public class Trigger
         {
+            public Trigger()
+            {
+                
+            }
             public Trigger(int x, int y, int size, bool visual = true, bool magnetic = true, int id = -1,
                 params int[] ac)
             {
@@ -65,9 +77,9 @@ namespace IOTEST.Models
                 Accepted = ac.ToList();
             }
 
-            public int X { get; set; }
-            public int Y { get; set; }
-            public int Size { get; set; }
+            public double X { get; set; }
+            public double Y { get; set; }
+            public double Size { get; set; }
             public bool Visual { get; set; }
             public bool Magnetic { get; set; }
             public int Id { get; set; }
@@ -76,6 +88,10 @@ namespace IOTEST.Models
         [Serializable]
         public class Animation
         {
+            public Animation()
+            {
+                
+            }
             [Serializable]
             public class EventAction
             {
@@ -95,6 +111,10 @@ namespace IOTEST.Models
             [Serializable]
             public class EventActivator
             {
+                public EventActivator()
+                {
+                    
+                }
                 [Serializable]
                 public enum EventType
                 {
@@ -116,8 +136,24 @@ namespace IOTEST.Models
         public List<DraggableObject> DraggableObjects { get; set; }
         public List<Trigger> Triggers { get; set; }
         public List<Animation> Animations { get; set; }
+        public int Id { get; set; }
+
         public TestX()
         {
+            Id = Guid.NewGuid().GetHashCode();
+        }
+        public TestX(int id)
+        {
+            Id = id;
+            Name = @"Пустой тест";
+            Resources = new List<Resource>();
+            DraggableObjects = new List<DraggableObject>();
+            Triggers = new List<Trigger>();
+            Animations = new List<Animation>();
+        }
+        public TestX(bool x)
+        {
+            Id = Guid.NewGuid().GetHashCode();
             Name = "Test";
             Resources = new List<Resource>
             {

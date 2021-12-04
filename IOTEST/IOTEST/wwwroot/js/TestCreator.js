@@ -15,12 +15,15 @@
         Init: function () {
             const Data = new FormData();
             Data.append('method', 'GetTest');
-            axios.post('/method', Data).then(test => this.TestLoad(test));
+            Data.append('TestKey', TestKey);
+            Data.append('TestId', TestId);
+            axios.post('/method', Data).then(x => this.TestLoad(x.data));
         },
         TestLoad: function (test) {
             const canvas = document.getElementById("TestCanvas");
             const parent = document.getElementById("TestMain");
-            this.Core = new TestCore(canvas, parent, test.data);
+            console.log(test)
+            this.Core = new TestCore(canvas, parent, test);
         },
         AddElement: function () {
             this.Core.Request("add", this.nObj);
@@ -57,6 +60,19 @@
                 this.nObj = new NewObject();
             }
             this.MenuMode = 20;
+        },
+        async SaveTest() {
+            const Data = new FormData();
+            Data.append('method', 'SaveTest');
+            Data.append('Key', TestKey);
+           
+            const s = this.Core.Save();
+            console.log(s)
+            Data.append('Data', JSON.stringify(s));
+            const dx = await axios.post('/method', Data);
+            console.log(dx.data)
+           
+
         }
 
     },

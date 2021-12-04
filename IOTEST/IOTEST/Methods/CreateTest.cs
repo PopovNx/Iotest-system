@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace IOTEST.Methods
 {
@@ -11,18 +12,20 @@ namespace IOTEST.Methods
         public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
         {
             if (!control.IsOk || !context.Request.Form.ContainsKey("Data")) return "error";
-            var Data = (Uri.UnescapeDataString(context.Request.Form["Data"].ToString()));
+            var Data = JsonConvert.DeserializeObject<IoContext.Test>(context.Request.Form["Data"]);
             var Test = new IoContext.Test
             {
-                Email = control.UserData.Gmail,
-                KEY = CreateGroup.KeyGen(),
-                JsonData = Data,
+                Author = control.UserData.Gmail,
+                Key = CreateGroup.KeyGen(),
+                Name = Data.Name,
+                Description = Data.Description,
+                JsonData = JsonConvert.SerializeObject(new IoContext.Test.DnTestData()),
+                FinalText = Data.FinalText,
                 Created = DateTime.Now
             };
             await db.Tests.AddAsync(Test);
             await db.SaveChangesAsync();
-            Console.WriteLine(Data);
-            return "Ok";
+            return JsonConvert.SerializeObject(Test);
         }
     }
 }

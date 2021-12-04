@@ -22,8 +22,8 @@ namespace IOTEST.Controllers
             if (!control.IsOk || !(await _database.Users.Where(x => x.Id == control.UserData.Id).AnyAsync())) { HttpContext.Response.Redirect("/login"); return View("Empty"); }
             var Key = HttpContext.Request.Query.Keys.FirstOrDefault();
             var IsYes = !string.IsNullOrEmpty(Key);
-            if (IsYes) IsYes = await _database.Tests.AnyAsync(x => x.KEY == Key);
-            if (IsYes) ViewData.Add("Model", await _database.Tests.Where(x => x.KEY == Key).FirstOrDefaultAsync());
+            if (IsYes) IsYes = await _database.Tests.AnyAsync(x => x.Key == Key);
+            if (IsYes) ViewData.Add("Model", await _database.Tests.Where(x => x.Key == Key).FirstOrDefaultAsync());
             var Prohods = await _database.AcceptedLvls.Where(x => x.KEY == Key).Where(x => x.Email == control.UserData.Gmail).AnyAsync();
             if (Key == null)Key = "error";
             var Ended = false;

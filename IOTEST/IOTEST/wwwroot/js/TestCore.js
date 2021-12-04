@@ -1,10 +1,28 @@
 ﻿'use strict';
+
+class Test {
+    Name;
+    Description;
+    Key;
+    Created;
+    Tests;
+    FinalText;
+    Tasks;
+
+    constructor(name, description, finalText) {
+        this.Name = name;
+        this.Description = description;
+        this.FinalText = finalText;
+    }
+}
+
 class Resource {
     Url;
     Name;
     Loaded;
     Id;
 }
+
 class Trigger {
     constructor(object) {
         this.X = object.X;
@@ -107,9 +125,10 @@ class NewObject {
     Draggable;
     ButtonMode;
     Recourse;
+
     constructor(res) {
         this.X = 100;
-        this.Y= 100;
+        this.Y = 100;
         this.ScaleX = 0.1;
         this.ScaleY = 0.1;
         this.Rotation = 0;
@@ -134,6 +153,7 @@ class DraggableObject {
     Dragging;
     Clicked;
     Type;
+
     constructor(resource, object) {
         this.Sprite = new PIXI.Sprite();
         this.SetResource(resource)
@@ -254,6 +274,7 @@ class DraggableObject {
         return false
     }
 }
+
 class EventActivator {
     Event;
     Selector;
@@ -274,69 +295,70 @@ class EventActivator {
                     if (t.Id === s)
                         if (t.ObjectsInside.length > 0)
                             zxc++;
-            if(zxc===this.Selector.length) return true;
+            if (zxc === this.Selector.length) return true;
         }
         if (this.Event === 3) {
             for (const t of objects) {
-                for (const s of this.Selector){
-                    if (t.Id === s){
-                        if(t.MouseDown===true&&!t.MouseClicked){
+                for (const s of this.Selector) {
+                    if (t.Id === s) {
+                        if (t.MouseDown === true && !t.MouseClicked) {
                             t.MouseClicked = true;
                             return true;
-                        }else{
-                            if(t.MouseClicked===true&&t.MouseDown===false){
-                                t.MouseClicked=false;
+                        } else {
+                            if (t.MouseClicked === true && t.MouseDown === false) {
+                                t.MouseClicked = false;
                             }
                         }
-                    }                  
-                }             
+                    }
+                }
             }
         }
     }
 }
+
 class EventAction {
     Event;
     Selector;
     Value;
+
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
         this.Value = object.Value;
     }
-    Do(objects, res){
-        if(this.Event === 0){
+
+    Do(objects, res) {
+        if (this.Event === 0) {
             for (const t of objects) {
                 for (const s of this.Selector) {
                     if (t.Id === s) {
                         t.AddRotation(this.Value[0]);
                     }
                 }
-            }            
+            }
         }
-        if(this.Event === 1){
+        if (this.Event === 1) {
             for (const t of objects) {
                 for (const s of this.Selector) {
                     if (t.Id === s) {
-                        const f1 = res.find((x)=>this.Value[0]===x.Id);
-                        const f2 = res.find((x)=>this.Value[1]===x.Id);                        
-                        if(t.Resource === f1){
+                        const f1 = res.find((x) => this.Value[0] === x.Id);
+                        const f2 = res.find((x) => this.Value[1] === x.Id);
+                        if (t.Resource === f1) {
                             t.SetResource(f2);
-                        }else
-                        {
+                        } else {
                             t.SetResource(f1);
                         }
                     }
                 }
             }
         }
-        if(this.Event === 2){
+        if (this.Event === 2) {
             for (const t of objects) {
                 for (const s of this.Selector) {
                     if (t.Id === s) {
-                        if(t.Visible === this.Value[0]){
+                        if (t.Visible === this.Value[0]) {
                             t.SetVisible(this.Value[1]);
-                        }else
-                        {
+                        } else {
                             t.SetVisible(this.Value[0]);
                         }
                     }
@@ -345,10 +367,10 @@ class EventAction {
         }
     }
 }
+
 class Animation {
     Activators;
     EventActions;
-
     constructor(object) {
         this.Activators = []
         this.EventActions = []
@@ -361,22 +383,23 @@ class Animation {
 
     }
 
-    Activate(objects,res) {
+    Activate(objects, res) {
         for (const d of this.EventActions) {
-            d.Do(objects,res);
-        }        
+            d.Do(objects, res);
+        }
         console.log(this)
     }
 
-    Work(objects,trg,res) {
+    Work(objects, trg, res) {
         const al = this.Activators.length;
         let ic = 0;
         for (const e of this.Activators)
-            if (e.Check(objects,trg))
+            if (e.Check(objects, trg))
                 ic++;
-        if (al === ic) this.Activate(objects,res);
+        if (al === ic) this.Activate(objects, res);
     }
 }
+
 class TestCore {
     Canvas;
     TestParent;
@@ -390,8 +413,10 @@ class TestCore {
     DraggableObjects;
     Triggers;
     Animations;
-
+    Id;
     constructor(canvas, testParent, test) {
+        console.log(test.Id);
+        this.Id = test.Id;
         this.Resources = test.Resources;
         this.Name = test.Name;
         this.DraggableObjects = test.DraggableObjects;
@@ -416,10 +441,10 @@ class TestCore {
 
         this.Resources.forEach((e) => loader.add(e.Url));
         loader.load((loader, res) => {
-            for (const e of this.Resources){
+            for (const e of this.Resources) {
                 e.Loaded = res[e.Url].texture;
                 e.__proto__ = Resource.prototype;
-            } 
+            }
             this.texturesLoaded();
         });
 
@@ -427,6 +452,7 @@ class TestCore {
         this.resize(this);
 
     }
+
     texturesLoaded() {
         for (let i = 0; i < this.Triggers.length; i++) {
             const obj = this.Triggers[i];
@@ -447,6 +473,7 @@ class TestCore {
         }
         this.Display.ticker.add(() => this.Worker());
     }
+
     Worker() {
         for (let i = 0; i < this.Triggers.length; i++) {
             const e = this.Triggers[i];
@@ -454,45 +481,50 @@ class TestCore {
         }
         for (let i = 0; i < this.Animations.length; i++) {
             const e = this.Animations[i];
-            e.Work(this.DraggableObjects,this.Triggers, this.Resources);
+            e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
 
     }
+
     resize(core) {
         const testWidth = core.TestParent.clientWidth;
         const w = testWidth;
         const h = testWidth / 3 * 2;
         core.Display.renderer.resize(w, h);
         core.Display.stage.scale.set(testWidth / 1000, testWidth / 1000);
-    }    
-    AddElement(data){
+    }
+
+    AddElement(data) {
         let maxId = 0;
         for (const t of this.DraggableObjects)
             if (maxId < t.Id)
                 maxId = t.Id;
         const res = this.Resources[0];
-        data.Id = maxId+1;
-        const nob = new DraggableObject(res,data )
+        data.Id = maxId + 1;
+        const nob = new DraggableObject(res, data)
         this.DraggableObjects.push(nob);
         this.DisplayContainer.addChild(nob.Sprite)
     }
-    AddResource(data){
+
+    AddResource(data) {
         const loader = PIXI.Loader.shared;
-        data.forEach((e) => loader.add(e.Url));        
+        data.forEach((e) => loader.add(e.Url));
         loader.load((loader, res) => {
-            for (const e of data){
+            for (const e of data) {
                 e.Loaded = res[e.Url].texture;
                 e.__proto__ = Resource.prototype;
                 this.Resources.push(e);
             }
         });
     }
-    RemoveObject(obj){
-        this.DisplayContainer.removeChild(obj.Sprite);        
-        this.DraggableObjects =  this.DraggableObjects.filter(x=>x!==obj);      
-        
+
+    RemoveObject(obj) {
+        this.DisplayContainer.removeChild(obj.Sprite);
+        this.DraggableObjects = this.DraggableObjects.filter(x => x !== obj);
+
     }
-    Request(request, data){
+
+    Request(request, data) {
         switch (request) {
             case "add":
                 return this.AddElement(data);
@@ -502,10 +534,48 @@ class TestCore {
                 return this.DraggableObjects;
             case "removeObj":
                 return this.RemoveObject(data);
-                
+
         }
-       
+
     }
 
+    Save() {
+        const saved = {
+            Id: this.Id,
+            Name: this.Name,
+            Resources: [],
+            DraggableObjects: [],
+            Triggers: [],
+            Animations: this.Animations
+        }
+        for (const res of this.Resources) {
+            const r = {Id: res.Id, Loaded: null, Name: res.Name, Url: res.Url}
+            r.__proto__ = Resource.prototype;
+            saved.Resources.push(r)
+        }
+        for (const obj of this.DraggableObjects) {
+            const r = {
+                X: obj.Sprite.x, Y: obj.Sprite.y, ScaleX: obj.Sprite.scale.x, ScaleY: obj.Sprite.scale.y,
+                Rotation: obj.Rotation, Draggable: obj.CanMove, ButtonMode: obj.Sprite.buttonMode,
+                ResourceId: obj.Resource.Id, Id: obj.Id
+            }
+            r.__proto__ = DraggableObject.prototype;
+            saved.DraggableObjects.push(r)
+        }
+        for (const trg of this.Triggers) {
+            const r = {
+                X: trg.X,
+                Y: trg.Y,
+                Size: trg.Size,
+                Visual: trg.Visual,
+                Magnetic: trg.Magnetic,
+                Id: trg.Id,
+                Accepted: trg.Accepted,
+            }
+            r.__proto__ = Trigger.prototype;
+            saved.Triggers.push(r)
+        }
+        return saved;
+    }
 }
 

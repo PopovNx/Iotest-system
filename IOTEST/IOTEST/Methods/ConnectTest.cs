@@ -16,7 +16,7 @@ namespace IOTEST.Methods
                 if (!await db.Groups.AnyAsync(x => x.Key == context.Request.Form["GKey"].ToString())) return "No";
                 var Group = await db.Groups.FirstAsync(x => x.Key == context.Request.Form["GKey"].ToString());
                 if (Group.Tests.Contains(context.Request.Form["TKey"].ToString())) return "Contains";
-                if (!await db.Tests.AnyAsync(x => x.KEY == context.Request.Form["TKey"].ToString())) return "NoTest";
+                if (!await db.Tests.AnyAsync(x => x.Key == context.Request.Form["TKey"].ToString())) return "NoTest";
                 Group.Tests.Add(context.Request.Form["TKey"].ToString());
                 db.Groups.Update(Group);
                 await db.SaveChangesAsync();

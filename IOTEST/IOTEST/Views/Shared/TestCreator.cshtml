@@ -1,4 +1,4 @@
-﻿@model IOTEST.IoContext.User
+﻿@model (IOTEST.IoContext.User User,IOTEST.IoContext.Test Test, int Id)
 @{
     ViewData["Title"] = "IOTEST - Test Creator";
 }
@@ -24,15 +24,18 @@
                 </span>
             </a>
             <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
-                <span class="mr-1">@Model.FirstName</span>
-                <span class="mr-2">@Model.FamilyName</span>
-                <img src="@Model.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+                <span class="mr-1">@Model.User.FirstName</span>
+                <span class="mr-2">@Model.User.FamilyName</span>
+                <img src="@Model.User.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
             </span>
         </div>
     </nav>
 </header>
 <script>
-const MyMail = "@Model.Gmail";
+const MyMail = "@Model.User.Gmail";
+const TestKey = "@Model.Test.Key";
+const TestId = "@Model.Id";
+
 </script>
 <div id="Page" class="user-select-none container-fluid" v-cloak>
     <div class="row mt-1">
@@ -201,7 +204,11 @@ const MyMail = "@Model.Gmail";
                         </div>
                     </div>
                 </div>
-
+                <div class="container" v-if="Core">
+                     <div class="p-3">
+                                                    <a class="btn btn-outline-light" v-on:click="SaveTest">Сохранить</a>
+                                                </div>
+                </div>
             </div>
         </div>
     </div>
