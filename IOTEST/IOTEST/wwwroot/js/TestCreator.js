@@ -7,8 +7,10 @@
         AddResourceMode: 0,
         ResourcesAw: [],
         ResourcesAwSelected: [],
-
+        EditObj: null,
+        LastSave:null,
         MenuMode: 0,
+        EditedTrigger:null,
 
     },
     methods: {
@@ -18,6 +20,7 @@
             Data.append('TestKey', TestKey);
             Data.append('TestId', TestId);
             axios.post('/method', Data).then(x => this.TestLoad(x.data));
+
         },
         TestLoad: function (test) {
             const canvas = document.getElementById("TestCanvas");
@@ -26,6 +29,7 @@
             this.Core = new TestCore(canvas, parent, test);
         },
         AddElement: function () {
+
             this.Core.Request("add", this.nObj);
         },
         AddResource: function () {
@@ -55,31 +59,50 @@
         DestroyObject(e) {
             this.Core.Request("removeObj", e);
         },
-        AddObjectMenu(isNew){
-            if(isNew){
+        EditObject(e) {
+            this.EditObj = e;
+            this.MenuMode = 30;
+        },
+        AddObjectMenu(isNew) {
+            if (isNew) {
                 this.nObj = new NewObject();
             }
             this.MenuMode = 20;
         },
         async SaveTest() {
+            this.LastSave = this.Core.Save();
             const Data = new FormData();
             Data.append('method', 'SaveTest');
             Data.append('Key', TestKey);
-           
-            const s = this.Core.Save();
-            console.log(s)
-            Data.append('Data', JSON.stringify(s));
-            const dx = await axios.post('/method', Data);
-            console.log(dx.data)
-           
+            Data.append('Data', JSON.stringify(this.LastSave));
+            await axios.post('/method', Data);
 
+        },
+        NeedSave(){
+            if(this.Core===null) return false;        
+            return JSON.stringify(this.Core.Save())===JSON.stringify(this.LastSave);
+        },
+        AddTrigger() {
+            this.Core.Request("trgAdd");
+         
+        },
+        EditTrigger(r){
+            this.EditedTrigger = r;
+            this.MenuMode = 41;
+            console.log(r)
+        },
+        DestroyTrigger(r){
+            this.Core.Request("destroyTrg",r);
         }
+
 
     },
     watch: {},
-    computed: {},
+    computed: {
+       
+    },
     mounted() {
         this.Init();
-        setInterval(x => (this.$forceUpdate()), 70);
+        setInterval(x => (this.$forceUpdate()), 200);
     }
 });

@@ -39,6 +39,7 @@ namespace IOTEST.Models
             public bool ButtonMode { get; set; }
             public int ResourceId { get; set; }
             public int Id { get; set; }
+            public bool Visible { get; set; }
 
             public DraggableObject()
             {

@@ -48,7 +48,7 @@ class Trigger {
             this.X + this.Size, this.Y + this.Size,
             this.X - this.Size, this.Y + this.Size];
         this.graphics.lineStyle(0);
-        this.graphics.beginFill(this.color, this.Visual ? 0.5 : 0);
+        this.graphics.beginFill(this.color, this.Visual ? 0.2 : 0);
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
@@ -76,7 +76,7 @@ class Trigger {
         this.Draw();
     }
 
-    color = 0x2600ff;
+    color = 0x00F0F0;
     graphics;
     VectorArray;
     Size;
@@ -124,7 +124,7 @@ class NewObject {
     Rotation;
     Draggable;
     ButtonMode;
-    Recourse;
+    Resource;
 
     constructor(res) {
         this.X = 100;
@@ -134,7 +134,7 @@ class NewObject {
         this.Rotation = 0;
         this.Draggable = true;
         this.ButtonMode = true;
-        this.Recourse = res;
+        this.Resource = res;
     }
 }
 
@@ -158,12 +158,10 @@ class DraggableObject {
         this.Sprite = new PIXI.Sprite();
         this.SetResource(resource)
         this.MouseOnThis = false;
-        this.Visible = true;
-
+        this.SetVisible(object.Visible)
         this.Id = object.Id;
         this.Sprite.x = object.X;
         this.Sprite.y = object.Y;
-
         this.Sprite.scale.set(1);
         this.Sprite.scale.x = object.ScaleX;
         this.Sprite.scale.y = object.ScaleY;
@@ -176,7 +174,6 @@ class DraggableObject {
 
         this.Sprite.buttonMode = object.ButtonMode;
         this.CanMove = object.Draggable;
-
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
         this.Sprite.DragClass = this;
         this.Sprite.OnTrigger = false;
@@ -371,6 +368,7 @@ class EventAction {
 class Animation {
     Activators;
     EventActions;
+
     constructor(object) {
         this.Activators = []
         this.EventActions = []
@@ -414,8 +412,8 @@ class TestCore {
     Triggers;
     Animations;
     Id;
+
     constructor(canvas, testParent, test) {
-        console.log(test.Id);
         this.Id = test.Id;
         this.Resources = test.Resources;
         this.Name = test.Name;
@@ -454,18 +452,18 @@ class TestCore {
     }
 
     texturesLoaded() {
-        for (let i = 0; i < this.Triggers.length; i++) {
-            const obj = this.Triggers[i];
-            this.Triggers[i] = new Trigger(obj);
-            this.DisplayContainer.addChild(this.Triggers[i].graphics)
-            console.log(this.Triggers[i])
-        }
         for (let i = 0; i < this.DraggableObjects.length; i++) {
             const obj = this.DraggableObjects[i];
             const res = this.Resources.find(x => x.Id === obj.ResourceId);
             if (res === undefined) continue;
             this.DraggableObjects[i] = new DraggableObject(res, obj);
             this.DisplayContainer.addChild(this.DraggableObjects[i].Sprite)
+        }
+        for (let i = 0; i < this.Triggers.length; i++) {
+            const obj = this.Triggers[i];
+            this.Triggers[i] = new Trigger(obj);
+            this.DisplayContainer.addChild(this.Triggers[i].graphics)
+            console.log(this.Triggers[i])
         }
         for (let i = 0; i < this.Animations.length; i++) {
             const obj = this.Animations[i];
@@ -497,11 +495,12 @@ class TestCore {
     AddElement(data) {
         let maxId = 0;
         for (const t of this.DraggableObjects)
-            if (maxId < t.Id)
+            if (maxId < t.Id) {
                 maxId = t.Id;
-        const res = this.Resources[0];
+            }
+
         data.Id = maxId + 1;
-        const nob = new DraggableObject(res, data)
+        const nob = new DraggableObject(data.Resource, data)
         this.DraggableObjects.push(nob);
         this.DisplayContainer.addChild(nob.Sprite)
     }
@@ -524,6 +523,32 @@ class TestCore {
 
     }
 
+    AddTrigger(data) {
+        let maxId = 0;
+        for (const t of this.Triggers)
+            if (maxId < t.Id) {
+                maxId = t.Id;
+            }
+        const obj = {
+            X:200,
+            Y: 200,
+            Size: 100,
+            Visual: true,
+            Magnetic: true,
+            Id: maxId + 1,
+            Accepted: [0,1,2],
+        }
+        const trg = new Trigger(obj);
+        console.log(trg);
+        this.Triggers.push(trg);
+        this.DisplayContainer.addChild(trg.graphics)
+        
+    }
+    RemoveTrigger(trg){
+        console.log(trg);
+        this.DisplayContainer.removeChild(trg.graphics);
+        this.Triggers = this.Triggers.filter(x => x !== trg);
+    }
     Request(request, data) {
         switch (request) {
             case "add":
@@ -531,51 +556,63 @@ class TestCore {
             case "resAdd":
                 return this.AddResource(data);
             case "getObjects":
-                return this.DraggableObjects;
+                return this.DraggableObjects.slice().reverse();
             case "removeObj":
                 return this.RemoveObject(data);
+            case "trgAdd":
+                return this.AddTrigger(data);
+            case "destroyTrg":
+                return this.RemoveTrigger(data);
+            default:
+                throw new Error();
 
         }
 
     }
 
     Save() {
-        const saved = {
-            Id: this.Id,
-            Name: this.Name,
-            Resources: [],
-            DraggableObjects: [],
-            Triggers: [],
-            Animations: this.Animations
-        }
-        for (const res of this.Resources) {
-            const r = {Id: res.Id, Loaded: null, Name: res.Name, Url: res.Url}
-            r.__proto__ = Resource.prototype;
-            saved.Resources.push(r)
-        }
-        for (const obj of this.DraggableObjects) {
-            const r = {
-                X: obj.Sprite.x, Y: obj.Sprite.y, ScaleX: obj.Sprite.scale.x, ScaleY: obj.Sprite.scale.y,
-                Rotation: obj.Rotation, Draggable: obj.CanMove, ButtonMode: obj.Sprite.buttonMode,
-                ResourceId: obj.Resource.Id, Id: obj.Id
+        try {
+            const saved = {
+                Id: this.Id,
+                Name: this.Name,
+                Resources: [],
+                DraggableObjects: [],
+                Triggers: [],
+                Animations: this.Animations
             }
-            r.__proto__ = DraggableObject.prototype;
-            saved.DraggableObjects.push(r)
-        }
-        for (const trg of this.Triggers) {
-            const r = {
-                X: trg.X,
-                Y: trg.Y,
-                Size: trg.Size,
-                Visual: trg.Visual,
-                Magnetic: trg.Magnetic,
-                Id: trg.Id,
-                Accepted: trg.Accepted,
+            for (const res of this.Resources) {
+                const r = {Id: res.Id, Loaded: null, Name: res.Name, Url: res.Url}
+                r.__proto__ = Resource.prototype;
+                saved.Resources.push(r)
             }
-            r.__proto__ = Trigger.prototype;
-            saved.Triggers.push(r)
+            for (const obj of this.DraggableObjects) {
+                const r = {
+                    X: obj.Sprite.x, Y: obj.Sprite.y, ScaleX: obj.Sprite.scale.x, ScaleY: obj.Sprite.scale.y,
+                    Rotation: obj.Rotation, Draggable: obj.CanMove, ButtonMode: obj.Sprite.buttonMode,
+                    ResourceId: obj.Resource.Id, Id: obj.Id,
+                    Visible: obj.Sprite.visible,
+                }
+                r.__proto__ = DraggableObject.prototype;
+                saved.DraggableObjects.push(r)
+            }
+            for (const trg of this.Triggers) {
+                const r = {
+                    X: trg.X,
+                    Y: trg.Y,
+                    Size: trg.Size,
+                    Visual: trg.Visual,
+                    Magnetic: trg.Magnetic,
+                    Id: trg.Id,
+                    Accepted: trg.Accepted,
+                }
+                r.__proto__ = Trigger.prototype;
+                saved.Triggers.push(r)
+            }
+            return saved;
+        } catch (e) {
+            return null;
         }
-        return saved;
+
     }
 }
 

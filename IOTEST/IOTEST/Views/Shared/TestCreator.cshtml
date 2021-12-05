@@ -37,179 +37,343 @@ const TestKey = "@Model.Test.Key";
 const TestId = "@Model.Id";
 
 </script>
-<div id="Page" class="user-select-none container-fluid" v-cloak>
-    <div class="row mt-1">
-        <div class="col-10 offset-1  DOB" style="background-color:rgba(45, 51, 51, 0.50)">
-            <div class="row">
-                <div class="col-3">
-                    <div class="text-left row pt-2">
-                        <h4 class="text-light mt-2 text-center text-md-left">Ресурсы</h4>
-                        <hr class="bg-light my-2"/>
-                    </div>
-                    <div class="flex-row justify-content-center">
-                        <div v-if="MenuMode == 0">
-                            <div>
-                                <div class="p-3">
-                                    <a class="btn btn-outline-light" v-on:click="MenuMode = 1">Управление ресурсами</a>
-                                </div>
-                                <div class="p-3">
-                                    <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Добавить</a>
-                                </div>
-                                <div class="p-3">
-                                    <a class="btn btn-outline-light" v-on:click="AddElement">Настройки</a>
-                                </div>
+<div id="Page" class="user-select-none container-fluid" v-cloak  >
+<div class="row mt-1">
+<div class="col-10 offset-1  DOB" style="background-color:rgba(45, 51, 51, 0.50)">
+<div class="row"  >
+<div class="col-3">
+<div class="text-left row pt-2"  v-show="Core">
+    <h4 class="text-light mt-2 text-center text-md-left">
+        <span v-if="MenuMode == 0">
+            Меню
+        </span>
+        <span v-else-if="MenuMode == 1">
+            Ресурсы
+        </span>
+        <span v-else-if="MenuMode == 2">
+            Добавить
+        </span>
+        <span v-else-if="MenuMode == 30">
+            Объект
+        </span>
+        <span v-else-if="MenuMode == 40">
+            Триггеры
+        </span>
+        <span v-else-if="MenuMode == 41">
+                    Триггер
+                </span>
+    </h4>
+    <hr class="bg-light my-2"/>
+</div>
+<div class="flex-row justify-content-center">
+<div v-if="MenuMode == 0">
+    <div class="d-grid justify-content-center">
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 1">Ресурсы</a>
+        </div>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Добавить</a>
+        </div>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="">Позиции</a>
+        </div>
+    </div>
+</div>
+<div v-if="MenuMode == 1">
+    <div>
+        <div>
+            <div v-if="AddResourceMode===0">
+                <div style="max-height: 40vh; overflow-y:auto;overflow-x: hidden" v-if="Core.Resources.length>0">
+                    <div v-for="r in Core.Resources">
+                        <div class="p-1 row">
+                            <div class="col-12">
+                                <h6 class="text-light text-center">{{r.Name}}</h6>
+                            </div>
+                            <div class="col-4 offset-4">
+                                <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="">
                             </div>
                         </div>
-                        <div v-if="MenuMode == 1">
-                            <div>
-                                <div v-if="Core!=null">
-                                    <div v-if="AddResourceMode===0">
-                                        <div style="max-height: 40vh; overflow-y:auto;overflow-x: hidden">
-                                            <div v-for="r in Core.Resources">
-                                                <div class="p-1 row">
-                                                    <div class="col-12">
-                                                        <h6 class="text-light text-center">{{r.Name}}</h6>
-                                                    </div>
-                                                    <div class="col-4 offset-4">
-                                                        <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="">
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="p-1">
-                                            <a class="btn btn-outline-light" v-on:click="AddResource()">Список</a>
-                                        </div>
-                                        <div class="p-1">
-                                            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
-                                        </div>
-                                    </div>
-                                    <div v-if="AddResourceMode===1">
-                                        <div style="max-height: 40vh; overflow-y:auto;overflow-x: hidden">
-                                            <div v-for="(r,i) in ResourcesAw" v-on:click="AddResourcesSelect(r)">
-                                                <div class="p-1 row" v-bind:class="{'bg-success':(ResourcesAwSelected.includes(r))}">
-                                                    <div class="col-12">
-                                                        <h6 class="text-light text-center">{{r.Name}}</h6>
-                                                    </div>
-                                                    <div class="col-4 offset-4">
-                                                        <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="">
-                                                    </div>
-                                                </div>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="p-1">
-                                            <div class="row">
-                                                <a class="btn btn-outline-light col-10 offset-1" v-on:click="AddResources()">Добавить</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div v-if="MenuMode == 2">
-                            <div>
-                                <div class="p-3">
-                                    <a class="btn btn-outline-light" v-on:click="AddObjectMenu(true)">Добавить объект</a>
-                                </div>
-                                <div class="p-3">
-                                    <a class="btn btn-outline-light" v-on:click="AddElement">Добавить тригер</a>
-                                </div>
-                                <div class="p-3">
-                                    <a class="btn btn-outline-light" v-on:click="AddElement">Добавить анимацию</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div v-if="MenuMode == 20">
-                            <div class="p-3 row">
-                                <div>
-                                                        
-                                </div>
-                                <div class="col-4">
-                                    <h3 class="text-light text-center">X:</h3>
-                                </div>
-                                <div class="col-6">
-                                    <input v-model="nObj.X" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-                                </div>
-                                <div class="col-4">
-                                    <h3 class="text-light text-center">Y:</h3>
-                                </div>
-                                <div class="col-6">
-                                    <input v-model="nObj.Y" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-                                </div>
-                                <div class="col-4">
-                                    <h6 class="text-light text-center">X Scale:</h6>
-                                </div>
-                                <div class="col-6">
-                                    <input v-model="nObj.ScaleX" min="0.01" step="0.05" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-                                </div>
-                                <div class="col-4">
-                                    <h6 class="text-light text-center">Y Scale:</h6>
-                                </div>
-                                <div class="col-6">
-                                    <input v-model="nObj.ScaleY" min="0.01" step="0.05" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-                                </div>
-                            </div>
-                            <div class="p-3">
-                                <a class="btn btn-outline-light" v-on:click="AddElement">Добавить</a>
-                            </div>
-                        </div>
+                        <hr>
                     </div>
                 </div>
-                <div class="col-7">
-                    <div>
-                        <div id="TestHead" class="text-left row pt-2">
-                            <h4 class="text-light mt-2 text-center text-md-left" v-if="Core">{{Core.Name}}</h4>
-                            <hr class="bg-light my-2"/>
-                        </div>
-                        <div id="TestMain" class="text-center text-light  DOB">
-                            <div id="InteractiveBlock">
-                                <canvas id="TestCanvas"></canvas>
+                <div v-else>
+                    <h4 class="text-light text-center">Пусто</h4>
+                </div>
+                <div class="p-1 d-flex justify-content-center">
+                    <a class="btn btn-outline-light" v-on:click="AddResource()">Список</a>
+                </div>
+                <div class="p-1 d-flex justify-content-center">
+                    <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+                </div>
+            </div>
+            <div v-if="AddResourceMode===1">
+                <div style="max-height: 40vh; overflow-y:auto;overflow-x: hidden">
+                    <div v-for="(r,i) in ResourcesAw" v-on:click="AddResourcesSelect(r)">
+                        <div class="p-1 row" v-bind:class="{'bg-success':(ResourcesAwSelected.includes(r))}">
+                            <div class="col-12">
+                                <h6 class="text-light text-center">{{r.Name}}</h6>
+                            </div>
+                            <div class="col-4 offset-4">
+                                <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="">
                             </div>
                         </div>
-                        <div id="TestFooter" class="text-left  pt-2 mt-0  row">
-                            <hr class="bg-light md-2 mt-0"/>
-                        </div>
+                        <hr>
                     </div>
                 </div>
-                <div class="col-2" v-if="Core">
-                    <div class="text-left row pt-2">
-                        <h4 class="text-light mt-2 text-center text-md-left">Сцена</h4>
-                        <hr class="bg-light my-2"/>
+                <div class="p-1">
+                    <div class="row">
+                        <a class="btn btn-outline-light col-10 offset-1" v-on:click="AddResources()">Добавить</a>
                     </div>
-                    <div>
-                        <div style="overflow-x: hidden; overflow-y: auto; max-height: 400px">
-                            <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
-                                <div class="p-1 row">
-                                    <div class="col-12">
-                                        <h6 class="text-light text-center">{{obj.Resource.Name}} - {{obj.Id}}</h6>
-                                        <div class="con">
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="DestroyObject(obj)">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img class="img-fluid bg-light" style="min-height: 35px;min-width: 35px" src="" v-bind:src="obj.Resource.Url" alt="">
-                                                </div>
-                                                <div class="col-4">
-                                                    <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyObject(obj)">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="container" v-if="Core">
-                     <div class="p-3">
-                                                    <a class="btn btn-outline-light" v-on:click="SaveTest">Сохранить</a>
-                                                </div>
                 </div>
             </div>
         </div>
+
     </div>
+</div>
+<div v-if="MenuMode == 2">
+    <div>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="AddObjectMenu(true)">Объект</a>
+        </div>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode= 40">Триггер</a>
+        </div>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="">Анимация</a>
+        </div>
+        <hr>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+        </div>
+
+    </div>
+</div>
+<div v-if="MenuMode == 20">
+    <div class="p-3 row">
+        <div v-if="Core.Resources.length>0">
+            <div style="max-height: 20vh; overflow-x: hidden">
+                <div v-for="r in Core.Resources" v-on:click="nObj.Resource = r">
+                    <div class="p-1 row" v-bind:class="{'bg-success':nObj.Resource==r}">
+                        <div class="col-12">
+                            <h6 class="text-light text-center">{{r.Name}}</h6>
+                        </div>
+                        <div class="col-4 offset-4">
+                            <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="">
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <div v-else>
+            <div class="col-12">
+                <h6 class="text-light text-center">Ресурсов не обнаружено</h6>
+            </div>
+        </div>
+        <hr>
+        <div class="col-4">
+            <h3 class="text-light text-center">X:</h3>
+        </div>
+        <div class="col-6">
+            <input v-model.number="nObj.X" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        </div>
+        <div class="col-4">
+            <h3 class="text-light text-center">Y:</h3>
+        </div>
+        <div class="col-6">
+            <input v-model.number="nObj.Y" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        </div>
+        <div class="col-12">
+            <h5 class="text-light text-center">Размер: {{nObj.ScaleX}} </h5>
+        </div>
+
+        <div class="col-12">
+            <input v-model.number="nObj.ScaleX" v-on:input="nObj.ScaleY = nObj.ScaleX" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+        </div>
+    </div>
+    <div class="p-3">
+        <a class="btn btn-outline-light" v-if="nObj.Resource" v-on:click="AddElement">Добавить</a>
+        <hr class="my-1">
+        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Назад</a>
+
+    </div>
+</div>
+<div v-if="MenuMode == 30">
+    <div class="p-1 row d-flex justify-content-center">
+        <div class="col-4">
+            <h3 class="text-light text-center">X:</h3>
+        </div>
+        <div class="col-8">
+            <input v-model.number="EditObj.Sprite.x" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        </div>
+        <div class="col-4">
+            <h3 class="text-light text-center">Y:</h3>
+        </div>
+        <div class="col-8">
+            <input v-model.number="EditObj.Sprite.x" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        </div>
+        <div class="col-12">
+            <h5 class="text-light text-center">Размер: {{EditObj.Sprite.scale.x}} </h5>
+        </div>
+        <div class="col-12">
+            <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+        </div>
+
+        <div class="col-10 offset-1 text-center p-1">
+            <div class="form-check">
+                <label for="editObjVisible" class="text-light">Видимый</label>
+                <input id="editObjVisible" v-model="EditObj.Sprite.visible" type="checkbox" class="form-check-input">
+            </div>
+        </div>
+        <div class="col-11 text-center p-1">
+            <div class="form-check">
+                <label for="editObjMovable" class="text-light">Перетаскиваемый</label>
+                <input id="editObjMovable" v-model="EditObj.CanMove" type="checkbox" class="form-check-input">
+            </div>
+        </div>
+        <div class="col-11 text-center p-1">
+            <div class="form-check">
+                <label for="editObjBtnMode" class="text-light">Нажимаемый</label>
+                <input id="editObjBtnMode" v-model="EditObj.Sprite.buttonMode" type="checkbox" class="form-check-input">
+            </div>
+        </div>
+
+    </div>
+    <div class="p-3">
+        <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+    </div>
+</div>
+<div v-if="MenuMode == 40">
+    <div class="p-1 row d-flex justify-content-center">
+        <div style="max-height: 20vh; overflow-x: hidden">
+            <div v-for="r in Core.Triggers">
+                <div class="p-1 row">
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyTrigger(r)">
+                        </div>
+
+                    </div>
+                    <div class="col-4">
+                        <h6 class="text-light text-center">{{r.Id}}</h6>
+                    </div>
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditTrigger(r)">
+                        </div>
+
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="AddTrigger">Добавить</a>
+        </div>
+    </div>
+    <div class="p-3">
+        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Назад</a>
+    </div>
+</div>
+<div v-if="MenuMode == 41">
+    <div class="p-1 row d-flex justify-content-center">
+       <div class="col-4">
+                   <h3 class="text-light text-center">X:</h3>
+               </div>
+        <div class="col-8">
+            <input v-model.number="EditedTrigger.X" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        </div>
+         <div class="col-4">
+                           <h3 class="text-light text-center">Y:</h3>
+                       </div>
+        <div class="col-8">
+            <input v-model.number="EditedTrigger.Y" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        </div>
+        
+          <div class="col-12">
+                    <h5 class="text-light text-center">Размер: {{EditedTrigger.Size}} </h5>
+                </div>
+        
+                <div class="col-12">
+                    <input v-model.number="EditedTrigger.Size"  min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+                </div>
+        
+        
+        <hr>
+        <div class="p-3">
+               <a class="btn btn-outline-light" v-on:click="MenuMode = 40">Назад</a>
+            </div>
+
+      
+    </div>
+
+</div>
+</div>
+</div>
+<div class="col-7">
+    <div>
+        <div id="TestHead" class="text-left row pt-2">
+            <input style="border-color: transparent" m v-if="Core" v-model="Core.Name" type="text" class="form-control text-center text-light border-1 bg-transparent mt-2"/>
+            <hr class="bg-light my-2"/>
+        </div>
+        <div id="TestMain" class="text-center text-light  DOB">
+            <div id="InteractiveBlock">
+                <canvas id="TestCanvas"></canvas>
+            </div>
+        </div>
+        <div id="TestFooter" class="text-left  pt-2 mt-0  row">
+            <hr class="bg-light md-2 mt-0"/>
+        </div>
+    </div>
+</div>
+<div class="col-2" v-if="Core">
+    <div class="text-left row pt-2">
+        <h4 class="text-light mt-2 text-center text-md-left">Сцена</h4>
+        <hr class="bg-light my-2"/>
+    </div>
+    <div>
+        <div style="overflow-x: hidden; overflow-y: auto; max-height: 400px">
+            <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
+                <div class="p-1 row">
+                    <div class="col-12">
+                        <h6 class="text-light text-center">{{obj.Resource.Name}} - {{obj.Id}}</h6>
+                        <div class="con">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditObject(obj)">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <img class="img-fluid bg-light" style="min-height: 35px;min-width: 35px" src="" v-bind:src="obj.Resource.Url" alt="">
+                                </div>
+                                <div class="col-4">
+                                    <div class="d-flex justify-content-center">
+                                        <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyObject(obj)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" v-if="Core">
+    <div class="row">
+        <div class="p-3 col-5">
+            <a class="btn btn-outline-light" href="/tests">Выход</a>
+        </div>
+        <div class="p-3  col-5">
+            <button class="btn btn-outline-light" v-on:click="SaveTest" v-bind:class="{'disabled': NeedSave()}">Сохранить</button>
+        </div>
+    </div>
+
+</div>
+</div>
+</div>
+</div>
 </div>
