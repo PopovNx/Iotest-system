@@ -48,7 +48,10 @@ class Trigger {
             this.X + this.Size, this.Y + this.Size,
             this.X - this.Size, this.Y + this.Size];
         this.graphics.lineStyle(0);
-        this.graphics.beginFill(this.color, this.Visual ? 0.2 : 0);
+        if (this.Hover === true) {
+            this.graphics.beginFill(this.color, 0.4);
+        } else
+            this.graphics.beginFill(this.color, this.Visual ? 0.2 : 0);
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
@@ -126,7 +129,7 @@ class NewObject {
     ButtonMode;
     Resource;
 
-    constructor(res) {
+    constructor(res,text) {
         this.X = 100;
         this.Y = 100;
         this.ScaleX = 0.1;
@@ -135,6 +138,13 @@ class NewObject {
         this.Draggable = true;
         this.ButtonMode = true;
         this.Resource = res;
+        this.Text= null
+        if(text){
+            this.Text = text;
+            this.ScaleX = 0.7;
+            this.ScaleY = 0.7;
+        }
+    
     }
 }
 
@@ -153,10 +163,20 @@ class DraggableObject {
     Dragging;
     Clicked;
     Type;
-
-    constructor(resource, object) {
-        this.Sprite = new PIXI.Sprite();
-        this.SetResource(resource)
+    Text;
+    constructor(resource, object, isText) {
+        if (resource === -1) {
+            const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
+            this.Text = new PIXI.Text(object.Text.text, textStyle);
+            window.df = this;
+            this.Text.updateText();
+            this.Sprite = new PIXI.Sprite(this.Text.texture);
+            this.Resource = -1;
+        } else {
+            this.Sprite = new PIXI.Sprite();
+            this.SetResource(resource)
+            this.Text = null;
+        }
         this.MouseOnThis = false;
         this.SetVisible(object.Visible)
         this.Id = object.Id;
@@ -238,6 +258,13 @@ class DraggableObject {
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
     }
 
+    GetRotation() {
+        const rot = this.Sprite.rotation * 180 / Math.PI;
+        this.Rotation = rot;
+
+        return Math.round(rot);
+    }
+
     AddRotation(rotation) {
         if (rotation === 0) return;
         this.Rotation += rotation;
@@ -261,6 +288,20 @@ class DraggableObject {
         if (this.Button === on) return;
         this.Button = on;
         this.Sprite.buttonMode = on;
+    }
+
+    GetText() {
+        if (this.Text === null) return null;
+        return {text:this.Text.text, color: this.Text._style.fill[0]}
+    }
+
+    SetText(text, color) {
+        if (this.Text === null) return null;
+        this.Text.text = text;
+        this.Text._style.fill[0] = color;
+
+        this.Text.updateText();
+
     }
 
     ReadClick() {
@@ -454,9 +495,15 @@ class TestCore {
     texturesLoaded() {
         for (let i = 0; i < this.DraggableObjects.length; i++) {
             const obj = this.DraggableObjects[i];
-            const res = this.Resources.find(x => x.Id === obj.ResourceId);
-            if (res === undefined) continue;
-            this.DraggableObjects[i] = new DraggableObject(res, obj);
+            if (obj.Text === null) {
+                const res = this.Resources.find(x => x.Id === obj.ResourceId);
+                if (res === undefined) continue;
+                this.DraggableObjects[i] = new DraggableObject(res, obj);
+            } else {
+
+                this.DraggableObjects[i] = new DraggableObject(-1, obj);
+            }
+
             this.DisplayContainer.addChild(this.DraggableObjects[i].Sprite)
         }
         for (let i = 0; i < this.Triggers.length; i++) {
@@ -530,25 +577,27 @@ class TestCore {
                 maxId = t.Id;
             }
         const obj = {
-            X:200,
+            X: 200,
             Y: 200,
             Size: 100,
             Visual: true,
             Magnetic: true,
             Id: maxId + 1,
-            Accepted: [0,1,2],
+            Accepted: [0, 1, 2],
         }
         const trg = new Trigger(obj);
         console.log(trg);
         this.Triggers.push(trg);
         this.DisplayContainer.addChild(trg.graphics)
-        
+
     }
-    RemoveTrigger(trg){
+
+    RemoveTrigger(trg) {
         console.log(trg);
         this.DisplayContainer.removeChild(trg.graphics);
         this.Triggers = this.Triggers.filter(x => x !== trg);
     }
+
     Request(request, data) {
         switch (request) {
             case "add":
@@ -591,6 +640,7 @@ class TestCore {
                     Rotation: obj.Rotation, Draggable: obj.CanMove, ButtonMode: obj.Sprite.buttonMode,
                     ResourceId: obj.Resource.Id, Id: obj.Id,
                     Visible: obj.Sprite.visible,
+                    Text: obj.GetText()
                 }
                 r.__proto__ = DraggableObject.prototype;
                 saved.DraggableObjects.push(r)

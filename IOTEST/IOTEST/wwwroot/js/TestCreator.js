@@ -12,6 +12,8 @@
         MenuMode: 0,
         EditedTrigger:null,
 
+        EditTextData:null
+        
     },
     methods: {
         Init: function () {
@@ -61,6 +63,7 @@
         },
         EditObject(e) {
             this.EditObj = e;
+            this.EditTextData =e.GetText();
             this.MenuMode = 30;
         },
         AddObjectMenu(isNew) {
@@ -79,7 +82,7 @@
 
         },
         NeedSave(){
-            if(this.Core===null) return false;        
+            if(this.Core===null) return false;
             return JSON.stringify(this.Core.Save())===JSON.stringify(this.LastSave);
         },
         AddTrigger() {
@@ -93,6 +96,11 @@
         },
         DestroyTrigger(r){
             this.Core.Request("destroyTrg",r);
+        },
+        AddText(){
+            const nOb = new NewObject(-1, {text: "Новый текст", color:"#0fd3ff"});
+            console.log(nOb)
+            this.Core.Request("add", nOb);
         }
 
 

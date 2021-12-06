@@ -37,12 +37,12 @@ const TestKey = "@Model.Test.Key";
 const TestId = "@Model.Id";
 
 </script>
-<div id="Page" class="user-select-none container-fluid" v-cloak  >
+<div id="Page" class="user-select-none container-fluid" v-cloak>
 <div class="row mt-1">
 <div class="col-10 offset-1  DOB" style="background-color:rgba(45, 51, 51, 0.50)">
-<div class="row"  >
+<div class="row">
 <div class="col-3">
-<div class="text-left row pt-2"  v-show="Core">
+<div class="text-left row pt-2" v-show="Core">
     <h4 class="text-light mt-2 text-center text-md-left">
         <span v-if="MenuMode == 0">
             Меню
@@ -53,6 +53,9 @@ const TestId = "@Model.Id";
         <span v-else-if="MenuMode == 2">
             Добавить
         </span>
+        <span v-else-if="MenuMode == 20">
+            Объект
+        </span>
         <span v-else-if="MenuMode == 30">
             Объект
         </span>
@@ -60,8 +63,8 @@ const TestId = "@Model.Id";
             Триггеры
         </span>
         <span v-else-if="MenuMode == 41">
-                    Триггер
-                </span>
+            Триггер
+        </span>
     </h4>
     <hr class="bg-light my-2"/>
 </div>
@@ -136,6 +139,9 @@ const TestId = "@Model.Id";
             <a class="btn btn-outline-light" v-on:click="AddObjectMenu(true)">Объект</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="AddText">Текст</a>
+        </div>
+        <div class="p-3 d-flex justify-content-center">
             <a class="btn btn-outline-light" v-on:click="MenuMode= 40">Триггер</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
@@ -200,6 +206,21 @@ const TestId = "@Model.Id";
 </div>
 <div v-if="MenuMode == 30">
     <div class="p-1 row d-flex justify-content-center">
+
+        <div class="col-9" v-if="EditTextData">
+            <input v-model="EditTextData.text" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="text" class="form-control text-center bg-dark text-light border-1 border-light mb-2"/>
+        </div>
+
+        <div class="col-3">
+            <div>
+                <input v-model="EditTextData.color" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="color" class="form-control form-control-color bg-dark border-1 border-light mt-1"/>
+            </div>
+
+        </div>
+
+        <hr v-if="EditTextData">
+
+
         <div class="col-4">
             <h3 class="text-light text-center">X:</h3>
         </div>
@@ -218,7 +239,12 @@ const TestId = "@Model.Id";
         <div class="col-12">
             <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
-
+        <div class="col-12">
+            <h5 class="text-light text-center">Поворот: {{EditObj.GetRotation()}}° </h5>
+        </div>
+        <div class="col-12">
+            <input v-model="EditObj.Sprite.rotation" min="0" max="6.29" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+        </div>
         <div class="col-10 offset-1 text-center p-1">
             <div class="form-check">
                 <label for="editObjVisible" class="text-light">Видимый</label>
@@ -252,9 +278,8 @@ const TestId = "@Model.Id";
                         <div class="d-flex justify-content-center">
                             <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyTrigger(r)">
                         </div>
-
                     </div>
-                    <div class="col-4">
+                    <div class="col-4" v-on:mouseover="r.Hover = true" v-on:mouseleave="r.Hover = false">
                         <h6 class="text-light text-center">{{r.Id}}</h6>
                     </div>
                     <div class="col-4">
@@ -278,34 +303,40 @@ const TestId = "@Model.Id";
 </div>
 <div v-if="MenuMode == 41">
     <div class="p-1 row d-flex justify-content-center">
-       <div class="col-4">
-                   <h3 class="text-light text-center">X:</h3>
-               </div>
+        <div class="col-4">
+            <h3 class="text-light text-center">X:</h3>
+        </div>
         <div class="col-8">
             <input v-model.number="EditedTrigger.X" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
-         <div class="col-4">
-                           <h3 class="text-light text-center">Y:</h3>
-                       </div>
+        <div class="col-4">
+            <h3 class="text-light text-center">Y:</h3>
+        </div>
         <div class="col-8">
             <input v-model.number="EditedTrigger.Y" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
-        
-          <div class="col-12">
-                    <h5 class="text-light text-center">Размер: {{EditedTrigger.Size}} </h5>
-                </div>
-        
-                <div class="col-12">
-                    <input v-model.number="EditedTrigger.Size"  min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
-                </div>
-        
-        
+
+        <div class="col-12">
+            <h5 class="text-light text-center">Размер: {{EditedTrigger.Size}} </h5>
+        </div>
+
+        <div class="col-12">
+            <input v-model.number="EditedTrigger.Size" min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+        </div>
+        <div class="col-10 offset-1 text-center p-1">
+            <div class="form-check">
+                <label for="editTrgVisible" class="text-light">Видимый</label>
+                <input id="editTrgVisible" v-model="EditedTrigger.Visual" type="checkbox" class="form-check-input">
+            </div>
+        </div>
+
+
         <hr>
         <div class="p-3">
-               <a class="btn btn-outline-light" v-on:click="MenuMode = 40">Назад</a>
-            </div>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 40">Назад</a>
+        </div>
 
-      
+
     </div>
 
 </div>
@@ -333,11 +364,19 @@ const TestId = "@Model.Id";
         <hr class="bg-light my-2"/>
     </div>
     <div>
-        <div style="overflow-x: hidden; overflow-y: auto; max-height: 400px">
+        <div style="overflow-x: hidden; overflow-y: auto; max-height: 50vh">
             <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
                 <div class="p-1 row">
                     <div class="col-12">
-                        <h6 class="text-light text-center">{{obj.Resource.Name}} - {{obj.Id}}</h6>
+                        <h6 class="text-light text-center">
+                            <span v-if="obj.Resource.Name">
+                                {{obj.Resource.Name}}
+                            </span>
+                            <span v-else v-bind:style="{'color':obj.GetText().color}">
+                                {{obj.GetText().text}}
+                            </span>
+                            - {{obj.Id}}
+                        </h6>
                         <div class="con">
                             <div class="row">
                                 <div class="col-4">
@@ -346,7 +385,15 @@ const TestId = "@Model.Id";
                                     </div>
                                 </div>
                                 <div class="col-4">
-                                    <img class="img-fluid bg-light" style="min-height: 35px;min-width: 35px" src="" v-bind:src="obj.Resource.Url" alt="">
+                                    <span v-if="obj.Resource.Name">
+                                        <img class="img-fluid bg-light" style="min-height: 35px;min-width: 35px" src="" v-bind:src="obj.Resource.Url" alt="">
+                                    </span>
+
+                                    <span v-else>
+                                        <img class="img-fluid" style="min-height: 35px;min-width: 35px" src="Images/text-icon-6.jpg" alt="">
+                                    </span>
+
+
                                 </div>
                                 <div class="col-4">
                                     <div class="d-flex justify-content-center">

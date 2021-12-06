@@ -40,7 +40,7 @@ namespace IOTEST.Models
             public int ResourceId { get; set; }
             public int Id { get; set; }
             public bool Visible { get; set; }
-
+            public dynamic Text { get; set; }
             public DraggableObject()
             {
                 
