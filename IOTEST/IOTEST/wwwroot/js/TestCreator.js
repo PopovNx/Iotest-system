@@ -12,7 +12,8 @@
         MenuMode: 0,
         EditedTrigger:null,
 
-        EditTextData:null
+        EditTextData:null,
+        
         
     },
     methods: {
@@ -29,6 +30,7 @@
             const parent = document.getElementById("TestMain");
             console.log(test)
             this.Core = new TestCore(canvas, parent, test);
+            window.Core =   this.Core;
         },
         AddElement: function () {
 
@@ -79,10 +81,11 @@
             Data.append('Key', TestKey);
             Data.append('Data', JSON.stringify(this.LastSave));
             await axios.post('/method', Data);
-
         },
-        NeedSave(){
+        NeedSave(){            
             if(this.Core===null) return false;
+            
+            
             return JSON.stringify(this.Core.Save())===JSON.stringify(this.LastSave);
         },
         AddTrigger() {
@@ -96,6 +99,14 @@
         },
         DestroyTrigger(r){
             this.Core.Request("destroyTrg",r);
+        },
+        MoveZObject(r,d){
+            if(d===0){
+                this.Core.Request("downElement",r);
+            }else{
+                this.Core.Request("upElement",r);
+            }
+            
         },
         AddText(){
             const nOb = new NewObject(-1, {text: "Новый текст", color:"#0fd3ff"});

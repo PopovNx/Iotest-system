@@ -71,9 +71,9 @@ class Trigger {
                 }
             }
             if (this.pointInPoly(this.VectorArray, e.Sprite.x, e.Sprite.y)) {
-                if (this.Accepted.includes(e.Id)) {
+               // if (this.Accepted.includes(e.Id)) {
                     this.ObjectsInside.push(e);
-                }
+                //}
             }
         }
         this.Draw();
@@ -168,7 +168,6 @@ class DraggableObject {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
             this.Text = new PIXI.Text(object.Text.text, textStyle);
-            window.df = this;
             this.Text.updateText();
             this.Sprite = new PIXI.Sprite(this.Text.texture);
             this.Resource = -1;
@@ -597,7 +596,30 @@ class TestCore {
         this.DisplayContainer.removeChild(trg.graphics);
         this.Triggers = this.Triggers.filter(x => x !== trg);
     }
-
+    
+    SwapElement(x,y){
+        const in1 =this.DisplayContainer.children.indexOf(this.DraggableObjects[x].Sprite)
+        const in2 =this.DisplayContainer.children.indexOf(this.DraggableObjects[y].Sprite)
+        const tmp = this.DisplayContainer.children[in1];
+        this.DisplayContainer.children[in1] = this.DisplayContainer.children[in2];
+        this.DisplayContainer.children[in2] = tmp;
+        const tmp1 = this.DraggableObjects[x];
+        this.DraggableObjects[x] = this.DraggableObjects[y];
+        this.DraggableObjects[y] = tmp1;
+    }
+    
+    UpElementZ(el){
+        const i = this.DraggableObjects.indexOf(el);
+        if((i+1)<this.DraggableObjects.length){
+            this.SwapElement(i,i+1);
+        }
+    }
+    DownElementZ(el){
+        const i = this.DraggableObjects.indexOf(el);
+        if((i-1)>=0){
+            this.SwapElement(i,i-1);
+        }
+    }
     Request(request, data) {
         switch (request) {
             case "add":
@@ -612,6 +634,10 @@ class TestCore {
                 return this.AddTrigger(data);
             case "destroyTrg":
                 return this.RemoveTrigger(data);
+            case "upElement":
+                return this.UpElementZ(data);
+                case "downElement":
+                return this.DownElementZ(data);
             default:
                 throw new Error();
 
