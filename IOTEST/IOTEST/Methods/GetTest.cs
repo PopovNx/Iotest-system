@@ -18,6 +18,8 @@ namespace IOTEST.Methods
             var test =await db.Tests.FirstOrDefaultAsync(x => x.Key == key);
             if (test is null) return "undef test";
             var fJ = JsonConvert.DeserializeObject<IoContext.Test.DnTestData>(test.JsonData);
+
+
             if (fJ.Levels.All(x => x.Id != id))
             {
                 fJ.Levels.Add(new Models.TestX(id));

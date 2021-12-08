@@ -24,6 +24,18 @@ class Resource {
 }
 
 class Trigger {
+    color = 0x00F0F0;
+    graphics;
+    VectorArray;
+    Size;
+    Id;
+    ObjectsInside;
+    Y;
+    X;
+    Visual;
+    Magnetic;
+    Accepted;
+
     constructor(object) {
         this.X = object.X;
         this.Y = object.Y;
@@ -71,25 +83,13 @@ class Trigger {
                 }
             }
             if (this.pointInPoly(this.VectorArray, e.Sprite.x, e.Sprite.y)) {
-               // if (this.Accepted.includes(e.Id)) {
+                if (e.CanMove && e.Visible && e.Triggerable) {
                     this.ObjectsInside.push(e);
-                //}
+                }
             }
         }
         this.Draw();
     }
-
-    color = 0x00F0F0;
-    graphics;
-    VectorArray;
-    Size;
-    Id;
-    ObjectsInside;
-    Y;
-    X;
-    Visual;
-    Magnetic;
-    Accepted;
 
     getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {
         const d = (startX1 - endX1) * (endY2 - startY2) - (startY1 - endY1) * (endX2 - startX2);
@@ -128,8 +128,10 @@ class NewObject {
     Draggable;
     ButtonMode;
     Resource;
+    Triggerable
+    Visible;
 
-    constructor(res,text) {
+    constructor(res, text) {
         this.X = 100;
         this.Y = 100;
         this.ScaleX = 0.1;
@@ -138,13 +140,15 @@ class NewObject {
         this.Draggable = true;
         this.ButtonMode = true;
         this.Resource = res;
-        this.Text= null
-        if(text){
+        this.Text = null
+        this.Triggerable = true;
+        this.Visible = true;
+        if (text) {
             this.Text = text;
             this.ScaleX = 0.7;
             this.ScaleY = 0.7;
         }
-    
+
     }
 }
 
@@ -164,7 +168,9 @@ class DraggableObject {
     Clicked;
     Type;
     Text;
-    constructor(resource, object, isText) {
+    Triggerable;
+
+    constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
             this.Text = new PIXI.Text(object.Text.text, textStyle);
@@ -176,6 +182,7 @@ class DraggableObject {
             this.SetResource(resource)
             this.Text = null;
         }
+        this.Triggerable = object.Triggerable;
         this.MouseOnThis = false;
         this.SetVisible(object.Visible)
         this.Id = object.Id;
@@ -184,13 +191,10 @@ class DraggableObject {
         this.Sprite.scale.set(1);
         this.Sprite.scale.x = object.ScaleX;
         this.Sprite.scale.y = object.ScaleY;
-
         this.Rotation = object.Rotation;
         let cc = true;
         this.Sprite.anchor.set(cc ? 0.5 : 0);
-
         this.Sprite.interactive = true;
-
         this.Sprite.buttonMode = object.ButtonMode;
         this.CanMove = object.Draggable;
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
@@ -291,7 +295,7 @@ class DraggableObject {
 
     GetText() {
         if (this.Text === null) return null;
-        return {text:this.Text.text, color: this.Text._style.fill[0]}
+        return {text: this.Text.text, color: this.Text._style.fill[0]}
     }
 
     SetText(text, color) {
@@ -453,7 +457,9 @@ class TestCore {
     Animations;
     Id;
 
-    constructor(canvas, testParent, test) {
+    CorrectState;
+
+    constructor(canvas, testParent, test, optimiseLoad) {
         this.Id = test.Id;
         this.Resources = test.Resources;
         this.Name = test.Name;
@@ -461,6 +467,7 @@ class TestCore {
         this.Triggers = test.Triggers;
         this.Animations = test.Animations;
         this.Canvas = canvas;
+        this.CorrectState = test.CorrectState
         this.Display = new PIXI.Application({
             view: this.Canvas,
             backgroundAlpha: 0,
@@ -477,9 +484,23 @@ class TestCore {
 
         const loader = PIXI.Loader.shared;
 
-        this.Resources.forEach((e) => loader.add(e.Url));
+
+        for (const e of this.Resources) {
+            if (optimiseLoad) {
+                if (this.DraggableObjects.some(x => x.ResourceId === e.Id)) {
+                    loader.add(e.Url);
+                } else {
+                    e.Useless = true;
+                }
+            } else {
+                loader.add(e.Url);
+            }
+
+        }
+
         loader.load((loader, res) => {
             for (const e of this.Resources) {
+                if (e.Useless) continue;
                 e.Loaded = res[e.Url].texture;
                 e.__proto__ = Resource.prototype;
             }
@@ -488,7 +509,6 @@ class TestCore {
 
         window.addEventListener('resize', () => this.resize(this));
         this.resize(this);
-
     }
 
     texturesLoaded() {
@@ -596,10 +616,10 @@ class TestCore {
         this.DisplayContainer.removeChild(trg.graphics);
         this.Triggers = this.Triggers.filter(x => x !== trg);
     }
-    
-    SwapElement(x,y){
-        const in1 =this.DisplayContainer.children.indexOf(this.DraggableObjects[x].Sprite)
-        const in2 =this.DisplayContainer.children.indexOf(this.DraggableObjects[y].Sprite)
+
+    SwapElement(x, y) {
+        const in1 = this.DisplayContainer.children.indexOf(this.DraggableObjects[x].Sprite)
+        const in2 = this.DisplayContainer.children.indexOf(this.DraggableObjects[y].Sprite)
         const tmp = this.DisplayContainer.children[in1];
         this.DisplayContainer.children[in1] = this.DisplayContainer.children[in2];
         this.DisplayContainer.children[in2] = tmp;
@@ -607,19 +627,21 @@ class TestCore {
         this.DraggableObjects[x] = this.DraggableObjects[y];
         this.DraggableObjects[y] = tmp1;
     }
-    
-    UpElementZ(el){
+
+    UpElementZ(el) {
         const i = this.DraggableObjects.indexOf(el);
-        if((i+1)<this.DraggableObjects.length){
-            this.SwapElement(i,i+1);
+        if ((i + 1) < this.DraggableObjects.length) {
+            this.SwapElement(i, i + 1);
         }
     }
-    DownElementZ(el){
+
+    DownElementZ(el) {
         const i = this.DraggableObjects.indexOf(el);
-        if((i-1)>=0){
-            this.SwapElement(i,i-1);
+        if ((i - 1) >= 0) {
+            this.SwapElement(i, i - 1);
         }
     }
+
     Request(request, data) {
         switch (request) {
             case "add":
@@ -636,13 +658,21 @@ class TestCore {
                 return this.RemoveTrigger(data);
             case "upElement":
                 return this.UpElementZ(data);
-                case "downElement":
+            case "downElement":
                 return this.DownElementZ(data);
             default:
                 throw new Error();
 
         }
 
+    }
+
+    GetState() {
+        if (this.Triggers.length < 1) return null;
+        const st = {
+            trg: this.Triggers.map(x => x.ObjectsInside.map(y => y.Id))
+        }
+        return st;
     }
 
     Save() {
@@ -653,8 +683,10 @@ class TestCore {
                 Resources: [],
                 DraggableObjects: [],
                 Triggers: [],
-                Animations: this.Animations
+                Animations: this.Animations,
+                CorrectState: []
             }
+            saved.CorrectState = this.CorrectState;
             for (const res of this.Resources) {
                 const r = {Id: res.Id, Loaded: null, Name: res.Name, Url: res.Url}
                 r.__proto__ = Resource.prototype;
@@ -666,6 +698,7 @@ class TestCore {
                     Rotation: obj.Rotation, Draggable: obj.CanMove, ButtonMode: obj.Sprite.buttonMode,
                     ResourceId: obj.Resource.Id, Id: obj.Id,
                     Visible: obj.Sprite.visible,
+                    Triggerable: obj.Triggerable,
                     Text: obj.GetText()
                 }
                 r.__proto__ = DraggableObject.prototype;

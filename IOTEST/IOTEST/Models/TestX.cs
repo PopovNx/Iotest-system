@@ -41,6 +41,7 @@ namespace IOTEST.Models
             public int Id { get; set; }
             public bool Visible { get; set; }
             public dynamic Text { get; set; }
+            public bool Triggerable{ get; set; }
             public DraggableObject()
             {
                 
@@ -138,6 +139,7 @@ namespace IOTEST.Models
         public List<Trigger> Triggers { get; set; }
         public List<Animation> Animations { get; set; }
         public int Id { get; set; }
+        public dynamic CorrectState { get; set; }
 
         public TestX()
         {
@@ -151,6 +153,7 @@ namespace IOTEST.Models
             DraggableObjects = new List<DraggableObject>();
             Triggers = new List<Trigger>();
             Animations = new List<Animation>();
+            CorrectState =null;
         }
         public TestX(bool x)
         {

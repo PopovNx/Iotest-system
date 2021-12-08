@@ -29,7 +29,7 @@
             const canvas = document.getElementById("TestCanvas");
             const parent = document.getElementById("TestMain");
             console.log(test)
-            this.Core = new TestCore(canvas, parent, test);
+            this.Core = new TestCore(canvas, parent, test,false);
             window.Core =   this.Core;
         },
         AddElement: function () {
