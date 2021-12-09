@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 namespace IOTEST.Methods
 {
@@ -12,19 +13,38 @@ namespace IOTEST.Methods
         {
             public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
-                if (!control.IsOk || !context.Request.Form.ContainsKey("Test") || !context.Request.Form.ContainsKey("Num") || !context.Request.Form.ContainsKey("Last") || !context.Request.Form.ContainsKey("Data")) return "error";
-                var Res = new IoContext.AcceptedLvl
+                if (!control.IsOk 
+                    || !context.Request.Form.ContainsKey("TestKey") 
+                    || !context.Request.Form.ContainsKey("Index") 
+                    || !context.Request.Form.ContainsKey("Finish") 
+                    || !context.Request.Form.ContainsKey("Data")) return "error";
+                
+                var testKey = context.Request.Form["TestKey"].ToString();
+                
+                var indexCorrect = int.TryParse(context.Request.Form["Index"].ToString(), out var levelIndex);
+                if (!indexCorrect) return "test index error";
+                
+                var test =await db.Tests.FirstOrDefaultAsync(x => x.Key == testKey);
+                if (test is null) return "test key error";
+                
+                var user =await db.Users.FirstOrDefaultAsync(x => x.Gmail == control.UserData.Gmail);
+                
+                var finishCorrect = bool.TryParse(context.Request.Form["Finish"].ToString(), out var finish);
+                if (!finishCorrect) return "finish error";
+                
+                var data = JsonConvert.DeserializeObject<IoContext.LevelResult.ResultData>(context.Request.Form["Data"]);
+
+                var res = new IoContext.LevelResult
                 {
-                    Email = control.UserData.Gmail,
-                    KEY = context.Request.Form["Test"],
-                    Num = int.Parse(context.Request.Form["Num"]),
-                    IsLast = bool.Parse(context.Request.Form["Last"]),
-                    Result = JsonConvert.DeserializeObject<IoContext.AcceptedLvl.ResultData>(Encoding.UTF8.GetString(Convert.FromBase64String(context.Request.Form["Data"]))),
+                    Test = test,
+                    User = user,
+                    Finish = finish,
+                    LevelIndex = levelIndex,
+                    JsonData = JsonConvert.SerializeObject(data),
                     Created = DateTime.Now
                 };
-                await db.AcceptedLvls.AddAsync(Res);
-
-                Console.WriteLine(JsonConvert.SerializeObject(Res));
+                await db.LevelResults.AddAsync(res);
+                
 
                 await db.SaveChangesAsync();
                 return "OK";

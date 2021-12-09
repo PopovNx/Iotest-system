@@ -7,25 +7,22 @@ namespace IOTEST
 {
     public sealed partial class IoContext
     {
-        [Table("AcceptedLvls")]
-        public class AcceptedLvl
+        [Serializable]
+        [Table("LevelResults")]
+        public class LevelResult
         {
             [Key]
             public int Id { get; set; }
-            public string KEY { get; set; }
-            public string Email { get; set; }
-            public bool IsLast { get; set; }
-            public int Num { get; set; }
-            public ResultData Result { get; set; }
+            public Test Test { get; set; }
+            public User User { get; set; }
+            public bool Finish { get; set; }
+            public int LevelIndex { get; set; }
+            public string JsonData { get; set; }
             public DateTime Created { get; set; }
             public class ResultData
             {
-                [Key]
-                public int Id { get; set; }
-                public int Max { get; set; }
-                public int Result { get; set; }
-                public int Settings { get; set; }
-                public string Rule { get; set; }
+                public List<List<int>> Correct { get; set; }
+                public List<List<int>> Result { get; set; }
             }
         }
     }

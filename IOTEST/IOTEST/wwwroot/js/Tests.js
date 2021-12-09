@@ -35,6 +35,13 @@
             this.ShowMode = 11;
             this.EditedTest = i;
         },
+        async DropTest(i) {
+            const Data = new FormData();
+            Data.append('method', 'RemoveTest');
+            Data.append('Key', i.Key);
+            await axios.post('/method', Data); 
+            await this.LoadTests();
+        },
         AddTask: function (i, e) {
             let id = Math.random().toString().split(".")[1].slice(0, 8);
             if (e === true) {

@@ -14,6 +14,8 @@
 
         EditTextData:null,
         
+        EditAnimData:null,
+        
         
     },
     methods: {
@@ -81,12 +83,13 @@
             Data.append('Key', TestKey);
             Data.append('Data', JSON.stringify(this.LastSave));
             await axios.post('/method', Data);
+            console.log(this.LastSave)
         },
         NeedSave(){            
             if(this.Core===null) return false;
-            
-            
-            return JSON.stringify(this.Core.Save())===JSON.stringify(this.LastSave);
+            const save = this.Core.Save();
+
+            return JSON.stringify(save)===JSON.stringify(this.LastSave);
         },
         AddTrigger() {
             this.Core.Request("trgAdd");
@@ -109,11 +112,21 @@
             
         },
         AddText(){
-            const nOb = new NewObject(-1, {text: "Новый текст", color:"#0fd3ff"});
+            const nOb = new NewObject(-1, {text: "Новый текст", color:"#0f3fff"});
             console.log(nOb)
             this.Core.Request("add", nOb);
-        }
-
+        },
+        AddAnimation(){
+            this.Core.Request("createAnim")
+        },
+        DestroyAnimation(r){
+            this.Core.Request("destroyAnim",r)
+        },
+        EditAnimation(r){
+            this.EditAnimData = r;
+            this.MenuMode = 61;
+            console.log(r)
+        },
 
     },
     watch: {},

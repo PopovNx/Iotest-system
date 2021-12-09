@@ -68,6 +68,15 @@ const TestId = "@Model.Id";
         <span v-else-if="MenuMode == 50">
             Позиции
         </span>
+        <span v-else-if="MenuMode == 60">
+            Анимации
+        </span>
+        <span v-else-if="MenuMode == 61">
+            Анимация
+        </span>
+        <span v-else-if="MenuMode == 100">
+                            Задание
+                        </span>
     </h4>
     <hr class="bg-light my-2"/>
 </div>
@@ -83,7 +92,9 @@ const TestId = "@Model.Id";
         <div class="p-3 d-flex justify-content-center">
             <a class="btn btn-outline-light" v-on:click="MenuMode = 50">Позиции</a>
         </div>
-
+ <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 100">Задание</a>
+        </div>
 
     </div>
 </div>
@@ -150,7 +161,7 @@ const TestId = "@Model.Id";
             <a class="btn btn-outline-light" v-on:click="MenuMode= 40">Триггер</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="">Анимация</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode= 60">Анимация</a>
         </div>
         <hr>
         <div class="p-3 d-flex justify-content-center">
@@ -232,7 +243,7 @@ const TestId = "@Model.Id";
             <h3 class="text-light text-center">Y:</h3>
         </div>
         <div class="col-8">
-            <input v-model.number="EditObj.Sprite.x" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+            <input v-model.number="EditObj.Sprite.y" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
         <div class="col-12">
             <h5 class="text-light text-center">Размер: {{EditObj.Sprite.scale.x}} </h5>
@@ -262,6 +273,12 @@ const TestId = "@Model.Id";
             <div class="form-check">
                 <label for="editObjBtnMode" class="text-light">Нажимаемый</label>
                 <input id="editObjBtnMode" v-model="EditObj.Sprite.buttonMode" type="checkbox" class="form-check-input">
+            </div>
+        </div>
+        <div class="col-11 text-center p-1">
+            <div class="form-check">
+                <label for="editObjTrg" class="text-light">Триггерный</label>
+                <input id="editObjTrg" v-model="EditObj.Triggerable" type="checkbox" class="form-check-input">
             </div>
         </div>
         <div class="col-11 text-center p-1">
@@ -352,7 +369,12 @@ const TestId = "@Model.Id";
                 <input id="editTrgVisible" v-model="EditedTrigger.Visual" type="checkbox" class="form-check-input">
             </div>
         </div>
-
+<div class="col-10 offset-1 text-center p-1">
+            <div class="form-check">
+                <label for="editTrgMagnetic" class="text-light">Магнитный</label>
+                <input id="editTrgMagnetic" v-model="EditedTrigger.Magnetic" type="checkbox" class="form-check-input">
+            </div>
+        </div>
 
         <hr>
         <div class="p-3">
@@ -367,34 +389,34 @@ const TestId = "@Model.Id";
 
 <div v-if="MenuMode == 50">
     <div class="p-1 row d-flex justify-content-center">
-        <span class=" d-flex justify-content-center" v-if="Core.GetState()">
+
+        <span class=" d-flex justify-content-center">
             <h6 class="text-light text-center">
                 Разместите объекты в конкретную позицию
                 <small>Правильный ответ:</small>
             </h6>
         </span>
-        <span class=" d-flex justify-content-center" v-if="Core.GetState()">
+        <span class=" d-flex justify-content-center">
 
-            <h4 class="text-light" v-if="Core.CorrectState">
+            <small class="text-light" v-if="Core.CorrectState">
                 {{Core.CorrectState.trg}}
-            </h4>
+            </small>
             <h6 class="text-light" v-else>
-                            Отсутствует
-                        </h6>
+                Отсутствует
+            </h6>
         </span>
-
-        <span class=" d-flex justify-content-center" v-if="Core.GetState()">
+        <span class=" d-flex justify-content-center">
             <h6 class="text-light text-center">
                 <small>Текущее состояние:</small>
             </h6>
         </span>
-        <span class=" d-flex justify-content-center" v-if="Core.CorrectState">
-            <h4 class="text-light" v-if="Core.GetState()">
+        <span class=" d-flex justify-content-center">
+            <small class="text-light" v-if="Core.GetState()">
                 {{Core.GetState().trg}}
-            </h4>
- <h6 class="text-light" v-else>
-                            Триггеры отсутствуют
-                        </h6>
+            </small>
+            <h6 class="text-light" v-else>
+                Триггеры отсутствуют
+            </h6>
         </span>
 
         <hr>
@@ -407,7 +429,88 @@ const TestId = "@Model.Id";
         </div>
     </div>
 </div>
+<div v-if="MenuMode == 60">
+    <div class="p-1 row d-flex justify-content-center">
+        <div class="p-1 row d-flex justify-content-center">
+            <div style="max-height: 20vh; overflow-x: hidden">
+                <div v-for="(r,i) in Core.Animations">
+                    <div class="p-1 row">
+                        <div class="col-4">
+                            <div class="d-flex justify-content-center">
+                                <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyAnimation(r)">
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <h6 class="text-light text-center">{{i+1}}</h6>
+                        </div>
+                        <div class="col-4">
+                            <div class="d-flex justify-content-center">
+                                <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r)">
+                            </div>
+
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="AddAnimation">Добавить</a>
+
+        </div>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+        </div>
+    </div>
 </div>
+<div v-if="MenuMode == 61">
+    <div class="p-1 row d-flex justify-content-center">
+        <div>
+            <h3 class="text-light text-center">Условия:</h3>   
+            <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto">
+                <div v-for="ax in EditAnimData.Activators" class="m-1 p-1" >
+                    <div class="form-group">
+                        <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
+                            <option v-for="nxd in 4" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActivatorsNames(nxd-1)}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">Добавить анимацию</a>
+
+        </div>
+
+        <hr>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">Назад</a>
+        </div>
+
+
+    </div>
+
+
+</div>
+<div v-if="MenuMode == 100">
+    <div class="p-1 row d-flex justify-content-center">
+        <div>
+            <h3 class="text-light text-center">Текст задания:</h3>   
+             <textarea v-model="Core.Description" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
+
+        </div>
+
+        <hr>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+        </div>
+
+
+    </div>
+
+
+</div>
+</div>
+
 <div class="col-7">
     <div>
         <div id="TestHead" class="text-left row pt-2">

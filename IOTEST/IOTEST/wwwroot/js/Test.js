@@ -1,38 +1,62 @@
-﻿'use strict';
-import VisualTestsWorker  from "./TestLbv7.js";
-let app = new Vue({
+﻿let app = new Vue({
     el: "#app",
-    data: { 
-        Test: {},  
-        DblockNow: 0,  
-        PageNow: "Test",
-        PreTestData: {},
-        ToTest: "", 
-        Key: "",
+    data: {
+        PageNow: 0,
+        Test: null,
+        Levels: null,
+
+        LevelNow: null,
+
+        TestPage: false,
+        Canva: null,
+        CoreParent: null,
+        Core: null,
+
+        NowLevelIndex: 0
     },
     methods: {
-    },
-    watch: {
-        "Test.VisualData": function (e) {  
-            this.DblockNow = 0;
+        LoadLevel() {
+            this.LevelNow = this.Levels[this.NowLevelIndex];
+            this.Core = new TestCore(this.Canva, this.CoreParent, this.LevelNow, true);
+            window.Core = this.Core;
         },
-        "Test.EndData": function (e) {
-            if (e.C == true)
-                this.PageNow = "End";
-        },
+        async PassLevel() {
+            const finish = (this.Levels.length - 1 === this.NowLevelIndex);
+            const  DataX= {
+                Correct: Core.CorrectState.trg,
+                    Result: Core.GetState().trg
+            }
+            const Data = new FormData();
+            Data.append('method', 'AcceptResult');
+            Data.append('TestKey', this.Test.Key.toString());
+            Data.append('Index', this.NowLevelIndex.toString());
+            Data.append('Finish', finish.toString());
+            Data.append('Data', JSON.stringify(DataX));            
+            await axios.post('/method', Data);
+            this.TestPage = false;
+            this.Core.Destroy();
+            if(!finish){                
+                this.NowLevelIndex++;
+                this.LoadLevel();
+            }else{
+                   this.PageNow = 2;
+            }
+        }
     },
+    watch: {},
     created() {
-        this.Key = Key;
-        if (!NO) this.PreTestData = JSON.parse(JSON.stringify(Test));
-        if (!NO) this.Test = new VisualTestsWorker(Test, new showdown.Converter(), Key);
+        this.Test = window.Test;
+        this.Levels = window.Levels.Levels;
+
+        window.Test = null;
+        window.Levels = null;
+        window.Apl = this;
     },
     mounted() {
-        if (!Ended)
-            if (!NO) this.Test.Start(document.getElementById("MT1"), NumLast);
-        if (Ended) this.Test.EndTest();
+        this.Canva = document.getElementById("canva");
+        this.CoreParent = document.getElementById("testMain");
+        this.LoadLevel();
 
-        if (!NO) Test = undefined;
-        this.PageNow = "Start";
-        if (Ended) this.PageNow = "End";
     }
+
 })

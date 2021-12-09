@@ -68,9 +68,10 @@ class Trigger {
         this.graphics.endFill();
     }
 
-    Work(Objects, Triggers) {
+    Work(Objects) {
         this.ObjectsInside = [];
         for (const e of Objects) {
+            if (!e.Triggerable) continue;
             if (this.Magnetic) {
                 if (this.pointInPoly(this.VectorArray, e.Sprite.hasposx, e.Sprite.hasposy)) {
                     if (e.Sprite.DragClass.Dragging && this.Magnetic) {
@@ -83,7 +84,8 @@ class Trigger {
                 }
             }
             if (this.pointInPoly(this.VectorArray, e.Sprite.x, e.Sprite.y)) {
-                if (e.CanMove && e.Visible && e.Triggerable) {
+
+                if (e.CanMove && e.Visible) {
                     this.ObjectsInside.push(e);
                 }
             }
@@ -204,11 +206,11 @@ class DraggableObject {
         this.Clicked = false;
         this.Sprite
             .on('pointerdown', (e) => this.onDragStart(e))
-            .on('pointerup', (e) => this.onDragEnd())
-            .on('pointerupoutside', (e) => this.onDragEnd())
-            .on('pointermove', (e) => this.onDragMove())
-            .on('pointerover', (e) => this.onPointerOver())
-            .on('pointerout', (e) => this.onPointerOut());
+            .on('pointerup', () => this.onDragEnd())
+            .on('pointerupoutside', () => this.onDragEnd())
+            .on('pointermove', () => this.onDragMove())
+            .on('pointerover', () => this.onPointerOver())
+            .on('pointerout', () => this.onPointerOut());
     }
 
     onPointerOver() {
@@ -412,13 +414,22 @@ class EventAction {
 class Animation {
     Activators;
     EventActions;
-
+    static ActivatorsNames = function (id){
+        switch (id) {
+            case 0: return "Всегда";
+            case 1: return "Никогда";
+            case 2: return "При триггере";
+            case 3: return "При клике";
+            default: return "Не определено";
+        }
+    }
     constructor(object) {
         this.Activators = []
         this.EventActions = []
         for (const el of object.Activators) {
             this.Activators.push(new EventActivator(el))
         }
+        
         for (const el of object.EventActions) {
             this.EventActions.push(new EventAction(el))
         }
@@ -435,10 +446,14 @@ class Animation {
     Work(objects, trg, res) {
         const al = this.Activators.length;
         let ic = 0;
+        let bool = false;
         for (const e of this.Activators)
-            if (e.Check(objects, trg))
+            if (e.Check(objects, trg)){
                 ic++;
-        if (al === ic) this.Activate(objects, res);
+                bool= true;
+            }
+               
+        if (al === ic&&bool) this.Activate(objects, res);
     }
 }
 
@@ -459,6 +474,7 @@ class TestCore {
 
     CorrectState;
 
+    Description;
     constructor(canvas, testParent, test, optimiseLoad) {
         this.Id = test.Id;
         this.Resources = test.Resources;
@@ -468,6 +484,7 @@ class TestCore {
         this.Animations = test.Animations;
         this.Canvas = canvas;
         this.CorrectState = test.CorrectState
+        this.Description = test.Description;
         this.Display = new PIXI.Application({
             view: this.Canvas,
             backgroundAlpha: 0,
@@ -506,8 +523,12 @@ class TestCore {
             }
             this.texturesLoaded();
         });
-
-        window.addEventListener('resize', () => this.resize(this));
+        const resizer = () =>{
+            if(this.Destroyed===true) return;
+            this.resize(this);
+        }
+        window.addEventListener('resize',resizer );
+        setInterval(resizer, 100);
         this.resize(this);
     }
 
@@ -529,13 +550,14 @@ class TestCore {
             const obj = this.Triggers[i];
             this.Triggers[i] = new Trigger(obj);
             this.DisplayContainer.addChild(this.Triggers[i].graphics)
-            console.log(this.Triggers[i])
         }
+        console.log(this.Animations)
         for (let i = 0; i < this.Animations.length; i++) {
             const obj = this.Animations[i];
             this.Animations[i] = new Animation(obj);
         }
         this.Display.ticker.add(() => this.Worker());
+        
     }
 
     Worker() {
@@ -589,7 +611,7 @@ class TestCore {
 
     }
 
-    AddTrigger(data) {
+    AddTrigger() {
         let maxId = 0;
         for (const t of this.Triggers)
             if (maxId < t.Id) {
@@ -641,7 +663,17 @@ class TestCore {
             this.SwapElement(i, i - 1);
         }
     }
-
+    CreateAnimation(){
+        
+      const anim = new Animation({Activators:[], EventActions:[]});
+      this.Animations.push(anim);
+      console.log(this.Animations)
+    }
+    RemoveAnimation(a){
+        
+        this.Animations = this.Animations.filter(x => x !== a);
+    }
+    
     Request(request, data) {
         switch (request) {
             case "add":
@@ -660,6 +692,10 @@ class TestCore {
                 return this.UpElementZ(data);
             case "downElement":
                 return this.DownElementZ(data);
+            case "createAnim":
+                return this.CreateAnimation();
+            case "destroyAnim":
+                return this.RemoveAnimation(data);
             default:
                 throw new Error();
 
@@ -669,12 +705,32 @@ class TestCore {
 
     GetState() {
         if (this.Triggers.length < 1) return null;
-        const st = {
+        return {
             trg: this.Triggers.map(x => x.ObjectsInside.map(y => y.Id))
-        }
-        return st;
+        };
     }
-
+    
+    Calculate(){
+        const correct = this.CorrectState.trg;
+        const nowState = this.GetState().trg; 
+        let mass = 0;
+        let now = 0;
+        for (const trg of correct)
+            mass += trg.length;
+        for (let i = 0; i < correct.length; i++) {
+            for (const num of nowState[i]){
+                now += correct[i].includes(num);
+            }
+        }                        
+        return now/mass;      
+    }
+    Destroy(){
+        PIXI.Loader.shared.reset();
+        this.Display.stop()
+        this.Display.renderer.destroy();
+        this.Destroyed = true;
+        
+            }
     Save() {
         try {
             const saved = {
@@ -683,14 +739,33 @@ class TestCore {
                 Resources: [],
                 DraggableObjects: [],
                 Triggers: [],
-                Animations: this.Animations,
-                CorrectState: []
+                Animations: [],
+                CorrectState: [],
+                Description: this.Description,
             }
             saved.CorrectState = this.CorrectState;
             for (const res of this.Resources) {
                 const r = {Id: res.Id, Loaded: null, Name: res.Name, Url: res.Url}
                 r.__proto__ = Resource.prototype;
                 saved.Resources.push(r)
+            } 
+            for (const anim of this.Animations) {
+                
+                const r = {Activators:[],EventActions:[]}
+                for (const a of anim.Activators) {
+                    const rx = {Event:a.Event,Selector:a.Selector};
+                    r.Activators.push(rx);
+                }
+                for (const a of anim.EventActions) {
+                    const rx = {
+                        Event : a.Event,
+                        Selector :a.Selector,
+                        Value :a.Value                    
+                    };
+                    r.EventActions.push(rx);
+                }
+                r.__proto__ = Animation.prototype;
+                saved.Animations.push(r)
             }
             for (const obj of this.DraggableObjects) {
                 const r = {

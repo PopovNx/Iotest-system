@@ -76,7 +76,10 @@
                                                                     <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-12">
+                                                                    <div class="col-6">
+                                                                        <a class="btn btn-outline-danger" v-on:click="DropTest(i)">Удалить</a>
+                                                                    </div>
+                                                                    <div class="col-6">
                                                                         <a class="btn btn-outline-light" v-on:click="EditTest(i)">Редактировать</a>
                                                                     </div>
                                                                 </div>
@@ -117,40 +120,47 @@
                                 <div class="row">
                                     <div>
                                         <div class="form-group col-6 offset-3 p-3">
-                                            <div class="bg-transparent overflow-auto">
-                                                <div class="list-group" style="max-height: 40vh" v-if="EditedTest.JsonData">
-                                                    <div v-if="EditedLevelsList.length!=0">
-                                                             <h5>Задания:</h5>
-                                                        <div v-for="i in EditedLevelsList">
-                                                            <div class="m-1">
-                                                                <div class="list-group-item bg-dark">
-                                                                    <div v-on:mouseleave="MouseOverGroup =null">
-                                                                        <h5 v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col-8 offset-2">
-                                                                            <a class="btn btn-outline-light" v-on:click="AddTask(i,true)">Редактировать</a>
+                                            <div>
+                                                <h4>Задания:</h4>
+                                                <div class="bg-transparent overflow-auto">
+                                                    <div class="list-group" style="max-height: 40vh" v-if="EditedTest.JsonData">
+                                                        <div v-if="EditedLevelsList.length!=0">
+
+                                                            <div v-for="i in EditedLevelsList">
+                                                                <div class="m-1">
+                                                                    <div class="list-group-item bg-dark">
+                                                                        <div v-on:mouseleave="MouseOverGroup =null">
+                                                                            <h5 v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
                                                                         </div>
-                                                                        <div class="col-1">
-                                                                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTask(i)">
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTask(i)">
+                                                                            </div>
+
+                                                                            <div class="col-6">
+                                                                                <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="AddTask(i,true)">
+                                                                            </div>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div v-else>
+                                                            <h4>Вы не создали заданий</h4>
+                                                        </div>
                                                     </div>
-                                                    <div v-else>
-                                                        <h4>Вы не создали заданий</h4>
-                                                    </div>
+
                                                 </div>
+
                                             </div>
-                                            
-                                           
+
+
                                         </div>
                                     </div>
                                 </div>
                             </span>
-                     
+
                         </div>
                         <hr class="m-0"/>
                         <div>

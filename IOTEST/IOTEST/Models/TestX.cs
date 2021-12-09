@@ -138,12 +138,14 @@ namespace IOTEST.Models
         public List<DraggableObject> DraggableObjects { get; set; }
         public List<Trigger> Triggers { get; set; }
         public List<Animation> Animations { get; set; }
+        public string Description { get; set; }
         public int Id { get; set; }
         public dynamic CorrectState { get; set; }
 
         public TestX()
         {
             Id = Guid.NewGuid().GetHashCode();
+            
         }
         public TestX(int id)
         {
@@ -155,49 +157,6 @@ namespace IOTEST.Models
             Animations = new List<Animation>();
             CorrectState =null;
         }
-        public TestX(bool x)
-        {
-            Id = Guid.NewGuid().GetHashCode();
-            Name = "Test";
-            Resources = new List<Resource>
-            {
-                new("Cpu", "/TestItems/Prefabs/Electrons/Cpu/1.png"),
-                new("ElectronKey", "/TestItems/Prefabs/Electrons/Keys/2.png"),
-            };
-            DraggableObjects = new List<DraggableObject>()
-            {
-                new(Resources.First(x => x.Name == "Cpu"), 200, 200, 0.2, 0.2, 0, false, false, 1),
-                new(Resources.First(x => x.Name == "Cpu"), 200, 400, 0.2, 0.2, 0, true, true, 2),
-                new(Resources.First(x => x.Name == "ElectronKey"), 400, 400, 0.2, 0.2, 0, true, true, 3),
-            };
-            Triggers = new List<Trigger>()
-            {
-                new(600, 400, 50, true, true, 1, 1, 2),
-                new(700, 100, 50, true, true, 2, 3)
-            };
-            Animations = new List<Animation>()
-            {
-                new()
-                {
-                    Activators = new List<Animation.EventActivator>()
-                    {
-                        new()
-                        {
-                            Event = Animation.EventActivator.EventType.OnClick,
-                            Selector = new List<int>() { 1 }
-                        },
-                    },
-                    EventActions = new List<Animation.EventAction>()
-                    {
-                        new()
-                        {
-                            Event = Animation.EventAction.EventType.Visibility,
-                            Selector = new List<int> { 2 },
-                            Value = new List<int> { 0, 1 },
-                        }
-                    }
-                }
-            };
-        }
+      
     }
 }
