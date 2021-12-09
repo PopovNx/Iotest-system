@@ -8,7 +8,8 @@
         TestNameInvalid: null,
         TestDescription: "",
         TestEndDescription: "",
-        EditedTest: null
+        EditedTest: null,
+        EditedTestResults:[],
     },
     methods: {
         CreateTest: async function () {
@@ -35,10 +36,24 @@
             this.ShowMode = 11;
             this.EditedTest = i;
         },
+        async Results(i) {
+            this.ShowMode = 15;
+            this.EditedTest = i;
+
+            this.EditedTestResults = [];
+            const Data = new FormData();
+            Data.append('method', 'GetTestResult');
+            Data.append('Key', i.Key);
+            const data = await axios.post('/method', Data);
+            this.EditedTestResults = data.data;
+            console.log(data.data)
+
+        },
         async DropTest(i) {
             const Data = new FormData();
             Data.append('method', 'RemoveTest');
             Data.append('Key', i.Key);
+       
             await axios.post('/method', Data); 
             await this.LoadTests();
         },
@@ -62,7 +77,6 @@
                 })
 
             });
-
         }
 
     },

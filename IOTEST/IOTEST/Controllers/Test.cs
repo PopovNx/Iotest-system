@@ -25,7 +25,9 @@ namespace IOTEST.Controllers
             if (test is null)
                 return new RedirectResult("/");
 
-            return View("Test",  (user, test));
+            var results = await _database.LevelResults.Where(x => x.User == user).Where(x => x.Test == test).ToListAsync();
+            
+            return View("Test",  (user, test,results));
         }
     }
 }

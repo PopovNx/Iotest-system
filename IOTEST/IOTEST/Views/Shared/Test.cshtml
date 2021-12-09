@@ -1,9 +1,24 @@
-﻿@using Newtonsoft.Json
-@model (IoContext.User User,IoContext.Test Test)
+﻿@using IOTEST.Methods
+@using Newtonsoft.Json
+@model (IoContext.User User,IoContext.Test Test, List<IoContext.LevelResult> Results)
 @{
     ViewData["Title"] = $"IOTEST - {Model.Test.Name}";
+    var finish = Model.Results.Any(x => x.Finish);
+    string mark = null;
+    int index = 0;
+    if (finish)
+    {
+        mark = $"{GetMark.Calculate(Model.Results)*100:F1}%";
+    }
+    else
+    {
+        if (Model.Results.Any())
+        {
+            index = Model.Results.Max(x => x.LevelIndex)+1;
+        }
+    }
+    
 }
-
 @section ScriptsAfter
 {
 
@@ -39,14 +54,16 @@
     }
      window.Levels = JSON.parse('@Html.Raw(levels)');
      window.Test = JSON.parse('@Html.Raw(testJson)');
+     window.Finish = @finish.ToString().ToLower();
+     window.Mark = '@mark';
+     window.Index = @index;
     </script>
 
 <div id="Page" class="user-select-none container-fluid" v-cloak>
     <div class="row mt-1">
+
         <div class="col-12 offset-0 col-sm-10 offset-sm-1 mt-3 col-lg-8 offset-lg-2 offset-xl-3 col-xl-6   DOB" style="background-color:rgba(45, 51, 51, 0.50)">
             <div v-if="Test">
-
-
                 <div v-show="PageNow===0">
                     <div id="head" class="text-left row pt-2">
                         <h4 class="text-light mt-2 col-8">Тестирование</h4>
@@ -71,7 +88,7 @@
                 </div>
                 <div v-show="PageNow===1">
                     <div id="testHead" class="text-left row pt-2">
-                        <h4 class="text-light mt-2 text-center text-md-left" v-if="LevelNow">{{LevelNow.Name}}</h4>
+                        <h4 class="text-light mt-2 text-center text-md-left" v-if="LevelNow">{{NowLevelIndex+1}}/{{Levels.length}} - {{LevelNow.Name}}</h4>
                         <hr class="bg-light my-2"/>
                     </div>
                     <div id="testMain" class="text-center text-light  DOB">
@@ -105,9 +122,9 @@
                             <hr>
                             <div id="endText">{{Test.FinalText}}</div>
                             <hr>
-                             <div id="endParams" class=" d-flex justify-content-around mb-3 ">
-                                 <span class="list-group-item bg-dark col-12 col-sm-6 col-md-4 offset-md-0">Результат: </span>
-                                <button class="btn btn-outline-light col-12 col-sm-6 col-md-4 offset-md-4 " v-on:click="location.href='/'">На главную</button>
+                            <div id="endParams" class=" d-flex justify-content-around mb-3 ">
+                                <span class="list-group-item bg-dark ">Результат: {{Mark}}</span>
+                                <button class="btn btn-outline-light" v-on:click="location.href='/'">На главную</button>
                             </div>
                         </div>
                     </div>

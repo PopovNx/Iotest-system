@@ -12,13 +12,17 @@
         CoreParent: null,
         Core: null,
 
-        NowLevelIndex: 0
+        NowLevelIndex: 0,
+        Finish:false,
+        
+        Mark:"Расчёт",
     },
     methods: {
         LoadLevel() {
             this.LevelNow = this.Levels[this.NowLevelIndex];
+            
             this.Core = new TestCore(this.Canva, this.CoreParent, this.LevelNow, true);
-            window.Core = this.Core;
+            window.Core = this.Core; 
         },
         async PassLevel() {
             const finish = (this.Levels.length - 1 === this.NowLevelIndex);
@@ -40,6 +44,12 @@
                 this.LoadLevel();
             }else{
                    this.PageNow = 2;
+                const Data = new FormData();
+                Data.append('method', 'GetMark');
+                Data.append('TestKey', this.Test.Key.toString());
+                const result = await axios.post('/method', Data);
+                console.log(result)
+                this.Mark = result.data;
             }
         }
     },
@@ -47,15 +57,24 @@
     created() {
         this.Test = window.Test;
         this.Levels = window.Levels.Levels;
-
+        this.Finish = window.Finish;
+        this.NowLevelIndex = window.Index;
         window.Test = null;
         window.Levels = null;
+        window.Finish = null;
+        window.Index = null;
         window.Apl = this;
     },
     mounted() {
-        this.Canva = document.getElementById("canva");
-        this.CoreParent = document.getElementById("testMain");
-        this.LoadLevel();
+        if(!this.Finish){
+            this.Canva = document.getElementById("canva");
+            this.CoreParent = document.getElementById("testMain");
+            this.LoadLevel();
+        }else{
+            this.PageNow = 2;
+            this.Mark = window.Mark;
+        }
+        
 
     }
 

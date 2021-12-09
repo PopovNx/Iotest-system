@@ -24,13 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Methods\GetBals.cs" />
-    <None Include="Methods\GetBals.cs" />
-    <Compile Remove="Methods\GetTestResult.cs" />
-    <None Include="Methods\GetTestResult.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="wwwroot\TestItems\Prefabs\Service" />
   </ItemGroup>
 

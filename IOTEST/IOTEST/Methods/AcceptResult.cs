@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -33,7 +34,7 @@ namespace IOTEST.Methods
                 if (!finishCorrect) return "finish error";
                 
                 var data = JsonConvert.DeserializeObject<IoContext.LevelResult.ResultData>(context.Request.Form["Data"]);
-
+                
                 var res = new IoContext.LevelResult
                 {
                     Test = test,
@@ -43,8 +44,12 @@ namespace IOTEST.Methods
                     JsonData = JsonConvert.SerializeObject(data),
                     Created = DateTime.Now
                 };
-                await db.LevelResults.AddAsync(res);
+                if (db.LevelResults.Any(x => x.User == user && x.Test == test && x.LevelIndex == levelIndex))
+                {
+                    return "error";
+                }
                 
+                await db.LevelResults.AddAsync(res);
 
                 await db.SaveChangesAsync();
                 return "OK";
