@@ -11,29 +11,33 @@ namespace IOTEST.Methods
         {
             public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
             {
-                var Mail = context.Request.Form["Email"].ToString();
-                if (string.IsNullOrEmpty(Mail)) return "NotOk";
-                var IsAny = await db.Users.AnyAsync(x => x.Gmail == Mail);
-                var User = new IoContext.User();
-                if (IsAny)
+                var mail = context.Request.Form["Email"].ToString();
+                if (string.IsNullOrEmpty(mail)) return "NotOk";
+                var isAny = await db.Users.AnyAsync(x => x.Gmail == mail);
+                var user = new IoContext.User();
+                if (isAny)
                 {
-                    User = await db.Users.Where(x => x.Gmail == Mail).FirstOrDefaultAsync();
-                }
+                    user = await db.Users.Where(x => x.Gmail == mail).FirstOrDefaultAsync();
+                } 
                 else
                 {
 
-                    User.Created = DateTime.Now;
-                    User.FirstName = context.Request.Form["GivenName"];
-                    User.FamilyName = context.Request.Form["FamilyName"];
-                    User.Image = context.Request.Form["ImageURL"];
-                    User.Gmail = Mail;
-                    User.Token = context.Request.Form["IDToken"];
-                    User.UserProf = IoContext.User.UserProfType.User;
-                    await db.AddAsync(User);
+                    user.Created = DateTime.Now;
+                    user.FirstName = context.Request.Form["GivenName"];
+                    user.FamilyName = context.Request.Form["FamilyName"];
+                    user.Image = context.Request.Form["ImageURL"];
+                    user.Gmail = mail;
+                    user.Token = context.Request.Form["IDToken"];
+                    user.UserProf = IoContext.User.UserProfType.User;
+                    if (user.FamilyName == "undefined")
+                    {
+                        user.FamilyName = "";
+                    }
+                    await db.AddAsync(user);
                     await db.SaveChangesAsync();
                 }
-                var DataC = new DataControl(User);
-                context.Response.Cookies.Append(DataControl.CookieName, DataC.ToString(), new CookieOptions { Path = "/", Expires = DateTime.Now.AddYears(1) });
+                var dataC = new DataControl(user);
+                context.Response.Cookies.Append(DataControl.CookieName, dataC.ToString(), new CookieOptions { Path = "/", Expires = DateTime.Now.AddYears(1) });
                 return "OK";
             }
         }

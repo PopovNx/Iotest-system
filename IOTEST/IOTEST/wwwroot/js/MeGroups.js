@@ -17,7 +17,10 @@
         EditGroupOpen: true,
 
         ConnectGroupKey: null,
-        ConnectGroupKeyInvalid: null
+        ConnectGroupKeyInvalid: null,
+        ConnectTestKey:"",
+        ConnectTestKeyInvalid:null,
+        
     },
     methods: {
         GetGroups: function () {
@@ -28,6 +31,7 @@
                 if (this.GroupEditId == null && e.data.length > 0)
                     this.GroupEditId = e.data[0].Key;
                 this.LoadedGroups = true;
+                
             });
         },
         CreateGroup: function () {
@@ -57,6 +61,39 @@
         OpenGroupEdit: function (e) {
             this.GroupEditId = e;
             this.ShowMode = 2;
+            console.log(this.EditGroup);
+        },
+        async RemoveTestFromGroup(e) {
+            const key = JSON.parse(e).Key;
+            const Data = new FormData();
+            Data.append('method', 'ConnectTest');
+            Data.append('GroupKey', this.EditGroup.Key);
+            Data.append('TestKey', key);
+            Data.append('Remove', "true");
+            console.log(await axios.post('/method', Data));
+            this.GetGroups();
+
+        },
+        ConnectTest(){
+            this.ConnectTestKeyInvalid = null;
+            const Data = new FormData();
+            Data.append('method', 'ConnectTest');
+            Data.append('GroupKey', this.EditGroup.Key);
+            Data.append('TestKey', this.ConnectTestKey);
+            Data.append('Remove', "false");
+            axios.post('/method', Data).then((e) => {
+                console.log(e.data );
+                if (e.data === "NoTest") {
+                    this.ConnectTestKeyInvalid = "Тест не найден";
+                }  else if (e.data === "Contains") {
+                    this.ConnectTestKeyInvalid = "Тест уже содержится";
+                }  else if (e.data === "OK") {
+                    this.ConnectTestKeyInvalid = null;
+                    this.GetGroups();
+                } else {
+                    this.ConnectTestKeyInvalid = "Неизвестная ошибка";
+                }
+            });
         },
         RmSelectedCourse: function () {
             const data = new FormData();

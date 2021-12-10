@@ -20,7 +20,7 @@ namespace IOTEST.Methods
                 var test = await db.Tests.FirstOrDefaultAsync(x => x.Key == key);
                 if (test is null) return "test key error";
                 var results = await db.LevelResults.Where(x => x.Test == test).Include(x=>x.User).ToListAsync();
-                var res = new List<(IoContext.User User, string Mark, DateTime Time)>();
+                var res = new List<(IoContext.User User, string Mark, DateTime Time)>();  
                 foreach (var g in results.GroupBy(x=>x.User))
                 {
                     var usr = g.Key;
@@ -37,5 +37,5 @@ namespace IOTEST.Methods
                 return JsonConvert.SerializeObject(res);
             }
         
-    }
+    } 
 }

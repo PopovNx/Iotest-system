@@ -1,9 +1,8 @@
-﻿@using Newtonsoft.Json.Linq
-@using Microsoft.EntityFrameworkCore
-
-@model IOTEST.IoContext.User
+﻿@model (IOTEST.IoContext.User User,List<IoContext.Test> Tests)
 @{
     ViewData["Title"] = "IOTEST - Main";
+
+
 }
 
 @section ScriptsBefore
@@ -26,19 +25,16 @@
                 </span>
             </a>
             <span class="DOB navbar-brand float-left ml-auto user-select-none border-1 border-dark" style="cursor: pointer" v-on:click="location.href='/me'">
-                <span class="mr-1">@Model.FirstName</span>
-                <span class="mr-2">@Model.FamilyName</span>
-                <img src="@Model.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+                <span class="mr-1">@Model.User.FirstName</span>
+                <span class="mr-2">@Model.User.FamilyName</span>
+                <img src="@Model.User.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
             </span>
         </div>
     </nav>
 </header>
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
     <div class="row">
-        <div id="LeftBlock" class="col-12 col-md-4 order-2 order-md-0 DOB">
-            123
-        </div>
-        <div class="col-12 col-md-4 order-0 order-md-1">
+        <div class="col-12 col-md-4 order-0 order-md-1 offset-md-4">
             <div class="bg-dark mt-4 rounded">
                 <div class="form-group DOB p-2 row d-flex   justify-content-center">
                     <label for="InputCodeTest">Введите код теста</label>
@@ -49,8 +45,24 @@
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-4 order-1 order-md-2">
-            123
+        <div class="col-12 col-md-4 order-1 order-md-2 DOB">
+            @{
+                foreach (var g in Model.Tests)
+                {
+                    @if (Model.Tests.First() == g)
+                    {
+                        <h4 class="text-light text-center mt-3 bg-dark">Тесты к прохождению</h4>
+                        <hr>
+                    }
+                    <div class="p-1 row bg-dark m-1" v-on:click="location.href='/test?@g.Key'">
+                        <div class="col-12">
+                            <h4 class="text-light text-center">@g.Name</h4>
+                            <h6 class="text-light text-center">@g.Key</h6>
+                        </div>
+                    </div>
+                    <hr>
+                }
+            }
         </div>
     </div>
 </div>

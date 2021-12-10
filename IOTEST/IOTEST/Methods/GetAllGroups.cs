@@ -16,8 +16,25 @@ namespace IOTEST.Methods
             {
                 if (!control.IsOk) return "error";
                 var gmail = control.UserData.Gmail;
-                var Result = await db.Groups.Select(x=>x).ToArrayAsync();
-                var data = Result.Where(x => x.Admin == gmail || x.Users.Contains(gmail)).ToList();
+                var result = await db.Groups.Select(x=>x).AsNoTracking().ToArrayAsync();
+                
+                var data = result.Where(x => x.Admin == gmail || x.Users.Contains(gmail)).ToList();
+                foreach (var g in data)
+                {
+                    for (var i = 0; i < g.Users.Count; i++)
+                    {
+                        var i1 = i;
+                        var user = await db.Users.FirstOrDefaultAsync(x => x.Gmail == g.Users[i1]);
+                        g.Users[i] = JsonConvert.SerializeObject(user);
+                    }
+                    for (var i = 0; i < g.Tests.Count; i++)
+                    {
+                        var i1 = i;
+                        var test = await db.Tests.FirstOrDefaultAsync(x => x.Key == g.Tests[i1]);
+                        g.Tests[i] = JsonConvert.SerializeObject(test);
+                    }
+                }
+                
                 return JsonConvert.SerializeObject(data);
             }
         

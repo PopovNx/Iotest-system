@@ -6,26 +6,22 @@ using Microsoft.EntityFrameworkCore;
 namespace IOTEST.Controllers
 {
     [Route("/tests")]
-    public class Tests : Controller
+    public class Tests : Controller 
     {
         private readonly IoContext _database;
         public Tests(IoContext userContext) => _database = userContext;
 
         public async Task<ActionResult> IndexAsync()
         {
-            var control = new DataControl(HttpContext.Request.Cookies);
+            var control = new DataControl(HttpContext);
+            
             if (!await control.Exist(_database))
-            {
-                HttpContext.Response.Redirect("/login");
-                return View("Empty");
-            }
-
+                return new RedirectResult("/login");
+            
             var user = await _database.Users.FirstAsync(x => x.Id == control.UserData.Id);
+            
             if (user.UserProf != IoContext.User.UserProfType.Teacher)
-            {
-                HttpContext.Response.Redirect("/");
-                return View("Empty");
-            }
+                return new RedirectResult("/");
 
 
             return View("Tests", user);

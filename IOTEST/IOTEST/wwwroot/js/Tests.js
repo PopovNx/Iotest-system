@@ -9,10 +9,10 @@
         TestDescription: "",
         TestEndDescription: "",
         EditedTest: null,
-        EditedTestResults:[],
+        EditedTestResults: [],
     },
     methods: {
-        CreateTest: async function () {
+        CreateTest: async function (update) {
             if (this.TestName.length < 5) {
                 this.TestNameInvalid = "Неправильное название";
                 return;
@@ -20,6 +20,10 @@
                 this.TestNameInvalid = null;
             }
             const test = new Test(this.TestName, this.TestDescription, this.TestEndDescription);
+            if (update) {
+                test.Key = this.EditedTest.Key;
+                test.Disabled = this.EditedTest.Disabled;
+            }
             const Data = new FormData();
             Data.append('method', 'CreateTest');
             Data.append('Data', JSON.stringify(test));
@@ -35,6 +39,16 @@
         EditTest(i) {
             this.ShowMode = 11;
             this.EditedTest = i;
+            this.TestName = this.EditedTest.Name;
+            this.TestDescription = this.EditedTest.Description;
+            this.TestEndDescription = this.EditedTest.FinalText;
+            window.ET = i;
+        },
+        CreateTestOpen() {
+            this.ShowMode = 1;
+            this.TestName = "";
+            this.TestDescription = "";
+            this.TestEndDescription = "";
         },
         async Results(i) {
             this.ShowMode = 15;
@@ -53,8 +67,8 @@
             const Data = new FormData();
             Data.append('method', 'RemoveTest');
             Data.append('Key', i.Key);
-       
-            await axios.post('/method', Data); 
+
+            await axios.post('/method', Data);
             await this.LoadTests();
         },
         AddTask: function (i, e) {

@@ -55,25 +55,30 @@
     },
     watch: {},
     created() {
-        this.Test = window.Test;
-        this.Levels = window.Levels.Levels;
-        this.Finish = window.Finish;
-        this.NowLevelIndex = window.Index;
-        window.Test = null;
-        window.Levels = null;
-        window.Finish = null;
-        window.Index = null;
-        window.Apl = this;
+        if( !window.Disabled) {
+            this.Test = window.Test;
+            this.Levels = window.Levels.Levels;
+            this.Finish = window.Finish;
+            this.NowLevelIndex = window.Index;
+            window.Test = null;
+            window.Levels = null;
+            window.Finish = null;
+            window.Index = null;
+            window.Apl = this;
+        }
     },
     mounted() {
-        if(!this.Finish){
-            this.Canva = document.getElementById("canva");
-            this.CoreParent = document.getElementById("testMain");
-            this.LoadLevel();
-        }else{
-            this.PageNow = 2;
-            this.Mark = window.Mark;
+        if( !window.Disabled){
+            if(!this.Finish){
+                this.Canva = document.getElementById("canva");
+                this.CoreParent = document.getElementById("testMain");
+                this.LoadLevel();
+            }else{
+                this.PageNow = 2;
+                this.Mark = window.Mark;
+            }
         }
+     
         
 
     }

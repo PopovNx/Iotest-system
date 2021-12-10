@@ -64,9 +64,14 @@ const UserType = "@Model.UserProf";
                             </span>
                             <span v-else-if="ShowMode==2">
                                 <div class="container">
-                                    <h4>{{EditGroup.Name}}</h4>
+                                    <h4 v-if="EditGroup">{{EditGroup.Name}}</h4>
                                 </div>
                             </span>
+                              <span v-else-if="ShowMode==3">
+                                                            <div class="container">
+                                                                <h4 v-if="EditGroup">{{EditGroup.Name}}</h4>
+                                                            </div>
+                                                        </span>
                             <span v-else-if="ShowMode==10">
                                 <div class="container">
                                     <h4>Присоедениться</h4>
@@ -135,12 +140,11 @@ const UserType = "@Model.UserProf";
                             <span v-else-if="ShowMode==2">
                                 <div class="row" v-if="EditGroup!=null">
                                     <div>
-                                        <div class="form-group col-6 offset-3 p-1">
-
-                                            <h5 style="user-select: text">{{EditGroup.Key}}</h5>
-                                            <hr class="p-0">
+                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                                            <h5 style="user-select: all">{{EditGroup.Key}}</h5>
+                                            <hr class="m-0">
                                         </div>
-                                        <div class="form-group col-6 offset-3 p-1">
+                                        <div class="form-group col-10 offset-1 col-sm-4 offset-sm-4">
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input" id="SwX2" type="checkbox" v-model="EditGroupOpen">
                                                 <label class="form-check-label" for="SwX2">
@@ -149,17 +153,21 @@ const UserType = "@Model.UserProf";
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="form-group col-6 offset-3 p-1">
-                                            <hr class="p-0">
+                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                                            <hr class="m-0">
                                             <h4>Пользователи:</h4>
-
                                             <div class="overflow-auto" style="max-height: 30vh">
                                                 <div>
                                                     <span v-if="EditGroup.Users.length!=0">
                                                         <div v-for="i in EditGroup.Users">
+                                                            
                                                             <div class="m-1">
                                                                 <div class="list-group-item bg-dark">
-                                                                    <h5 >{{i}}</h5>
+                                                                    <div class="">
+                                                                        <span class="mr-1">{{JSON.parse(i).FirstName}}</span>
+                                                                        <span class="mr-2">{{JSON.parse(i).FamilyName}}</span>
+                                                                        <img src="" v-bind:src="JSON.parse(i).Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -177,14 +185,61 @@ const UserType = "@Model.UserProf";
                             <span v-else-if="ShowMode==10">
                                 <div class="row">
                                     <div>
-                                        <div class="form-group col-6 offset-3 p-3">
-                                            <h5>Код группы</h5>
+                                        <div class="form-group col-8 col-sm-6 offset-2 offset-sm-3 p-3">
+                                            <h5>Код</h5>
                                             <input v-bind:class="{'is-invalid':ConnectGroupKeyInvalid}" v-model="ConnectGroupKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
                                             <div class="invalid-feedback">{{ConnectGroupKeyInvalid}}</div>
                                         </div>
                                     </div>
                                 </div>
                             </span>
+                            <span v-else-if="ShowMode==3">
+                                <div class="row" v-if="EditGroup!=null">
+                                    
+                                    <div>
+                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                                            <h5 style="user-select: all">{{EditGroup.Key}}</h5>
+                                            <hr class="m-0">
+                                        </div>
+                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                                            <h4>Тесты:</h4>
+                                            <div class="overflow-auto" style="max-height: 25vh">
+                                                <div>
+                                                    <span v-if="EditGroup.Tests.length!=0">
+                                                        <div v-for="i in EditGroup.Tests">
+                                                            <div class="m-1">
+                                                                <div class="list-group-item bg-dark">
+                                                                    <div class="">
+                                                                        <h4 class="mr-1">{{JSON.parse(i).Name}}</h4>
+                                                                        <h6 class="mr-1 user-select-all">{{JSON.parse(i).Key}}</h6>
+                                                                    </div>
+                                                                      <div class="">
+                                                                                                <div class="d-flex justify-content-center">
+                                                                                                    <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTestFromGroup(i)">
+                                                                                                </div>
+                                                                                            </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </span>
+                                                    <span v-else>
+                                                        <h6>Добавте тесты</h6>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="form-group col-8 offset-2 p-1">
+                                                <h5>Код теста</h5>
+                                                <input v-bind:class="{'is-invalid':ConnectTestKeyInvalid}" v-model="ConnectTestKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                                                <div class="invalid-feedback">{{ConnectTestKeyInvalid}}</div>
+                                                  <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ConnectTest">Добавить тест</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                            
                         </div>
                         <hr class="m-0"/>
                         <div>
@@ -198,11 +253,15 @@ const UserType = "@Model.UserProf";
                             </span>
                             <span v-if="ShowMode==2">
                                 <div class="row">
-                                    <div class="col-4 offset-4">
+                                    <div class="col-4">
+                                        <a class="m-3 btn btn-outline-danger" v-on:click="RmSelectedCourse">Удалить курс</a>
+                                    </div>
+                                    
+                                    <div class="col-4">
                                         <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
                                     </div>
                                     <div class="col-4">
-                                        <a class="m-3 btn btn-outline-danger" v-on:click="RmSelectedCourse">Удалить курс</a>
+                                        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=3">Тесты</a>
                                     </div>
                                 </div>
                             </span>
@@ -210,6 +269,10 @@ const UserType = "@Model.UserProf";
                                 <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
                                 <a class="m-3 btn btn-outline-light" v-on:click="ConnectToGroup">Присоедениться </a>
                             </span>
+                             <span v-if="ShowMode==3">
+                                 <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=2">Назад</a>
+                                 
+                             </span>
                         </div>
                     </div>
                 </div>

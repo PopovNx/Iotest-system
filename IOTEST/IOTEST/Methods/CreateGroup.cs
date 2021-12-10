@@ -36,7 +36,7 @@ namespace IOTEST.Methods
 
             if (await db.Groups.AnyAsync(x => x.Name == groupName && x.Admin == control.UserData.Gmail))
                 return "exist";
-            var Res = new IoContext.Group
+            var res = new IoContext.Group
             {
                 Created = DateTime.Now,
                 Admin = control.UserData.Gmail,
@@ -46,9 +46,9 @@ namespace IOTEST.Methods
                 Open = isOpen == "true",
                 Key = KeyGen(true)
             };
-            await db.Groups.AddAsync(Res);
+            await db.Groups.AddAsync(res);
             await db.SaveChangesAsync();
-            return Res.Key;
+            return res.Key;
         }
     }
 }
