@@ -72,7 +72,7 @@
             Data.append('Remove', "true");
             console.log(await axios.post('/method', Data));
             this.GetGroups();
-
+ 
         },
         ConnectTest(){
             this.ConnectTestKeyInvalid = null;
