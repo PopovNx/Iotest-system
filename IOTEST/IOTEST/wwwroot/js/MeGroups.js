@@ -68,7 +68,7 @@
             const Data = new FormData();
             Data.append('method', 'ConnectTest');
             Data.append('GroupKey', this.EditGroup.Key);
-            Data.append('TestKey', key);
+            Data.append('TestKey', key); 
             Data.append('Remove', "true");
             console.log(await axios.post('/method', Data));
             this.GetGroups();

@@ -29,6 +29,7 @@ namespace IOTEST.Methods
                     user.Gmail = mail;
                     user.Token = context.Request.Form["IDToken"];
                     user.UserProf = IoContext.User.UserProfType.User;
+                    user.Lang = IoContext.User.Languages.Ukrainian;
                     if (user.FamilyName == "undefined")
                     {
                         user.FamilyName = "";

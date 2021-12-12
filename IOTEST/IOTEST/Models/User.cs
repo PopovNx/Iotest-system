@@ -19,6 +19,12 @@ namespace IOTEST
             public string Image { get; set; }
             public string Token { get; set; }
             public UserProfType UserProf { get; set; }
+            public Languages Lang { get; set; }
+            public enum Languages{
+                Ukrainian,
+                Russian,
+                English,
+            }
             public enum UserProfType
             {
                 User,

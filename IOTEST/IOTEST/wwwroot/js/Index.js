@@ -1,4 +1,4 @@
-﻿var app = new Vue({
+﻿const app = new Vue({
     el: "#app",
     data: {
         needRegister: false,
@@ -10,6 +10,6 @@
         }
     },
     mounted() {
-       
+
     }
-})
+});

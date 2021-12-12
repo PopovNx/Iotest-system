@@ -11,7 +11,6 @@ namespace IOTEST.Controllers
     {
         private readonly IoContext _database;
         public TestController(IoContext userContext) => _database = userContext;
-
         public async Task<IActionResult> IndexAsync()
         {
             var control = new DataControl(HttpContext.Request.Cookies);

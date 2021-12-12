@@ -24,18 +24,9 @@ class Resource {
 }
 
 class Trigger {
-    color = 0x00F0F0;
-    graphics;
-    VectorArray;
-    Size;
-    Id;
-    ObjectsInside;
-    Y;
-    X;
-    Visual;
-    Magnetic;
-    Accepted;
-
+    color = 0x00F0F0;    graphics;    VectorArray;
+    Size;    Id;    ObjectsInside;    Y;
+    X;    Visual;    Magnetic;    Accepted;
     constructor(object) {
         this.X = object.X;
         this.Y = object.Y;
@@ -51,7 +42,6 @@ class Trigger {
             this.X - this.Size, this.Y + this.Size];
         this.graphics = new PIXI.Graphics();
     }
-
     Draw() {
         this.graphics.clear();
         this.VectorArray = [
@@ -67,7 +57,6 @@ class Trigger {
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
-
     Work(Objects) {
         this.ObjectsInside = [];
         for (const e of Objects) {
@@ -92,7 +81,6 @@ class Trigger {
         }
         this.Draw();
     }
-
     getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {
         const d = (startX1 - endX1) * (endY2 - startY2) - (startY1 - endY1) * (endX2 - startX2);
         const da = (startX1 - startX2) * (endY2 - startY2) - (startY1 - startY2) * (endX2 - startX2);
@@ -107,7 +95,6 @@ class Trigger {
         }
         return [-100, -100];
     }
-
     pointInPoly(poly, pointX, pointY) {
         let i, j, c = false;
         const polyCords = [[poly[0], poly[1]], [poly[2], poly[3]], [poly[4], poly[5]], [poly[6], poly[7]]];
@@ -155,23 +142,10 @@ class NewObject {
 }
 
 class DraggableObject {
-    Id;
-    Weight;
-    Resource;
-    Sprite;
-    MouseOnThis;
-    GroupType;
-    Rotation;
-    Visible;
-    Button;
-    CanMove;
-    MouseDown;
-    Dragging;
-    Clicked;
-    Type;
-    Text;
-    Triggerable;
-
+    Id;    Weight;    Resource;    Sprite;
+    MouseOnThis;   GroupType;    Rotation;
+    Visible;    Button;    CanMove;  
+    MouseDown;    Dragging;    Clicked;    Type;    Text;    Triggerable;
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -180,7 +154,7 @@ class DraggableObject {
             this.Sprite = new PIXI.Sprite(this.Text.texture);
             this.Resource = -1;
         } else {
-            this.Sprite = new PIXI.Sprite();
+            this.Sprite = new PIXI.Sprite(resource);
             this.SetResource(resource)
             this.Text = null;
         }
@@ -212,15 +186,12 @@ class DraggableObject {
             .on('pointerover', () => this.onPointerOver())
             .on('pointerout', () => this.onPointerOut());
     }
-
     onPointerOver() {
         this.MouseOnThis = true;
     }
-
     onPointerOut() {
         this.MouseOnThis = false;
     }
-
     onDragStart(event) {
         this.MouseDown = true;
         if (!this.CanMove) return;
@@ -228,7 +199,6 @@ class DraggableObject {
         this.Sprite.alpha = 0.5;
         this.Dragging = true;
     }
-
     onDragEnd() {
         this.MouseDown = false;
         this.Clicked = true;
@@ -236,7 +206,6 @@ class DraggableObject {
         this.Dragging = false;
         this.Sprite.data = null;
     }
-
     onDragMove() {
 
         if (!this.CanMove) return;
@@ -251,55 +220,46 @@ class DraggableObject {
             }
         }
     }
-
     SetResource(rs) {
         this.Resource = rs;
         this.Sprite.texture = rs.Loaded;
     }
-
     SetRotation(rotation) {
         if (this.Rotation === rotation) return;
         this.Rotation = rotation;
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
     }
-
     GetRotation() {
         const rot = this.Sprite.rotation * 180 / Math.PI;
         this.Rotation = rot;
 
         return Math.round(rot);
     }
-
     AddRotation(rotation) {
         if (rotation === 0) return;
         this.Rotation += rotation;
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
     }
-
     SetVisible(visible) {
         if (this.Visible === visible) return;
         this.Visible = visible;
         this.Sprite.visible = this.Visible;
     }
-
     SetCanMove(e) {
         if (this.CanMove === e) return;
         this.CanMove = e;
         this.Sprite.CanMove = e;
         this.Sprite.buttonMode = this.Button || e;
     }
-
     SetIsButton(on) {
         if (this.Button === on) return;
         this.Button = on;
         this.Sprite.buttonMode = on;
     }
-
     GetText() {
         if (this.Text === null) return null;
         return {text: this.Text.text, color: this.Text._style.fill[0]}
     }
-
     SetText(text, color) {
         if (this.Text === null) return null;
         this.Text.text = text;
@@ -308,7 +268,6 @@ class DraggableObject {
         this.Text.updateText();
 
     }
-
     ReadClick() {
         if (this.Clicked) {
             this.Clicked = false;
@@ -319,15 +278,11 @@ class DraggableObject {
 }
 
 class EventActivator {
-    Event;
-    Selector;
-
+    Event;    Selector;
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
-
     }
-
     Check(objects, trg) {
         if (this.Event === 0) return true;
         if (this.Event === 1) return false;
@@ -358,18 +313,15 @@ class EventActivator {
         }
     }
 }
-
 class EventAction {
     Event;
     Selector;
     Value;
-
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
         this.Value = object.Value;
     }
-
     Do(objects, res) {
         if (this.Event === 0) {
             for (const t of objects) {
@@ -410,7 +362,6 @@ class EventAction {
         }
     }
 }
-
 class Animation {
     Activators;
     EventActions;
@@ -435,14 +386,12 @@ class Animation {
         }
 
     }
-
     Activate(objects, res) {
         for (const d of this.EventActions) {
             d.Do(objects, res);
         }
         console.log(this)
     }
-
     Work(objects, trg, res) {
         const al = this.Activators.length;
         let ic = 0;
