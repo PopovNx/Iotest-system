@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <script src="~/lib/Cookie/js.cookie.min.js"></script>
@@ -31,6 +32,21 @@
     <script src="~/lib/Bootstrap/js/mdb.min.js"></script>
     <script src="~/lib/Vue/vue.min.js"></script>
     <script src="~/lib/Axios/axios.min.js"></script>
+    @{
+        var lang = IoContext.User.Languages.Ukrainian;
+        if (Model is not null)
+        {
+            if (Model is IoContext.User user)
+            {
+                lang = user.Lang;
+            }
+            else if(Model.Item1 is IoContext.User user1)
+            {
+                lang = user1.Lang;
+            }
+        }
+        <script>window.LangSelected = @((int)lang)</script>
+    }
     <script src="~/js/LangsLoader.js" type="module" asp-append-version="true"></script>
     @await RenderSectionAsync("ScriptsBefore", false)
 </head>
