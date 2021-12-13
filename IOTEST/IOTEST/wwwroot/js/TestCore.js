@@ -154,7 +154,7 @@ class DraggableObject {
             this.Sprite = new PIXI.Sprite(this.Text.texture);
             this.Resource = -1;
         } else {
-            this.Sprite = new PIXI.Sprite(resource);
+            this.Sprite = new PIXI.Sprite();
             this.SetResource(resource)
             this.Text = null;
         }

@@ -14,7 +14,7 @@
     methods: {
         CreateTest: async function (update) {
             if (this.TestName.length < 5) {
-                this.TestNameInvalid = "Неправильное название";
+                this.TestNameInvalid =Lang.testsWrong;
                 return;
             } else {
                 this.TestNameInvalid = null;

@@ -1,14 +1,12 @@
 ﻿@model IoContext.User
 @{
-    ViewData["Title"] = "IOTEST - Me";
-
+    ViewData["Title"] = "Profile";
+    var isTeacher = Model.UserProf == IoContext.User.UserProfType.Teacher;
 }
-
 @section ScriptsAfter
 {
     <script src="js/Me.js" asp-append-version="true" type="module"></script>
 }
-
 <header>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
@@ -26,6 +24,9 @@
         </div>
     </nav>
 </header>
+@{
+    <script>window.isTeacher = @isTeacher.ToString().ToLower()</script>
+}
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
     <div class="row d-flex justify-content-center mt-sm-5">
         <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
@@ -35,19 +36,37 @@
                         <div class="mt-3">
                             <div class="tab-pane fade show active" id="v-pill-profile" role="tabpanel" aria-labelledby="pill-profile">
                                 <div class="DOB">
-                                    <h4>Информация</h4>
+                                    <h4>{{Lang.meStatics}}</h4>
                                     <hr/>
+                                    <h6>
+                                        {{Lang.meStatus}}:
+                                        <span v-if="!window.isTeacher">{{Lang.meSetStatusStudent}}</span>
+                                        <span v-else>{{Lang.meSetStatusTeacher}}</span>
+                                    </h6>
                                     <h6>@Model.Gmail</h6>
-                                    <br>
-                                    <h6>Статус: @(Model.UserProf == IoContext.User.UserProfType.User ? "Ученик" : "Учитель")</h6>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="form-group col-4 offset-4">
+                                            <label for="LangSelect" class="h4">{{Lang.Interfacelanguage}}</label>
+                                            <select v-model="window.LangSelected" v-on:change="ChangeLang" class="form-control text-center text-light border-1 bg-transparent mt-2 form-control-lg bg-dark" id="LangSelect">
+                                                <option class="bg-dark" value="0">{{Lang.UkrainianLanguage}}</option>
+                                                <option class="bg-dark" value="1">{{Lang.RussianLanguage}}</option>
+                                                <option class="bg-dark" value="2">{{Lang.Englishlanguage}}</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <hr/>
-                                    <a class="m-3 btn btn-outline-light" href="/">Назад</a>
-                                    <a class="m-3 btn btn-outline-light" href="/megroups">Группы</a>
-                                    @if (Model.UserProf == IoContext.User.UserProfType.Teacher)
-                                    {
-                                        <a class="m-3 btn btn-outline-light" href="/tests">Тесты</a> 
-                                    }
-                                    <a class="m-3 btn btn-outline-light" v-on:click="ChangeUserStatus">@(Model.UserProf == IoContext.User.UserProfType.User ? "Стать учителем" : "Стать учеником") </a>
+                                    <a class="m-3 btn btn-outline-light" href="/">{{Lang.meGetBack}}</a>
+                                    <a class="m-3 btn btn-outline-light" href="/megroups">{{Lang.meMyGroups}}</a>
+                                    <a class="m-3 btn btn-outline-light" href="/tests" v-if="window.isTeacher">{{Lang.meTests}}</a>
+                                    <a class="m-3 btn btn-outline-light" v-on:click="ChangeUserStatus">
+                                        <span v-if="window.isTeacher">
+                                            {{Lang.meBecomeStudent}}
+                                        </span>
+                                        <span v-else>
+                                            {{Lang.meBecomeTeacher}}
+                                        </span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

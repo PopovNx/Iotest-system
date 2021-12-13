@@ -1,5 +1,5 @@
 ﻿@model IoContext.User
-@{ ViewData["Title"] = "IOTEST - Tests"; }
+@{ ViewData["Title"] = "Tests"; }
 
 @section ScriptsAfter
 {
@@ -30,251 +30,253 @@
 <div class="bg-dark">
 <div class="row">
 <div class="DOB mt-2">
-    <div>
-        <span v-if="ShowMode==0">
-            <div class="row">
-                <div class="col-4 offset-4">
-                    <h4>Тесты</h4>
-                </div>
+<div>
+    <span v-if="ShowMode==0">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <h4>{{Lang.meTests}}</h4>
             </div>
-        </span>
-        <span v-if="ShowMode==1">
-            <div class="row">
-                <div class="col-4 offset-4">
-                    <h4>Создание теста</h4>
-                </div>
+        </div>
+    </span>
+    <span v-if="ShowMode==1">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <h4>{{Lang.TestsCreateTest}}</h4>
             </div>
-        </span>
-        <span v-if="ShowMode==11">
-            <div class="row">
-                <div class="col-4 offset-4">
-                    <h4>{{EditedTest.Name}}</h4>
-                </div>
+        </div>
+    </span>
+    <span v-if="ShowMode==11">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <h4>{{EditedTest.Name}}</h4>
             </div>
-        </span>
-        <span v-if="ShowMode==20">
-            <div class="row">
-                <div class="col-4 offset-4">
-                    <h4>Задания</h4>
-                </div>
+        </div>
+    </span>
+    <span v-if="ShowMode==20">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <h4>{{Lang.TestsTask}}</h4>
             </div>
-        </span>
-        <span v-if="ShowMode==15">
-            <div class="row">
-                <div class="col-4 offset-4">
-                    <h4>{{EditedTest.Name}}</h4>
-                </div>
+        </div>
+    </span>
+    <span v-if="ShowMode==15">
+        <div class="row">
+            <div class="col-8 offset-2">
+                <h4>{{EditedTest.Name}}</h4>
             </div>
-        </span>
-         <span v-if="ShowMode==25">
-                    <div class="row">
-                        <div class="col-4 offset-4">
-                            <h4>{{EditedTest.Key}}</h4>
+        </div>
+    </span>
+    <span v-if="ShowMode==25">
+        <div class="row">
+            <div class="col-4 offset-4">
+                <h4>{{EditedTest.Key}}</h4>
+            </div>
+        </div>
+    </span>
+</div>
+<hr class="m-0"/>
+<div>
+    <span v-if="ShowMode==0">
+        <div class="m-3">
+            <div class="container">
+                <div class="row">
+                    <div class="bg-transparent overflow-auto">
+                        <div class="list-group" style="max-height: 40vh" v-if="LoadedTests">
+                            <div v-for="i in LoadedTests" v-if="LoadedTests.length!=0">
+                                <div class="m-1">
+                                    <div class="list-group-item bg-dark">
+                                        <div v-on:mouseleave="MouseOverGroup =null">
+                                            <h5 class="gdd" style="user-select: all" v-if="MouseOverGroup == i">{{i.Key}}</h5>
+                                            <h5 v-else v-on:mouseover="MouseOverGroup = i">
+                                                {{i.Name}}
+                                                <small v-if="i.Disabled">
+                                                    <small>
+                                                        <small>({{Lang.TestsTestClosed}})</small>
+                                                    </small>
+                                                </small>
+                                            </h5>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-4">
+                                                <a class="btn btn-outline-danger" v-on:click="DropTest(i)">{{Lang.meGroupsDelete}}</a>
+                                            </div>
+                                            <div class="col-4">
+                                                <a class="btn btn-outline-success" v-on:click="Results(i)">{{Lang.TestResults}}</a>
+                                            </div>
+                                            <div class="col-4">
+                                                <a class="btn btn-outline-light" v-on:click="EditTest(i)">{{Lang.meGroupsCreateCourseEdit}}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="LoadedTests.length==0">
+                                <h4>{{Lang.TestsNoTests}}</h4>
+                            </div>
                         </div>
                     </div>
-                </span>
-    </div>
-    <hr class="m-0"/>
-    <div>
-        <span v-if="ShowMode==0">
-            <div class="m-3">
-                <div class="container">
-                    <div class="row">
+                </div>
+            </div>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==1">
+        <div class="row">
+            <div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <h5>{{Lang.meGroupsName}}</h5>
+                    <input v-bind:class="{'is-invalid':TestNameInvalid}" v-model="TestName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                    <div class="invalid-feedback">{{TestNameInvalid}}</div>
+                </div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <h5>{{Lang.TestsDescription}}</h5>
+                    <textarea v-model="TestDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
+                </div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <h5>{{Lang.TestsFinalText}}</h5>
+                    <textarea v-model="TestEndDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
+                </div>
+            </div>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==11">
+        <div class="row">
+            <div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <div>
+                        <h4>{{Lang.TestsTask}}:</h4>
                         <div class="bg-transparent overflow-auto">
-                            <div class="list-group" style="max-height: 40vh" v-if="LoadedTests">
-                                <div v-for="i in LoadedTests" v-if="LoadedTests.length!=0">
-                                    <div class="m-1">
-                                        <div class="list-group-item bg-dark">
-                                            <div v-on:mouseleave="MouseOverGroup =null">
-                                                <h5 class="gdd" style="user-select: all" v-if="MouseOverGroup == i">{{i.Key}}</h5>
-                                                <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}} <small v-if="i.Disabled"><small><small>(Закрыт)</small></small></small></h5>
-                                            </div>
-                                            <hr>
-                                            <div class="row">
-                                                <div class="col-4">
-                                                    <a class="btn btn-outline-danger" v-on:click="DropTest(i)">Удалить</a>
+                            <div class="list-group" style="max-height: 40vh" v-if="EditedTest.JsonData">
+                                <div v-if="EditedLevelsList.length!=0">
+                                    <div v-for="i in EditedLevelsList">
+                                        <div class="m-1">
+                                            <div class="list-group-item bg-dark">
+                                                <div v-on:mouseleave="MouseOverGroup =null">
+                                                    <h5 v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
                                                 </div>
-                                                <div class="col-4">
-                                                    <a class="btn btn-outline-success" v-on:click="Results(i)">Результаты</a>
-                                                </div>
-                                                <div class="col-4">
-                                                    <a class="btn btn-outline-light" v-on:click="EditTest(i)">Редактировать</a>
-                                                </div>
-                                            </div>
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTask(i)">
+                                                    </div>
 
+                                                    <div class="col-6">
+                                                        <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="AddTask(i,true)">
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="LoadedTests.length==0">
-                                    <h4>Вы не создали тестов</h4>
+                                <div v-else>
+                                    <h4>{{Lang.TestsNoAssignments}}</h4>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </span>
-        <span v-else-if="ShowMode==1">
-            <div class="row">
-                <div>
-                    <div class="form-group col-6 offset-3 p-3">
-                        <h5>Название</h5>
-                        <input v-bind:class="{'is-invalid':TestNameInvalid}" v-model="TestName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
-                        <div class="invalid-feedback">{{TestNameInvalid}}</div>
-                    </div>
-                    <div class="form-group col-6 offset-3 p-3">
-                        <h5>Описание</h5>
-                        <textarea v-model="TestDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
-                    </div>
-                    <div class="form-group col-6 offset-3 p-3">
-                        <h5>Финальный текст</h5>
-                        <textarea v-model="TestEndDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
-                    </div>
-
-                </div>
-            </div>
-        </span>
-        <span v-else-if="ShowMode==11">
-            <div class="row">
-                <div>
-                    <div class="form-group col-6 offset-3 p-3">
-                        <div>
-                            <h4>Задания:</h4>
-                            <div class="bg-transparent overflow-auto">
-                                <div class="list-group" style="max-height: 40vh" v-if="EditedTest.JsonData">
-                                    <div v-if="EditedLevelsList.length!=0">
-
-                                        <div v-for="i in EditedLevelsList">
-                                            <div class="m-1">
-                                                <div class="list-group-item bg-dark">
-                                                    <div v-on:mouseleave="MouseOverGroup =null">
-                                                        <h5 v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTask(i)">
-                                                        </div>
-
-                                                        <div class="col-6">
-                                                            <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="AddTask(i,true)">
-                                                        </div>
-
+        </div>
+    </span>
+    <span v-else-if="ShowMode==15">
+        <div class="row">
+            <div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <div>
+                        <h4>{{Lang.TestResults}}:</h4>
+                        <div class="bg-transparent overflow-auto">
+                            <div class="list-group" style="max-height: 40vh" v-if="EditedTest.JsonData">
+                                <div v-if="EditedLevelsList.length!=0">
+                                    <div v-for="i in EditedTestResults">
+                                        <div class="m-1">
+                                            <div class="list-group-item bg-dark">
+                                                <div class="">
+                                                    <span class="mr-1">{{i.Item1.FirstName}}</span>
+                                                    <span class="mr-2">{{i.Item1.FamilyName}}</span>
+                                                    <img src="" v-bind:src="i.Item1.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+                                                </div>
+                                                <div class="">
+                                                    <div class="col-12">
+                                                        <h6>{{Lang.TestResult}}: 
+                                                            <span v-if="i.Item2!=='Не завершено'">
+                                                                {{i.Item2}}
+                                                            </span>
+                                                            <span v-else>
+                                                                {{Lang.GetTestResult}}
+                                                            </span>
+                                                        </h6>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div v-else>
-                                        <h4>Вы не создали заданий</h4>
                                     </div>
                                 </div>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-                </div>
-            </div>
-        </span>
-        <span v-else-if="ShowMode==15">
-            <div class="row">
-                <div>
-                    <div class="form-group col-6 offset-3 p-3">
-                        <div>
-                            <h4>Результаты:</h4>
-                            <div class="bg-transparent overflow-auto">
-                                <div class="list-group" style="max-height: 40vh" v-if="EditedTest.JsonData">
-                                    <div v-if="EditedLevelsList.length!=0">
-                                        <div v-for="i in EditedTestResults">
-                                            <div class="m-1">
-                                                <div class="list-group-item bg-dark">
-                                                    <div class="">
-                                                        <span class="mr-1">{{i.Item1.FirstName}}</span>
-                                                        <span class="mr-2">{{i.Item1.FamilyName}}</span>
-                                                        <img src="" v-bind:src="i.Item1.Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
-                                                    </div>
-                                                    <div class="">
-                                                        <div class="col-12">
-                                                            <h6>Результат: {{i.Item2}}</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div v-else>
-                                        <h5>Пусто</h5>
-                                    </div>
+                                <div v-else>
+                                    <h5>{{Lang.TestsEmpty}}</h5>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </span>
-           <span v-else-if="ShowMode==25">
+        </div>
+    </span>
+    <span v-else-if="ShowMode==25">
 
-               <div >
-                   <div class="row">
-                       <div class="form-group col-6 offset-3 p-3">
-                           <h5>Название</h5>
-                           <input v-bind:class="{'is-invalid':TestNameInvalid}" v-model="TestName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
-                           <div class="invalid-feedback">{{TestNameInvalid}}</div>
-                       </div>
-                       <div class="form-group col-6 offset-3 p-3">
-                           <h5>Описание</h5>
-                           <textarea v-model="TestDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
-                       </div>
-                       <div class="form-group col-6 offset-3 p-3">
-                           <h5>Финальный текст</h5>
-                           <textarea v-model="TestEndDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
-                       </div>
-                       <div class="col-4 offset-4 p-3">
-                           <div class="form-check form-switch">
-                               <input class="form-check-input" id="SwTX" type="checkbox" v-model="EditedTest.Disabled">
-                               <label class="form-check-label" for="SwTX">
-                                   <span v-if="EditedTest.Disabled">
-                                       <h6>Тест Закрыт</h6>
-                                   </span>
-                                   <span v-else>
-                                       <h6>Тест Открыт</h6>
-                                   </span>
-                               </label>
-                           </div>
-                       </div>
-                    
-                       
-                   </div>
-               </div>
-               
-                             
-                </span>
-    </div>
-    <hr class="m-0"/>
-    <div>
-        <span v-if="ShowMode==0">
-            <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">Создать Тест</a>
-        </span>
-        <span v-if="ShowMode==1">
-            <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 0">Назад</a>
-            <a class="m-3 btn btn-outline-light" v-on:click="CreateTest(false)">Создать</a>
-        </span>
-        <span v-if="ShowMode==11">
-            <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 0">Назад</a>
-            <a class="m-3 btn btn-outline-light" v-on:click="AddTask">Добавить задание</a>
-            <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 25">Редактировать</a>
-        </span>
-        <span v-if="ShowMode==15">
-            <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 0">Назад</a>
-        </span>
-        <span v-if="ShowMode==25">
-            <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 11">Отмена</a>
-            <a class="m-3 btn btn-outline-light" v-on:click="CreateTest(true)">Сохранить</a>
-        </span>
-        
-    </div>
+        <div >
+            <div class="row">
+                <div class="form-group col-6 offset-3 p-3">
+                    <h5>{{Lang.meGroupsName}}</h5>
+                    <input v-bind:class="{'is-invalid':TestNameInvalid}" v-model="TestName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                    <div class="invalid-feedback">{{TestNameInvalid}}</div>
+                </div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <h5>{{Lang.TestsDescription}}</h5>
+                    <textarea v-model="TestDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
+                </div>
+                <div class="form-group col-6 offset-3 p-3">
+                    <h5>{{Lang.TestsFinalText}}</h5>
+                    <textarea v-model="TestEndDescription" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
+                </div>
+                <div class="col-4 offset-4 p-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="SwTX" type="checkbox" v-model="EditedTest.Disabled">
+                        <label class="form-check-label" for="SwTX">
+                            <span v-if="EditedTest.Disabled">
+                                <h6>{{Lang.TestsTestClosed}}</h6>
+                            </span>
+                            <span v-else>
+                                <h6>{{Lang.TestsTestOpen}}</h6>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </span>
+</div>
+<hr class="m-0"/>
+<div>
+    <span v-if="ShowMode==0">
+        <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">{{Lang.TestsCreateATest}}</a>
+    </span>
+    <span v-if="ShowMode==1">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 0">{{Lang.meGetBack}}</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="CreateTest(false)">{{Lang.meGroupsCreate}}</a>
+    </span>
+    <span v-if="ShowMode==11">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 0">{{Lang.meGetBack}}</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="AddTask">{{Lang.TestsAddTask}}</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 25">{{Lang.meGroupsCreateCourseEdit}}</a>
+    </span>
+    <span v-if="ShowMode==15">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 0">{{Lang.meGetBack}}</a>
+    </span>
+    <span v-if="ShowMode==25">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode = 11">{{Lang.TestsCancel}}</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="CreateTest(true)">{{Lang.TestSave}}</a>
+    </span>
+
+</div>
 </div>
 </div>
 </div>

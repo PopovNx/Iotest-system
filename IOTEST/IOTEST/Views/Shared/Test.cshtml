@@ -83,7 +83,7 @@ else
                 <div v-if="Test">
                     <div v-show="PageNow===0">
                         <div id="head" class="text-left row pt-2">
-                            <h4 class="text-light mt-2 col-8">Тестирование</h4>
+                            <h4 class="text-light mt-2 col-8">{{Lang.TestTestingHead}}</h4>
                             <hr class="bg-light my-2"/>
                         </div>
                         <div id="startMain" class="text-center text-light">
@@ -97,8 +97,8 @@ else
                                 </div>
                                 <hr>
                                 <div id="startParams" class="d-flex justify-content-around mb-3">
-                                    <button class="btn btn-outline-light" v-on:click="location.href='/'">На главную</button>
-                                    <button class="btn btn-outline-light" v-on:click="PageNow = 1">Приступить</button>
+                                    <button class="btn btn-outline-light" v-on:click="location.href='/'">{{Lang.TestBackToMain}}</button>
+                                    <button class="btn btn-outline-light" v-on:click="PageNow = 1">{{Lang.TestSolve}}</button>
                                 </div>
                             </div>
                         </div>
@@ -122,26 +122,26 @@ else
                         </div>
                         <hr class="bg-light"/>
                         <div id="testFooter" class=" d-flex justify-content-around mb-3 ">
-                            <button class="btn btn-outline-light" v-on:click="PassLevel()">Сдать</button>
-                            <button class="btn btn-outline-light" v-on:click="TestPage = !TestPage">{{TestPage?"Условие":"К выполнению"}}</button>
+                            <button class="btn btn-outline-light" v-on:click="PassLevel()">{{Lang.TestPassButton}}</button>
+                            <button class="btn btn-outline-light" v-on:click="TestPage = !TestPage">{{TestPage?Lang.TestTaskButton : Lang.TestSolveButton}}</button>
                         </div>
                     </div>
                     <div v-show="PageNow===2">
                         <div id="endhead" class="text-left row pt-2">
-                            <h4 class="text-light mt-2 col-8">Результаты</h4>
+                            <h4 class="text-light mt-2 col-8">{{Lang.TestResults}}</h4>
                             <hr class="bg-light my-2"/>
                         </div>
                         <div id="endMain" class="text-center text-light">
                             <div>
                                 <div id="endTextTitle">
-                                    <h2>Тест пройден</h2>
+                                    <h2>{{Lang.TestPassedTest}}</h2>
                                 </div>
                                 <hr>
                                 <div id="endText">{{Test.FinalText}}</div>
                                 <hr>
                                 <div id="endParams" class=" d-flex justify-content-around mb-3 ">
-                                    <span class="list-group-item bg-dark ">Результат: {{Mark}}</span>
-                                    <button class="btn btn-outline-light" v-on:click="location.href='/'">На главную</button>
+                                    <span class="list-group-item bg-dark ">{{Lang.TestResult}}: {{Mark}}</span>
+                                    <button class="btn btn-outline-light" v-on:click="location.href='/'">{{Lang.TestBackToMain}}</button>
                                 </div>
                             </div>
                         </div>
@@ -152,7 +152,7 @@ else
             {
                 <div>
                     <div id="head" class="text-left row pt-2">
-                        <h4 class="text-light mt-2 col-8">Тестирование</h4>
+                        <h4 class="text-light mt-2 col-8">{{Lang.TestTestingHead}}</h4>
                         <hr class="bg-light my-2"/>
                     </div>
                     <div id="startMain" class="text-center text-light">
@@ -162,11 +162,11 @@ else
                             </div>
                             <hr>
                             <div id="startTextDescription">
-                                <h4>Прием ответов закрыт</h4>
+                                <h4>{{Lang.TestAcceptRepliesClosed}}</h4>
                             </div>
                             <hr>
                             <div id="startParams" class="d-flex justify-content-around mb-3">
-                                <button class="btn btn-outline-light" v-on:click="location.href='/'">На главную</button>
+                                <button class="btn btn-outline-light" v-on:click="location.href='/'">{{Lang.TestBackToMain}}</button>
                             </div>
                         </div>
                     </div>

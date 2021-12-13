@@ -30,254 +30,253 @@ const MyMail = "@Model.Gmail";
 const UserType = "@Model.UserProf";
 </script>
 <div id="Page" class="user-select-none container-fluid text-light text-center">
-    <div class="row d-flex justify-content-center mt-sm-5">
-        <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
-            <div class="bg-dark">
+<div class="row d-flex justify-content-center mt-sm-5">
+<div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
+<div class="bg-dark">
+<div class="row">
+<div class="DOB mt-2">
+<div>
+    <span v-if="ShowMode==0">
+        <div class="row">
+            <div class="col-4 offset-4">
+                <h4>{{Lang.meGroupsCourses}}</h4>
+            </div>
+            <div class="col-4" v-if="UserType == 'Teacher'">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" id="SwT" type="checkbox" v-model="AllCourses">
+                    <label class="form-check-label" for="SwT">
+                        <span v-if="AllCourses">
+                            <h6>{{Lang.meGroupsMyCourses}}</h6>
+                        </span>
+                        <span v-else>
+                            <h6>{{Lang.meGroupsAllCourses}}</h6>
+                        </span>
+                    </label>
+
+                </div>
+            </div>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==1">
+        <div class="container">
+            <h4>{{Lang.meGroupsCreateCourseText}}</h4>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==2">
+        <div class="container">
+            <h4 v-if="EditGroup">{{EditGroup.Name}}</h4>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==3">
+        <div class="container">
+            <h4 v-if="EditGroup">{{EditGroup.Name}}</h4>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==10">
+        <div class="container">
+            <h4>{{Lang.meGroupsConnectToCoursesConnectText}}</h4>
+        </div>
+    </span>
+</div>
+<hr class="m-0"/>
+<div>
+    <span v-if="ShowMode==0">
+        <div class="m-3">
+            <div class="container">
                 <div class="row">
-                    <div class="DOB mt-2">
-                        <div>
-                            <span v-if="ShowMode==0">
-                                <div class="row" >
-                                    <div class="col-4 offset-4">
-                                        <h4>Курсы</h4>
-                                    </div>
-                                    <div class="col-4" v-if="UserType == 'Teacher'">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" id="SwT" type="checkbox" v-model="AllCourses">
-                                            <label class="form-check-label" for="SwT">
-                                                <span v-if="AllCourses">
-                                                    <h6>Мои курсы</h6>
-                                                </span>
-                                                <span v-else>
-                                                    <h6>Все курсы</h6>
-                                                </span>
-                                            </label>
-
+                    <div class="bg-transparent overflow-auto">
+                        <div class="list-group" style="max-height: 40vh" v-if="LoadedGroups">
+                            <div v-for="i in ShowedGroups" v-if="ShowedGroups.length!=0">
+                                <div class="m-1">
+                                    <div class="list-group-item bg-dark">
+                                        <div v-on:mouseleave="MouseOverGroup =null">
+                                            <h5 class="gdd" style="user-select: all" v-if="MouseOverGroup == i">{{i.Key}}</h5>
+                                            <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
                                         </div>
-                                    </div>
-                                </div>
-                            </span>
-                            <span v-else-if="ShowMode==1">
-                                <div class="container">
-                                    <h4>Создание курса</h4>
-                                </div>
-                            </span>
-                            <span v-else-if="ShowMode==2">
-                                <div class="container">
-                                    <h4 v-if="EditGroup">{{EditGroup.Name}}</h4>
-                                </div>
-                            </span>
-                              <span v-else-if="ShowMode==3">
-                                                            <div class="container">
-                                                                <h4 v-if="EditGroup">{{EditGroup.Name}}</h4>
-                                                            </div>
-                                                        </span>
-                            <span v-else-if="ShowMode==10">
-                                <div class="container">
-                                    <h4>Присоедениться</h4>
-                                </div>
-                            </span>
-                        </div>
-                        <hr class="m-0"/>
-                        <div>
-                            <span v-if="ShowMode==0">
-                                <div class="m-3">
-                                    <div class="container">
                                         <div class="row">
-                                            <div class="bg-transparent overflow-auto">
-                                                <div class="list-group" style="max-height: 40vh" v-if="LoadedGroups">
-                                                    <div v-for="i in ShowedGroups" v-if="ShowedGroups.length!=0">
-                                                        <div class="m-1">
-                                                            <div class="list-group-item bg-dark">
-                                                                <div v-on:mouseleave="MouseOverGroup =null">
-                                                                    <h5 class="gdd" style="user-select: all" v-if="MouseOverGroup == i">{{i.Key}}</h5>
-                                                                    <h5 v-else v-on:mouseover="MouseOverGroup = i">{{i.Name}}</h5>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-4 offset-4">
-                                                                        <p>Пользователей: {{i.Users.length}}</p>
-                                                                    </div>
-                                                                    <div class="col-4" v-if="MyMail==i.Admin">
-                                                                        <a class="btn btn-outline-light" v-on:click="OpenGroupEdit(i.Key)">Редактировать</a>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div v-if="ShowedGroups.length==0">
-                                                        <h4 v-if="AllCourses">Вы не создали курсы</h4>
-                                                        <h4 v-else>Вы не участник курсов</h4>
-                                                    </div>
-                                                </div>
+                                            <div class="col-4 offset-4">
+                                                <p>{{Lang.meGroupsUsers}}: {{i.Users.length}}</p>
+                                            </div>
+                                            <div class="col-4" v-if="MyMail==i.Admin">
+                                                <a class="btn btn-outline-light" v-on:click="OpenGroupEdit(i.Key)">{{Lang.meGroupsCreateCourseEdit}}</a>
                                             </div>
                                         </div>
 
                                     </div>
-
                                 </div>
-                            </span>
-                            <span v-else-if="ShowMode==1">
-                                <div class="row">
-                                    <div>
-                                        <div class="form-group col-6 offset-3 p-1">
-                                            <h5>Название</h5>
-                                            <input v-bind:class="{'is-invalid':NewGroupNameInvalid}" v-model="NewGroupName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
-                                            <div class="invalid-feedback">{{NewGroupNameInvalid}}</div>
-                                        </div>
-                                        <div class="form-group col-6 offset-3 p-1">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" id="SwX" type="checkbox" v-model="NewGroupOpen">
-                                                <label class="form-check-label" for="SwX">
-                                                    <h5 v-if="NewGroupOpen">Открытый курс</h5>
-                                                    <h5 v-else>Закрытый курс</h5>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                            <span v-else-if="ShowMode==2">
-                                <div class="row" v-if="EditGroup!=null">
-                                    <div>
-                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
-                                            <h5 style="user-select: all">{{EditGroup.Key}}</h5>
-                                            <hr class="m-0">
-                                        </div>
-                                        <div class="form-group col-10 offset-1 col-sm-4 offset-sm-4">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" id="SwX2" type="checkbox" v-model="EditGroupOpen">
-                                                <label class="form-check-label" for="SwX2">
-                                                    <h5 v-if="EditGroupOpen">Открытый курс</h5>
-                                                    <h5 v-else>Закрытый курс</h5>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
-                                            <hr class="m-0">
-                                            <h4>Пользователи:</h4>
-                                            <div class="overflow-auto" style="max-height: 30vh">
-                                                <div>
-                                                    <span v-if="EditGroup.Users.length!=0">
-                                                        <div v-for="i in EditGroup.Users">
-                                                            
-                                                            <div class="m-1">
-                                                                <div class="list-group-item bg-dark">
-                                                                    <div class="">
-                                                                        <span class="mr-1">{{JSON.parse(i).FirstName}}</span>
-                                                                        <span class="mr-2">{{JSON.parse(i).FamilyName}}</span>
-                                                                        <img src="" v-bind:src="JSON.parse(i).Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </span>
-                                                    <span v-else>
-                                                        <h6>Пригласите пользователей</h6>
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                            <span v-else-if="ShowMode==10">
-                                <div class="row">
-                                    <div>
-                                        <div class="form-group col-8 col-sm-6 offset-2 offset-sm-3 p-3">
-                                            <h5>Код</h5>
-                                            <input v-bind:class="{'is-invalid':ConnectGroupKeyInvalid}" v-model="ConnectGroupKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
-                                            <div class="invalid-feedback">{{ConnectGroupKeyInvalid}}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                            <span v-else-if="ShowMode==3">
-                                <div class="row" v-if="EditGroup!=null">
-                                    
-                                    <div>
-                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
-                                            <h5 style="user-select: all">{{EditGroup.Key}}</h5>
-                                            <hr class="m-0">
-                                        </div>
-                                        <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
-                                            <h4>Тесты:</h4>
-                                            <div class="overflow-auto" style="max-height: 25vh">
-                                                <div>
-                                                    <span v-if="EditGroup.Tests.length!=0">
-                                                        <div v-for="i in EditGroup.Tests">
-                                                            <div class="m-1">
-                                                                <div class="list-group-item bg-dark">
-                                                                    <div class="">
-                                                                        <h4 class="mr-1">{{JSON.parse(i).Name}}</h4>
-                                                                        <h6 class="mr-1 user-select-all">{{JSON.parse(i).Key}}</h6>
-                                                                    </div>
-                                                                      <div class="">
-                                                                                                <div class="d-flex justify-content-center">
-                                                                                                    <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTestFromGroup(i)">
-                                                                                                </div>
-                                                                                            </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </span>
-                                                    <span v-else>
-                                                        <h6>Добавте тесты</h6>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                            <div class="form-group col-8 offset-2 p-1">
-                                                <h5>Код теста</h5>
-                                                <input v-bind:class="{'is-invalid':ConnectTestKeyInvalid}" v-model="ConnectTestKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
-                                                <div class="invalid-feedback">{{ConnectTestKeyInvalid}}</div>
-                                                  <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ConnectTest">Добавить тест</a>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                            
+                            </div>
+                            <div v-if="ShowedGroups.length==0">
+                                <h4 v-if="AllCourses">{{Lang.meGroupsNotCreateCourses}}</h4>
+                                <h4 v-else>{{Lang.meGroupsNotCourseMember}}<</h4>
+                            </div>
                         </div>
-                        <hr class="m-0"/>
-                        <div>
-                            <span v-if="ShowMode==0">
-                                <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ShowMode=1">Создать курс</a>
-                                <a class="m-3 btn btn-outline-light" v-else v-on:click="ShowMode=10">Присоедениться к крусу</a>
-                            </span>
-                            <span v-if="ShowMode==1">
-                                <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
-                                <a class="m-3 btn btn-outline-light" v-on:click="CreateGroup">Создать</a>
-                            </span>
-                            <span v-if="ShowMode==2">
-                                <div class="row">
-                                    <div class="col-4">
-                                        <a class="m-3 btn btn-outline-danger" v-on:click="RmSelectedCourse">Удалить курс</a>
-                                    </div>
-                                    
-                                    <div class="col-4">
-                                        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
-                                    </div>
-                                    <div class="col-4">
-                                        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=3">Тесты</a>
-                                    </div>
-                                </div>
-                            </span>
-                            <span v-if="ShowMode==10">
-                                <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">Назад</a>
-                                <a class="m-3 btn btn-outline-light" v-on:click="ConnectToGroup">Присоедениться </a>
-                            </span>
-                             <span v-if="ShowMode==3">
-                                 <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=2">Назад</a>
-                                 
-                             </span>
-                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </span>
+    <span v-else-if="ShowMode==1">
+        <div class="row">
+            <div>
+                <div class="form-group col-6 offset-3 p-1">
+                    <h5>{{Lang.meGroupsName}}</h5>
+                    <input v-bind:class="{'is-invalid':NewGroupNameInvalid}" v-model="NewGroupName" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                    <div class="invalid-feedback">{{NewGroupNameInvalid}}</div>
+                </div>
+                <div class="form-group col-6 offset-3 p-1">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="SwX" type="checkbox" v-model="NewGroupOpen">
+                        <label class="form-check-label" for="SwX">
+                            <h5 v-if="NewGroupOpen">{{Lang.meGroupsOpenCourse}}</h5>
+                            <h5 v-else>{{Lang.meGroupsClosedCourse}}</h5>
+                        </label>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </span>
+    <span v-else-if="ShowMode==2">
+        <div class="row" v-if="EditGroup!=null">
+            <div>
+                <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                    <h5 style="user-select: all">{{EditGroup.Key}}</h5>
+                    <hr class="m-0">
+                </div>
+                <div class="form-group col-10 offset-1 col-sm-4 offset-sm-4">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" id="SwX2" type="checkbox" v-model="EditGroupOpen">
+                        <label class="form-check-label" for="SwX2">
+                            <h5 v-if="EditGroupOpen">{{Lang.meGroupsOpenCourse}}</h5>
+                            <h5 v-else>{{Lang.meGroupsClosedCourse}}</h5>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                    <hr class="m-0">
+                    <h4>{{Lang.meGroupsUsers}}:</h4>
+                    <div class="overflow-auto" style="max-height: 30vh">
+                        <div>
+                            <span v-if="EditGroup.Users.length!=0">
+                                <div v-for="i in EditGroup.Users">
+
+                                    <div class="m-1">
+                                        <div class="list-group-item bg-dark">
+                                            <div class="">
+                                                <span class="mr-1">{{JSON.parse(i).FirstName}}</span>
+                                                <span class="mr-2">{{JSON.parse(i).FamilyName}}</span>
+                                                <img src="" v-bind:src="JSON.parse(i).Image" alt="" width="35" height="35" class="d-inline-block align-top rounded-circle">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                            <span v-else>
+                                <h6>{{Lang.meGroupsInviteUser}}</h6>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==10">
+        <div class="row">
+            <div>
+                <div class="form-group col-8 col-sm-6 offset-2 offset-sm-3 p-3">
+                    <h5>{{Lang.meGroupsConnectToCoursesEnterCode}}</h5>
+                    <input v-bind:class="{'is-invalid':ConnectGroupKeyInvalid}" v-model="ConnectGroupKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                    <div class="invalid-feedback">{{ConnectGroupKeyInvalid}}</div>
+                </div>
+            </div>
+        </div>
+    </span>
+    <span v-else-if="ShowMode==3">
+        <div class="row" v-if="EditGroup!=null">
+
+            <div>
+                <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                    <h5 style="user-select: all">{{EditGroup.Key}}</h5>
+                    <hr class="m-0">
+                </div>
+                <div class="form-group col-12 col-sm-6 offset-sm-3 p-1">
+                    <h4>{{Lang.meGroupsTests}}:</h4>
+                    <div class="overflow-auto" style="max-height: 25vh">
+                        <div>
+                            <span v-if="EditGroup.Tests.length!=0">
+                                <div v-for="i in EditGroup.Tests">
+                                    <div class="m-1">
+                                        <div class="list-group-item bg-dark">
+                                            <div class="">
+                                                <h4 class="mr-1">{{JSON.parse(i).Name}}</h4>
+                                                <h6 class="mr-1 user-select-all">{{JSON.parse(i).Key}}</h6>
+                                            </div>
+                                            <div class="">
+                                                <div class="d-flex justify-content-center">
+                                                    <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTestFromGroup(i)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </span>
+                            <span v-else>
+                                <h6>{{Lang.meGroupsAddATest}}</h6>
+                            </span>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group col-8 offset-2 p-1">
+                        <h5>{{Lang.meGroupsCodeOfTest}}</h5>
+                        <input v-bind:class="{'is-invalid':ConnectTestKeyInvalid}" v-model="ConnectTestKey" type="text" placeholder="" class="form-control text-center bg-dark text-light border-2 border-light">
+                        <div class="invalid-feedback">{{ConnectTestKeyInvalid}}</div>
+                        <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ConnectTest">{{Lang.meGroupsAddTest}}</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </span>
+
+</div>
+<hr class="m-0"/>
+<div>
+    <span v-if="ShowMode==0">
+        <a class="m-3 btn btn-outline-light" v-if="AllCourses" v-on:click="ShowMode=1">{{Lang.meGroupsCreateCourse}}</a>
+        <a class="m-3 btn btn-outline-light" v-else v-on:click="ShowMode=10">{{Lang.meGroupsConnectToCourses}}</a>
+    </span>
+    <span v-if="ShowMode==1">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">{{Lang.meGroupsConnectToCoursesBack}}</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="CreateGroup">{{Lang.meGroupsCreate}}</a>
+    </span>
+    <span v-if="ShowMode==2">
+        <div class="row">
+            <div class="col-4">
+                <a class="m-3 btn btn-outline-danger" v-on:click="RmSelectedCourse">{{Lang.meGroupsDeleteCourse}}</a>
+            </div>
+
+            <div class="col-4">
+                <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">{{Lang.meGroupsConnectToCoursesBack}}</a>
+            </div>
+            <div class="col-4">
+                <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=3">{{Lang.meGroupsTests}}</a>
+            </div>
+        </div>
+    </span>
+    <span v-if="ShowMode==10">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=0">{{Lang.meGroupsConnectToCoursesBack}}</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="ConnectToGroup">{{Lang.meGroupsConnectToCoursesConnectButton}}</a>
+    </span>
+    <span v-if="ShowMode==3">
+        <a class="m-3 btn btn-outline-light" v-on:click="ShowMode=2">{{Lang.meGroupsConnectToCoursesBack}}</a>
+    </span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 </div>

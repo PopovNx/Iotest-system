@@ -1,20 +1,15 @@
 ﻿@model (IOTEST.IoContext.User User,List<IoContext.Test> Tests)
 @{
     ViewData["Title"] = "IOTEST - Main";
-
-
 }
-
 @section ScriptsBefore
 {
     <link href="css/Index.css" rel="stylesheet" asp-append-version="true"/>
 }
-
 @section ScriptsAfter
 {
     <script src="js/Index.js" asp-append-version="true" type="module"></script>
 }
-
 <header>
     <nav class="navbar navbar-dark" style="background-color:rgba(45, 51, 51, 0.50)">
         <div class="container-fluid ">
@@ -37,11 +32,11 @@
         <div class="col-12 col-md-4 order-0 order-md-1 offset-md-4">
             <div class="bg-dark mt-4 rounded">
                 <div class="form-group DOB p-2 row d-flex   justify-content-center">
-                    <label for="InputCodeTest">Введите код теста</label>
+                    <label for="InputCodeTest">{{Lang.indexEnterTestCode}}</label>
                     <div class="px-5">
                         <input type="text" v-model="code" value="" id="InputCodeTest" class="my-2 form-control text-center bg-dark text-light border-2 border-light"/>
                     </div>
-                    <button v-on:click="GotoModel" class="btn btn-outline-light my-3 col-6">Перейти</button>
+                    <button v-on:click="GotoModel" class="btn btn-outline-light my-3 col-6">{{Lang.indexGotoTest}}</button>
                 </div>
             </div>
         </div>
@@ -51,7 +46,7 @@
                 {
                     @if (Model.Tests.First() == g)
                     {
-                        <h4 class="text-light text-center mt-3 bg-dark">Тесты к прохождению</h4>
+                        <h4 class="text-light text-center mt-3 bg-dark">{{Lang.indexTestsToPass}}</h4>
                         <hr>
                     }
                     <div class="p-1 row bg-dark m-1" v-on:click="location.href='/test?@g.Key'">

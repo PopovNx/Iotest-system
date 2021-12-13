@@ -1,6 +1,6 @@
 ﻿@model (IOTEST.IoContext.User User,IOTEST.IoContext.Test Test, int Id)
 @{
-    ViewData["Title"] = "IOTEST - Test Creator";
+    ViewData["Title"] = "Test Creator";
 }
 
 @section ScriptsBefore
@@ -45,38 +45,39 @@ const TestId = "@Model.Id";
 <div class="text-left row pt-2" v-show="Core">
     <h4 class="text-light mt-2 text-center text-md-left">
         <span v-if="MenuMode == 0">
-            Меню
+            {{Lang.TestMenu}}
         </span>
         <span v-else-if="MenuMode == 1">
-            Ресурсы
+            {{Lang.TestResource}}
         </span>
         <span v-else-if="MenuMode == 2">
-            Добавить
+            {{Lang.TestAdd}}
         </span>
         <span v-else-if="MenuMode == 20">
-            Объект
+            {{Lang.TestObject}}
         </span>
         <span v-else-if="MenuMode == 30">
-            Объект
+            {{Lang.TestObject}}
         </span>
         <span v-else-if="MenuMode == 40">
-            Триггеры
+            {{Lang.TestTriggers}}
         </span>
         <span v-else-if="MenuMode == 41">
-            Триггер
+            {{Lang.TestTrigger}}
         </span>
         <span v-else-if="MenuMode == 50">
-            Позиции
+            {{Lang.TestPosition}}
         </span>
         <span v-else-if="MenuMode == 60">
-            Анимации
+            {{Lang.TestAnimations }}
         </span>
         <span v-else-if="MenuMode == 61">
-            Анимация
+            {{Lang.TestAnimation }}
         </span>
         <span v-else-if="MenuMode == 100">
-                            Задание
-                        </span>
+            {{Lang.TestTask }}
+        </span>
+
     </h4>
     <hr class="bg-light my-2"/>
 </div>
@@ -84,16 +85,16 @@ const TestId = "@Model.Id";
 <div v-if="MenuMode == 0">
     <div class="d-grid justify-content-center">
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 1">Ресурсы</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 1">{{Lang.TestResource}}</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Добавить</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 2">{{Lang.TestAdd}}</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 50">Позиции</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 50">{{Lang.TestPosition}}</a>
         </div>
- <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 100">Задание</a>
+        <div class="p-3 d-flex justify-content-center">
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 100">{{Lang.TestTask}}</a>
         </div>
 
     </div>
@@ -116,13 +117,13 @@ const TestId = "@Model.Id";
                     </div>
                 </div>
                 <div v-else>
-                    <h4 class="text-light text-center">Пусто</h4>
+                    <h4 class="text-light text-center">{{Lang.TestsEmpty}}</h4>
                 </div>
                 <div class="p-1 d-flex justify-content-center">
-                    <a class="btn btn-outline-light" v-on:click="AddResource()">Список</a>
+                    <a class="btn btn-outline-light" v-on:click="AddResource()">{{Lang.TestList}}</a>
                 </div>
                 <div class="p-1 d-flex justify-content-center">
-                    <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+                    <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
                 </div>
             </div>
             <div v-if="AddResourceMode===1">
@@ -141,7 +142,7 @@ const TestId = "@Model.Id";
                 </div>
                 <div class="p-1">
                     <div class="row">
-                        <a class="btn btn-outline-light col-10 offset-1" v-on:click="AddResources()">Добавить</a>
+                        <a class="btn btn-outline-light col-10 offset-1" v-on:click="AddResources()">{{Lang.TestAdd}}</a>
                     </div>
                 </div>
             </div>
@@ -152,20 +153,20 @@ const TestId = "@Model.Id";
 <div v-if="MenuMode == 2">
     <div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddObjectMenu(true)">Объект</a>
+            <a class="btn btn-outline-light" v-on:click="AddObjectMenu(true)">{{Lang.TestObject}}</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddText">Текст</a>
+            <a class="btn btn-outline-light" v-on:click="AddText">{{Lang.textText}}</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode= 40">Триггер</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode= 40">{{Lang.TestTrigger}}</a>
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode= 60">Анимация</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode= 60">{{Lang.TestAnimation}}</a>
         </div>
         <hr>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
         </div>
 
     </div>
@@ -189,7 +190,7 @@ const TestId = "@Model.Id";
         </div>
         <div v-else>
             <div class="col-12">
-                <h6 class="text-light text-center">Ресурсов не обнаружено</h6>
+                <h6 class="text-light text-center">{{Lang.TestRecoursesNotFound}}</h6>
             </div>
         </div>
         <hr>
@@ -206,7 +207,7 @@ const TestId = "@Model.Id";
             <input v-model.number="nObj.Y" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
         <div class="col-12">
-            <h5 class="text-light text-center">Размер: {{nObj.ScaleX}} </h5>
+            <h5 class="text-light text-center">{{Lang.TestSize}}: {{nObj.ScaleX}} </h5>
         </div>
 
         <div class="col-12">
@@ -214,9 +215,9 @@ const TestId = "@Model.Id";
         </div>
     </div>
     <div class="p-3">
-        <a class="btn btn-outline-light" v-if="nObj.Resource" v-on:click="AddElement">Добавить</a>
+        <a class="btn btn-outline-light" v-if="nObj.Resource" v-on:click="AddElement">{{Lang.TestAdd}}</a>
         <hr class="my-1">
-        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Назад</a>
+        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
 
     </div>
 </div>
@@ -246,38 +247,38 @@ const TestId = "@Model.Id";
             <input v-model.number="EditObj.Sprite.y" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
         <div class="col-12">
-            <h5 class="text-light text-center">Размер: {{EditObj.Sprite.scale.x}} </h5>
+            <h5 class="text-light text-center">{{Lang.TestSize}}: {{EditObj.Sprite.scale.x}} </h5>
         </div>
         <div class="col-12">
             <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
         <div class="col-12">
-            <h5 class="text-light text-center">Поворот: {{EditObj.GetRotation()}}° </h5>
+            <h5 class="text-light text-center">{{Lang.TestRotation}}: {{EditObj.GetRotation()}}° </h5>
         </div>
         <div class="col-12">
             <input v-model="EditObj.Sprite.rotation" min="0" max="6.29" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
         <div class="col-10 offset-1 text-center p-1">
             <div class="form-check">
-                <label for="editObjVisible" class="text-light">Видимый</label>
+                <label for="editObjVisible" class="text-light">{{Lang.TestVisibility}}</label>
                 <input id="editObjVisible" v-model="EditObj.Sprite.visible" type="checkbox" class="form-check-input">
             </div>
         </div>
         <div class="col-11 text-center p-1">
             <div class="form-check">
-                <label for="editObjMovable" class="text-light">Перетаскиваемый</label>
+                <label for="editObjMovable" class="text-light">{{Lang.TestDraggable}}</label>
                 <input id="editObjMovable" v-model="EditObj.CanMove" type="checkbox" class="form-check-input">
             </div>
         </div>
         <div class="col-11 text-center p-1">
             <div class="form-check">
-                <label for="editObjBtnMode" class="text-light">Нажимаемый</label>
+                <label for="editObjBtnMode" class="text-light">{{Lang.TestPressed}}</label>
                 <input id="editObjBtnMode" v-model="EditObj.Sprite.buttonMode" type="checkbox" class="form-check-input">
             </div>
         </div>
         <div class="col-11 text-center p-1">
             <div class="form-check">
-                <label for="editObjTrg" class="text-light">Триггерный</label>
+                <label for="editObjTrg" class="text-light">{{Lang.TestTriggerNiy}}</label>
                 <input id="editObjTrg" v-model="EditObj.Triggerable" type="checkbox" class="form-check-input">
             </div>
         </div>
@@ -306,7 +307,7 @@ const TestId = "@Model.Id";
         </div>
     </div>
     <div class="p-3">
-        <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+        <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
     </div>
 </div>
 <div v-if="MenuMode == 40">
@@ -334,11 +335,11 @@ const TestId = "@Model.Id";
         </div>
 
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddTrigger">Добавить</a>
+            <a class="btn btn-outline-light" v-on:click="AddTrigger">{{Lang.TestAdd}}</a>
         </div>
     </div>
     <div class="p-3">
-        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">Назад</a>
+        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
     </div>
 </div>
 <div v-if="MenuMode == 41">
@@ -357,7 +358,7 @@ const TestId = "@Model.Id";
         </div>
 
         <div class="col-12">
-            <h5 class="text-light text-center">Размер: {{EditedTrigger.Size}} </h5>
+            <h5 class="text-light text-center">{{Lang.TestSize}}: {{EditedTrigger.Size}} </h5>
         </div>
 
         <div class="col-12">
@@ -365,25 +366,21 @@ const TestId = "@Model.Id";
         </div>
         <div class="col-10 offset-1 text-center p-1">
             <div class="form-check">
-                <label for="editTrgVisible" class="text-light">Видимый</label>
+                <label for="editTrgVisible" class="text-light">{{Lang.TestVisibility}}</label>
                 <input id="editTrgVisible" v-model="EditedTrigger.Visual" type="checkbox" class="form-check-input">
             </div>
         </div>
-<div class="col-10 offset-1 text-center p-1">
+        <div class="col-10 offset-1 text-center p-1">
             <div class="form-check">
-                <label for="editTrgMagnetic" class="text-light">Магнитный</label>
+                <label for="editTrgMagnetic" class="text-light">{{Lang.TestMagnetic}}</label>
                 <input id="editTrgMagnetic" v-model="EditedTrigger.Magnetic" type="checkbox" class="form-check-input">
             </div>
         </div>
-
         <hr>
         <div class="p-3">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 40">Назад</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 40">{{Lang.meGetBack}}</a>
         </div>
-
-
     </div>
-
 </div>
 </div>
 
@@ -392,40 +389,42 @@ const TestId = "@Model.Id";
 
         <span class=" d-flex justify-content-center">
             <h6 class="text-light text-center">
-                Разместите объекты в конкретную позицию
-                <small>Правильный ответ:</small>
+                {{Lang.TestALotOfText}}
+                <br>
+                <small>{{Lang.TestCorrectAnswer}}:</small>
             </h6>
         </span>
         <span class=" d-flex justify-content-center">
 
-            <small class="text-light" v-if="Core.CorrectState">
+            <small class="text-light  m-0" v-if="Core.CorrectState">
                 {{Core.CorrectState.trg}}
             </small>
-            <h6 class="text-light" v-else>
-                Отсутствует
+            <h6 class="text-light m-0" v-else>
+                {{Lang.TestMissing}}
             </h6>
         </span>
+          <hr class="m-0">
         <span class=" d-flex justify-content-center">
             <h6 class="text-light text-center">
-                <small>Текущее состояние:</small>
+                <small>{{Lang.TestCurrent}}:</small>
             </h6>
         </span>
         <span class=" d-flex justify-content-center">
-            <small class="text-light" v-if="Core.GetState()">
+            <small class="text-light  m-0" v-if="Core.GetState()">
                 {{Core.GetState().trg}}
             </small>
-            <h6 class="text-light" v-else>
-                Триггеры отсутствуют
+            <h6 class="text-light  m-0" v-else>
+                {{Lang.TestNoTriggers}}
             </h6>
         </span>
 
         <hr>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="Core.CorrectState = Core.GetState()">Сохранить</a>
+            <a class="btn btn-outline-light" v-on:click="Core.CorrectState = Core.GetState()">{{Lang.TestSave}}</a>
 
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
         </div>
     </div>
 </div>
@@ -447,7 +446,6 @@ const TestId = "@Model.Id";
                             <div class="d-flex justify-content-center">
                                 <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r)">
                             </div>
-
                         </div>
                     </div>
                     <hr>
@@ -456,20 +454,20 @@ const TestId = "@Model.Id";
         </div>
         <hr>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddAnimation">Добавить</a>
+            <a class="btn btn-outline-light" v-on:click="AddAnimation">{{Lang.TestAdd}}</a>
 
         </div>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
         </div>
     </div>
 </div>
 <div v-if="MenuMode == 61">
     <div class="p-1 row d-flex justify-content-center">
         <div>
-            <h3 class="text-light text-center">Условия:</h3>   
+            <h3 class="text-light text-center">{{Lang.TestTaskAnim}}:</h3>
             <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto">
-                <div v-for="ax in EditAnimData.Activators" class="m-1 p-1" >
+                <div v-for="ax in EditAnimData.Activators" class="m-1 p-1">
                     <div class="form-group">
                         <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
                             <option v-for="nxd in 4" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActivatorsNames(nxd-1)}}</option>
@@ -477,37 +475,26 @@ const TestId = "@Model.Id";
                     </div>
                 </div>
             </div>
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">Добавить анимацию</a>
-
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">{{Lang.TestAddAnimation}}</a>
         </div>
-
         <hr>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">Назад</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
         </div>
-
-
     </div>
-
-
 </div>
 <div v-if="MenuMode == 100">
     <div class="p-1 row d-flex justify-content-center">
         <div>
-            <h3 class="text-light text-center">Текст задания:</h3>   
-             <textarea v-model="Core.Description" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
-
+            <h3 class="text-light text-center">{{Lang.textsText}}:</h3>
+            <textarea v-model="Core.Description" class="form-control text-center bg-dark text-light border-2 border-light"></textarea>
         </div>
 
         <hr>
         <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">Назад</a>
+            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
         </div>
-
-
     </div>
-
-
 </div>
 </div>
 
@@ -529,7 +516,7 @@ const TestId = "@Model.Id";
 </div>
 <div class="col-2" v-if="Core">
     <div class="text-left row pt-2">
-        <h4 class="text-light mt-2 text-center text-md-left">Сцена</h4>
+        <h4 class="text-light mt-2 text-center text-md-left">{{Lang.TestScene}}</h4>
         <hr class="bg-light my-2"/>
     </div>
     <div>
@@ -578,10 +565,10 @@ const TestId = "@Model.Id";
 <div class="container" v-if="Core">
     <div class="row">
         <div class="p-3 col-5">
-            <a class="btn btn-outline-light" href="/tests">Выход</a>
+            <a class="btn btn-outline-light" href="/tests">{{Lang.TestExit}}</a>
         </div>
         <div class="p-3  col-5">
-            <button class="btn btn-outline-light" v-on:click="SaveTest" v-bind:class="{'disabled': NeedSave()}">Сохранить</button>
+            <button class="btn btn-outline-light" v-on:click="SaveTest" v-bind:class="{'disabled': NeedSave()}">{{Lang.TestSave}}</button>
         </div>
     </div>
 

@@ -67,6 +67,14 @@
                 Modal.show();
                 this.TestResult = x.data;
             });
+        },
+        async ChangeLang(e) {
+            const lang = window.LangSelected;
+            const Data = new FormData();
+            Data.append('method', 'ChangeLanguage');
+            Data.append('value', lang.toString());
+            await axios.post('/method', Data);
+            location.reload();
         }
     },
     watch: {

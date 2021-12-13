@@ -40,20 +40,20 @@
             data.append('Name', this.NewGroupName);
             data.append('IsOpen', this.NewGroupOpen.toString());
             if (this.NewGroupName.length < 4 || this.NewGroupName.length > 32) {
-                this.NewGroupNameInvalid = "Неверное название";
+                this.NewGroupNameInvalid = Lang.meGroupsConnectToCoursesErrorInvalidName;
                 return
             }
             this.NewGroupNameInvalid = null;
             axios.post('/method', data).then((e) => {
                 if (e.data === "exist") {
-                    this.NewGroupNameInvalid = "Курс с таким именем уже существует";
+                    this.NewGroupNameInvalid = Lang.meGroupsConnectToCoursesAlreadyExists;
                 } else {
                     if (e.data.split("-").length === 4) {
                         this.ShowMode = 2;
                         this.GroupEditId = e.data;
                         this.GetGroups();
                     } else {
-                        this.NewGroupNameInvalid = "Неизвестная ошибка";
+                        this.NewGroupNameInvalid =Lang.meGroupsConnectToCoursesUnknownError;
                     }
                 }
             });
@@ -84,14 +84,14 @@
             axios.post('/method', Data).then((e) => {
                 console.log(e.data );
                 if (e.data === "NoTest") {
-                    this.ConnectTestKeyInvalid = "Тест не найден";
+                    this.ConnectTestKeyInvalid = Lang.meGroupsConnectTestTestNotFind;
                 }  else if (e.data === "Contains") {
-                    this.ConnectTestKeyInvalid = "Тест уже содержится";
+                    this.ConnectTestKeyInvalid = Lang.meGroupsConnectTestContained;
                 }  else if (e.data === "OK") {
                     this.ConnectTestKeyInvalid = null;
                     this.GetGroups();
                 } else {
-                    this.ConnectTestKeyInvalid = "Неизвестная ошибка";
+                    this.ConnectTestKeyInvalid = Lang.meGroupsConnectToCoursesUnknownError;
                 }
             });
         },
@@ -113,19 +113,19 @@
             Data.append('Key', this.ConnectGroupKey);
             axios.post('/method', Data).then((e) => {
                 if (e.data === "invalid" || e.data === "not found") {
-                    this.ConnectGroupKeyInvalid = "Курс не найден";
+                    this.ConnectGroupKeyInvalid = Lang.meGroupsConnectToCoursesNotFound;
                 } else if (e.data === "adm") {
-                    this.ConnectGroupKeyInvalid = "Вы администратор курса";
+                    this.ConnectGroupKeyInvalid = Lang.meGroupsConnectToGroupYouAdmin;
                 } else if (e.data === "contains") {
-                    this.ConnectGroupKeyInvalid = "Вы уже участник курса";
+                    this.ConnectGroupKeyInvalid = Lang.meGroupsConnectToGroupYouMember;
                 } else if (e.data === "close") {
-                    this.ConnectGroupKeyInvalid = "Закрытый курс";
+                    this.ConnectGroupKeyInvalid = Lang.meGroupsClosedCourse;
                 }  else if (e.data === "OK") {
                     this.ConnectGroupKeyInvalid = null;
                     this.ShowMode = 0;
                     this.GetGroups();
                 } else {
-                    this.ConnectGroupKeyInvalid = "Неизвестная ошибка";
+                    this.ConnectGroupKeyInvalid = Lang.meGroupsConnectToCoursesUnknownError;
                 }
             });
 

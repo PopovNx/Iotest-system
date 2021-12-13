@@ -16,15 +16,15 @@
                 </div>
                 <hr class="mt-0">
                 <div class="d-flex justify-content-center" v-if="!InstYet||IsIphone">
-                    <button class="btn btn-outline-light btn-lg DOB" v-on:click="InstallClick">Установить</button>
+                    <button class="btn btn-outline-light btn-lg DOB" v-on:click="InstallClick">{{Lang.installButton}</button>
                 </div>
                 <div class="d-flex justify-content-center align-items-center mt-1">
                     <span v-if="!InstYet||IsIphone" class="text-center">
-                        Для начала вам нужно установить наше PWA приложение
+                        {{Lang.installWw}}
                     </span>
                     <span v-else class="text-center" style="line-height:30px;">
-                        Перейдите в приложение или в
-                        <button class="btn btn-outline-light btn-sm DOB" v-on:click="ToWeb">WEB версию</button>
+                        {{Lang.installUp}}
+                        <button class="btn btn-outline-light btn-sm DOB" v-on:click="ToWeb">{{Lang.installUpButton}}</button>
                     </span>
                 </div>
             </div>
@@ -33,8 +33,7 @@
             <div class="text-light">
                 <div class="d-flex justify-content-center align-items-center mt-1">
                     <span class="text-center">
-                        IOTest - интерактивная платформа тестирования
-                        Все что нужно, для школьного и не только тестирования на одном сайте
+                        {{Lang.installDown}}
                     </span>
                 </div>
             </div>
@@ -57,7 +56,7 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-center row">
-                        <button type="button" class="btn btn-outline-light col-7" data-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-outline-light col-7" data-dismiss="modal">{{Lang.Close}}</button>
                     </div>
                 </div>
             </div>
