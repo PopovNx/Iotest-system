@@ -215,8 +215,8 @@ class DraggableObject {
             this.Sprite.hasposx = newPosition.x;
             this.Sprite.hasposy = newPosition.y;
             if (!this.Sprite.OnTrigger) {
-                this.Sprite.x = newPosition.x;
-                this.Sprite.y = newPosition.y;
+                this.Sprite.x = Math.round(newPosition.x*10)/10;
+                this.Sprite.y =  Math.round(newPosition.y*10)/10;
             }
         }
     }
@@ -434,7 +434,9 @@ class TestCore {
     CorrectState;
 
     Description;
+    LastWidth;
     constructor(canvas, testParent, test, optimiseLoad) {
+        
         this.Id = test.Id;
         this.Resources = test.Resources;
         this.Name = test.Name;
@@ -448,10 +450,10 @@ class TestCore {
             view: this.Canvas,
             backgroundAlpha: 0,
             antialias: true,
-            resolution: 1
+            resolution: 1,
         })
         this.TestParent = testParent;
-
+      
         this.DisplayContainer = new PIXI.Container();
         this.Display.stage.addChild(this.DisplayContainer);
 
@@ -460,7 +462,7 @@ class TestCore {
 
         const loader = PIXI.Loader.shared;
 
-
+    
         for (const e of this.Resources) {
             if (optimiseLoad) {
                 if (this.DraggableObjects.some(x => x.ResourceId === e.Id)) {
@@ -529,16 +531,17 @@ class TestCore {
             e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
 
-    }
-
+    }    
     resize(core) {
-        const testWidth = core.TestParent.clientWidth;
+        const nd = core.TestParent.getBoundingClientRect();
+        const testWidth = nd.width;
+        if(core.LastWidth===testWidth) return;
+        core.LastWidth = testWidth;
         const w = testWidth;
         const h = testWidth / 3 * 2;
         core.Display.renderer.resize(w, h);
         core.Display.stage.scale.set(testWidth / 1000, testWidth / 1000);
     }
-
     AddElement(data) {
         let maxId = 0;
         for (const t of this.DraggableObjects)

@@ -37,50 +37,23 @@ const TestKey = "@Model.Test.Key";
 const TestId = "@Model.Id";
 </script>
 <div id="Page" class="user-select-none container-fluid" v-cloak>
-<div class="row mt-1">
-<div class="col-10 offset-1  DOB" style="background-color:rgba(45, 51, 51, 0.50)">
-<div class="row">
-<div class="col-3">
-<div class="text-left row pt-2" v-show="Core">
-    <h4 class="text-light mt-2 text-center text-md-left">
-        <span v-if="MenuMode == 0">
-            {{Lang.TestMenu}}
-        </span>
-        <span v-else-if="MenuMode == 1">
-            {{Lang.TestResource}}
-        </span>
-        <span v-else-if="MenuMode == 2">
-            {{Lang.TestAdd}}
-        </span>
-        <span v-else-if="MenuMode == 20">
-            {{Lang.TestObject}}
-        </span>
-        <span v-else-if="MenuMode == 30">
-            {{Lang.TestObject}}
-        </span>
-        <span v-else-if="MenuMode == 40">
-            {{Lang.TestTriggers}}
-        </span>
-        <span v-else-if="MenuMode == 41">
-            {{Lang.TestTrigger}}
-        </span>
-        <span v-else-if="MenuMode == 50">
-            {{Lang.TestPosition}}
-        </span>
-        <span v-else-if="MenuMode == 60">
-            {{Lang.TestAnimations }}
-        </span>
-        <span v-else-if="MenuMode == 61">
-            {{Lang.TestAnimation }}
-        </span>
-        <span v-else-if="MenuMode == 100">
-            {{Lang.TestTask }}
-        </span>
-
-    </h4>
-    <hr class="bg-light my-2"/>
+<div>
+<div class="DOB m-3" style="background-color:rgba(45, 51, 51, 0.50)" v-show="Core">
+<div class="d-flex flex-column">
+<div id="boxHeader" class="d-flex justify-content-between">
+    <div class="fb20">
+        <h4 class="mx-4 my-2 text-light text-center">{{HeaderBoxOne}}</h4>
+    </div>
+    <div class="d-flex fb60" id="TestMain">
+        <input style="border-color: transparent" v-if="Core" v-model="Core.Name" type="text" class="form-control text-center text-light border-1 bg-transparent"/>
+    </div>
+    <div class="fb20">
+        <h4 class="mx-4 my-2 text-light text-center">{{Lang.TestScene}}</h4>
+    </div>
 </div>
-<div class="flex-row justify-content-center">
+<hr class="mb-1 mt-0">
+<div class="d-flex justify-content-between">
+<div class="fb25 flex-row justify-content-center">
 <div v-if="MenuMode == 0">
     <div class="d-grid justify-content-center">
         <div class="p-3 d-flex justify-content-center">
@@ -222,74 +195,84 @@ const TestId = "@Model.Id";
     </div>
 </div>
 <div v-if="MenuMode == 30">
-    <div class="p-1 row d-flex justify-content-center">
-
-        <div class="col-9" v-if="EditTextData">
-            <input v-model="EditTextData.text" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="text" class="form-control text-center bg-dark text-light border-1 border-light mb-2"/>
-        </div>
-        <div class="col-3" v-if="EditTextData">
-            <div>
-                <input v-model="EditTextData.color" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="color" class="form-control form-control-color bg-dark border-1 border-light mt-1"/>
+    <div class="p-1 d-flex justify-content-center flex-column">
+        <div v-if="EditTextData">
+            <div class="d-flex justify-content-around">
+                <div class="fb70">
+                    <input v-model="EditTextData.text" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="text" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+                <div class="fb20 d-flex">
+                    <input v-model="EditTextData.color" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="color" class="align-self-center form-control form-control-color bg-dark p-0"/>
+                </div>
             </div>
-
+            <hr class="mt-2">
         </div>
-        <hr v-if="EditTextData">
-        <div class="col-4">
-            <h3 class="text-light text-center">X:</h3>
+        <div class="d-flex justify-content-center">
+            <div class="fb20 mx-1">
+                <h3 class="text-light text-center">X:</h3>
+            </div>
+            <div class="fb60 mx-1">
+                <input v-model.number="EditObj.Sprite.x" min="0" step="10" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+            </div>
         </div>
-        <div class="col-8">
-            <input v-model.number="EditObj.Sprite.x" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+        <div class="d-flex justify-content-center">
+            <div class="fb20 mx-1">
+                <h3 class="text-light text-center">Y:</h3>
+            </div>
+            <div class="fb60 mx-1">
+                <input v-model.number="EditObj.Sprite.y" min="0" step="10" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+            </div>
         </div>
-        <div class="col-4">
-            <h3 class="text-light text-center">Y:</h3>
-        </div>
-        <div class="col-8">
-            <input v-model.number="EditObj.Sprite.y" min="0" step="50" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-        </div>
-        <div class="col-12">
-            <h5 class="text-light text-center">{{Lang.TestSize}}: {{EditObj.Sprite.scale.x}} </h5>
-        </div>
-        <div class="col-12">
+           <hr class="mt-2">
+          <div class="d-flex justify-content-center">
+                    <div class="fb25 mx-1 d-flex">
+                        <h5 class="text-light text-center align-self-end">{{Lang.TestSize}}:</h5>
+                    </div>
+                    <div class="fb50 mx-1">
+                        <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3"  step="0.01" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                    </div>
+                </div>
+        <div class="">
             <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
-        <div class="col-12">
+        <div class="">
             <h5 class="text-light text-center">{{Lang.TestRotation}}: {{EditObj.GetRotation()}}° </h5>
         </div>
-        <div class="col-12">
+        <div class="">
             <input v-model="EditObj.Sprite.rotation" min="0" max="6.29" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
-        <div class="col-10 offset-1 text-center p-1">
+        <div class=" text-center p-1">
             <div class="form-check">
                 <label for="editObjVisible" class="text-light">{{Lang.TestVisibility}}</label>
                 <input id="editObjVisible" v-model="EditObj.Sprite.visible" type="checkbox" class="form-check-input">
             </div>
         </div>
-        <div class="col-11 text-center p-1">
+        <div class=" text-center p-1">
             <div class="form-check">
                 <label for="editObjMovable" class="text-light">{{Lang.TestDraggable}}</label>
                 <input id="editObjMovable" v-model="EditObj.CanMove" type="checkbox" class="form-check-input">
             </div>
         </div>
-        <div class="col-11 text-center p-1">
+        <div class=" text-center p-1">
             <div class="form-check">
                 <label for="editObjBtnMode" class="text-light">{{Lang.TestPressed}}</label>
                 <input id="editObjBtnMode" v-model="EditObj.Sprite.buttonMode" type="checkbox" class="form-check-input">
             </div>
         </div>
-        <div class="col-11 text-center p-1">
+        <div class=" text-center p-1">
             <div class="form-check">
                 <label for="editObjTrg" class="text-light">{{Lang.TestTriggerNiy}}</label>
                 <input id="editObjTrg" v-model="EditObj.Triggerable" type="checkbox" class="form-check-input">
             </div>
         </div>
-        <div class="col-11 text-center p-1">
+        <div class=" text-center p-1">
             <div class="d-flex justify-content-evenly">
                 <span v-on:click="MoveZObject(EditObj,0)">
                     <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                          viewBox="0 0 330 330" xml:space="preserve" style="fill: #567478">
                         <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393
-                   	c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393
-                   	s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
+                     	c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393
+                     	s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
                     </svg>
 
                 </span>
@@ -297,8 +280,8 @@ const TestId = "@Model.Id";
                     <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                          viewBox="0 0 330 330" xml:space="preserve" style="fill: #567478">
                         <path d="M325.606,229.393l-150.004-150C172.79,76.58,168.974,75,164.996,75c-3.979,0-7.794,1.581-10.607,4.394
-                                   	l-149.996,150c-5.858,5.858-5.858,15.355,0,21.213c5.857,5.857,15.355,5.858,21.213,0l139.39-139.393l139.397,139.393
-                                   	C307.322,253.536,311.161,255,315,255c3.839,0,7.678-1.464,10.607-4.394C331.464,244.748,331.464,235.251,325.606,229.393z"/>
+                                     	l-149.996,150c-5.858,5.858-5.858,15.355,0,21.213c5.857,5.857,15.355,5.858,21.213,0l139.39-139.393l139.397,139.393
+                                     	C307.322,253.536,311.161,255,315,255c3.839,0,7.678-1.464,10.607-4.394C331.464,244.748,331.464,235.251,325.606,229.393z"/>
                     </svg>
 
                 </span>
@@ -382,8 +365,6 @@ const TestId = "@Model.Id";
         </div>
     </div>
 </div>
-</div>
-
 <div v-if="MenuMode == 50">
     <div class="p-1 row d-flex justify-content-center">
 
@@ -546,81 +527,66 @@ const TestId = "@Model.Id";
     </div>
 </div>
 </div>
-
-<div class="col-7">
-    <div>
-        <div id="TestHead" class="text-left row pt-2">
-            <input style="border-color: transparent" m v-if="Core" v-model="Core.Name" type="text" class="form-control text-center text-light border-1 bg-transparent mt-2"/>
-            <hr class="bg-light my-2"/>
-        </div>
-        <div id="TestMain" class="text-center text-light  DOB">
-            <div id="InteractiveBlock">
-                <canvas id="TestCanvas"></canvas>
-            </div>
-        </div>
-        <div id="TestFooter" class="text-left  pt-2 mt-0  row">
-            <hr class="bg-light md-2 mt-0"/>
+<div>
+    <div class="text-center text-light  DOB">
+        <div id="InteractiveBlock">
+            <canvas id="TestCanvas"></canvas>
         </div>
     </div>
 </div>
-<div class="col-2" v-if="Core">
-    <div class="text-left row pt-2">
-        <h4 class="text-light mt-2 text-center text-md-left">{{Lang.TestScene}}</h4>
-        <hr class="bg-light my-2"/>
-    </div>
-    <div>
-        <div style="overflow-x: hidden; overflow-y: auto; max-height: 50vh">
-            <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
-                <div class="p-1 row">
-                    <div class="col-12">
-                        <h6 class="text-light text-center">
-                            <span v-if="obj.Resource.Name">
-                                {{obj.Resource.Name}}
-                            </span>
-                            <span v-else v-bind:style="{'color':obj.GetText().color}">
-                                {{obj.GetText().text}}
-                            </span>
-                            - {{obj.Id}}
-                        </h6>
-                        <div class="con">
-                            <div class="row">
-                                <div class="col-4">
-                                    <div class="d-flex justify-content-center">
-                                        <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditObject(obj)">
-                                    </div>
+<div class="fb25" v-if="Core">
+    <div style="overflow-x: hidden; overflow-y: auto; max-height: 50vh">
+        <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
+            <div class="p-1 row">
+                <div class="col-12">
+                    <h6 class="text-light text-center">
+                        <span v-if="obj.Resource.Name">
+                            {{obj.Resource.Name}}
+                        </span>
+                        <span v-else v-bind:style="{'color':obj.GetText().color}">
+                            {{obj.GetText().text}}
+                        </span>
+                        - {{obj.Id}}
+                    </h6>
+                    <div class="con">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditObject(obj)">
                                 </div>
-                                <div class="col-4">
-                                    <span v-if="obj.Resource.Name" class="d-flex justify-content-center">
-                                        <img class="img-fluid bg-light" style="min-height: 35px;min-width: 35px" src="" v-bind:src="obj.Resource.Url" alt="">
-                                    </span>
-                                    <span v-else class="d-flex justify-content-center">
-                                        <img class="img-fluid" style="min-height: 35px;min-width: 35px" src="Images/text-icon-667.png" alt="">
-                                    </span>
-                                </div>
-                                <div class="col-4">
-                                    <div class="d-flex justify-content-center">
-                                        <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyObject(obj)">
-                                    </div>
+                            </div>
+                            <div class="col-4">
+                                <span v-if="obj.Resource.Name" class="d-flex justify-content-center">
+                                    <img class="img-fluid bg-light" style="min-height: 35px;min-width: 35px" src="" v-bind:src="obj.Resource.Url" alt="">
+                                </span>
+                                <span v-else class="d-flex justify-content-center">
+                                    <img class="img-fluid" style="min-height: 35px;min-width: 35px" src="Images/text-icon-667.png" alt="">
+                                </span>
+                            </div>
+                            <div class="col-4">
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyObject(obj)">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <hr class="m-1">
             </div>
+            <hr class="m-1">
         </div>
     </div>
 </div>
+</div>
+<hr class="my-1">
 <div class="container" v-if="Core">
-    <div class="row">
-        <div class="p-3 col-5">
+    <div class="d-flex p-1 pb-2 justify-content-between">
+        <div class="m-1">
             <a class="btn btn-outline-light" href="/tests">{{Lang.TestExit}}</a>
         </div>
-        <div class="p-3  col-5">
+        <div class="m-1">
             <button class="btn btn-outline-light" v-on:click="SaveTest" v-bind:class="{'disabled': NeedSave()}">{{Lang.TestSave}}</button>
         </div>
     </div>
-
 </div>
 </div>
 </div>

@@ -8,15 +8,15 @@
         ResourcesAw: [],
         ResourcesAwSelected: [],
         EditObj: null,
-        LastSave:null,
+        LastSave: null,
         MenuMode: 0,
-        EditedTrigger:null,
+        EditedTrigger: null,
 
-        EditTextData:null,
-        
-        EditAnimData:null,
-        
-        
+        EditTextData: null,
+
+        EditAnimData: null,
+
+
     },
     methods: {
         Init: function () {
@@ -31,8 +31,8 @@
             const canvas = document.getElementById("TestCanvas");
             const parent = document.getElementById("TestMain");
             console.log(test)
-            this.Core = new TestCore(canvas, parent, test,false);
-            window.Core =   this.Core;
+            this.Core = new TestCore(canvas, parent, test, false);
+            window.Core = this.Core;
         },
         AddElement: function () {
 
@@ -67,7 +67,7 @@
         },
         EditObject(e) {
             this.EditObj = e;
-            this.EditTextData =e.GetText();
+            this.EditTextData = e.GetText();
             this.MenuMode = 30;
         },
         AddObjectMenu(isNew) {
@@ -85,65 +85,92 @@
             await axios.post('/method', Data);
             console.log(this.LastSave)
         },
-        NeedSave(){            
-            if(this.Core===null) return false;
+        NeedSave() {
+            if (this.Core === null) return false;
             const save = this.Core.Save();
 
-            return JSON.stringify(save)===JSON.stringify(this.LastSave);
+            return JSON.stringify(save) === JSON.stringify(this.LastSave);
         },
         AddTrigger() {
             this.Core.Request("trgAdd");
-         
+
         },
-        EditTrigger(r){
+        EditTrigger(r) {
             this.EditedTrigger = r;
             this.MenuMode = 41;
             console.log(r)
         },
-        DestroyTrigger(r){
-            this.Core.Request("destroyTrg",r);
+        DestroyTrigger(r) {
+            this.Core.Request("destroyTrg", r);
         },
-        MoveZObject(r,d){
-            if(d===0){
-                this.Core.Request("downElement",r);
-            }else{
-                this.Core.Request("upElement",r);
+        MoveZObject(r, d) {
+            if (d === 0) {
+                this.Core.Request("downElement", r);
+            } else {
+                this.Core.Request("upElement", r);
             }
-            
+
         },
-        AddText(){
-            const nOb = new NewObject(-1, {text: "Новый текст", color:"#0f3fff"});
+        AddText() {
+            const nOb = new NewObject(-1, {text: "Новый текст", color: "#0f3fff"});
             console.log(nOb)
             this.Core.Request("add", nOb);
         },
-        AddAnimation(){
+        AddAnimation() {
             this.Core.Request("createAnim")
         },
-        DestroyAnimation(r){
-            this.Core.Request("destroyAnim",r)
+        DestroyAnimation(r) {
+            this.Core.Request("destroyAnim", r)
         },
-        EditAnimation(r){
+        EditAnimation(r) {
             this.EditAnimData = r;
             this.MenuMode = 61;
-            
+
             console.log(r)
         },
-        AddActivator(){
+        AddActivator() {
             this.Core.Request("addActivator", this.EditAnimData);
         },
-        AddEventAction(){
+        AddEventAction() {
             this.Core.Request("addEventAction", this.EditAnimData);
         },
-        CheckEventSelectors(ax){
-            ax.Selector= ax.Selector.filter(function(x) {
-                    return x !== "";
-                });            
+        CheckEventSelectors(ax) {
+            ax.Selector = ax.Selector.filter(function (x) {
+                return x !== "";
+            });
         }
-        
+
     },
     watch: {},
     computed: {
-       
+        HeaderBoxOne: function () {
+            switch (this.MenuMode) {
+                case 0:
+                    return Lang.TestMenu;
+                case 1:
+                    return Lang.TestResource;
+                case 2:
+                    return Lang.TestAdd;
+                case 20:
+                    return Lang.TestObject;
+                case 30:
+                    return Lang.TestObject;
+                case 40:
+                    return Lang.TestTriggers;
+                case 41:
+                    return Lang.TestTrigger;
+                case 50:
+                    return Lang.TestPosition;
+                case 60:
+                    return Lang.TestAnimations;
+                case 61:
+                    return Lang.TestAnimation;
+                case 100:
+                    return Lang.TestTask;
+                default:
+                    return "error";
+            }
+        }
     },
     mounted() {
         this.Init();
