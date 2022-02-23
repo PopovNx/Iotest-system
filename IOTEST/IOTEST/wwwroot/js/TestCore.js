@@ -74,7 +74,7 @@ class Trigger {
             }
             if (this.pointInPoly(this.VectorArray, e.Sprite.x, e.Sprite.y)) {
 
-                if (e.CanMove && e.Visible) {
+                if (e.Visible) {
                     this.ObjectsInside.push(e);
                 }
             }
@@ -241,7 +241,6 @@ class DraggableObject {
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
     }
     SetVisible(visible) {
-        if (this.Visible === visible) return;
         this.Visible = visible;
         this.Sprite.visible = this.Visible;
     }
@@ -282,12 +281,14 @@ class EventActivator {
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
+       
     }
     Check(objects, trg) {
         if (this.Event === 0) return true;
         if (this.Event === 1) return false;
         if (this.Event === 2) {
             let zxc = 0;
+            if(this.Selector.length===0) return false;
             for (const t of trg)
                 for (const s of this.Selector)
                     if (t.Id === s)
@@ -351,7 +352,7 @@ class EventAction {
             for (const t of objects) {
                 for (const s of this.Selector) {
                     if (t.Id === s) {
-                        if (t.Visible === this.Value[0]) {
+                        if (t.Sprite.visible === this.Value[0]) {
                             t.SetVisible(this.Value[1]);
                         } else {
                             t.SetVisible(this.Value[0]);
@@ -367,10 +368,19 @@ class Animation {
     EventActions;
     static ActivatorsNames = function (id){
         switch (id) {
-            case 0: return "Всегда";
-            case 1: return "Никогда";
-            case 2: return "При триггере";
-            case 3: return "При клике";
+            case 0: return "Завжди";
+            case 1: return "Ніколи";
+            case 2: return "При тригері";
+            case 3: return "При натиску";
+            default: return "Не определено";
+        }
+    }
+    static ActionNames = function (id){
+        switch (id) {
+            case -1: return "Нічого";
+            case 0: return "Обертання";
+            case 1: return "Ресурс";
+            case 2: return "Видимість";
             default: return "Не определено";
         }
     }
@@ -618,8 +628,17 @@ class TestCore {
       this.Animations.push(anim);
       console.log(this.Animations)
     }
-    RemoveAnimation(a){
-        
+    AddActivator(anim){
+        const act = new EventActivator( {Event:1, Selector:[]});
+        anim.Activators.push(act);
+      console.log(anim)
+    }
+    AddEventAction(anim){
+        const act = new EventAction( {Event:0, Selector:[], Value:[0, 1]});
+        anim.EventActions.push(act);
+      console.log(anim)
+    }
+    RemoveAnimation(a){        
         this.Animations = this.Animations.filter(x => x !== a);
     }
     
@@ -645,6 +664,10 @@ class TestCore {
                 return this.CreateAnimation();
             case "destroyAnim":
                 return this.RemoveAnimation(data);
+            case "addActivator":                    
+                return this.AddActivator(data); 
+            case "addEventAction":
+                return this.AddEventAction(data);                
             default:
                 throw new Error();
 
@@ -708,7 +731,9 @@ class TestCore {
                 for (const a of anim.EventActions) {
                     const rx = {
                         Event : a.Event,
-                        Selector :a.Selector,
+                        Selector : a.Selector.filter(function(x) {
+                            return x !== "";
+                        }),
                         Value :a.Value                    
                     };
                     r.EventActions.push(rx);

@@ -35,7 +35,6 @@
 const MyMail = "@Model.User.Gmail";
 const TestKey = "@Model.Test.Key";
 const TestId = "@Model.Id";
-
 </script>
 <div id="Page" class="user-select-none container-fluid" v-cloak>
 <div class="row mt-1">
@@ -126,7 +125,7 @@ const TestId = "@Model.Id";
                     <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
                 </div>
             </div>
-            <div v-if="AddResourceMode===1">
+            <div v-if="AddResourceMode===1" class="border-1">
                 <div style="max-height: 40vh; overflow-y:auto;overflow-x: hidden">
                     <div v-for="(r,i) in ResourcesAw" v-on:click="AddResourcesSelect(r)">
                         <div class="p-1 row" v-bind:class="{'bg-success':(ResourcesAwSelected.includes(r))}">
@@ -140,9 +139,10 @@ const TestId = "@Model.Id";
                         <hr>
                     </div>
                 </div>
-                <div class="p-1">
-                    <div class="row">
-                        <a class="btn btn-outline-light col-10 offset-1" v-on:click="AddResources()">{{Lang.TestAdd}}</a>
+                <hr class="mt-1">
+                <div>
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-outline-light" v-on:click="AddResources()">{{Lang.TestAdd}}</a>
                     </div>
                 </div>
             </div>
@@ -395,7 +395,6 @@ const TestId = "@Model.Id";
             </h6>
         </span>
         <span class=" d-flex justify-content-center">
-
             <small class="text-light  m-0" v-if="Core.CorrectState">
                 {{Core.CorrectState.trg}}
             </small>
@@ -403,7 +402,7 @@ const TestId = "@Model.Id";
                 {{Lang.TestMissing}}
             </h6>
         </span>
-          <hr class="m-0">
+        <hr class="m-0">
         <span class=" d-flex justify-content-center">
             <h6 class="text-light text-center">
                 <small>{{Lang.TestCurrent}}:</small>
@@ -463,19 +462,69 @@ const TestId = "@Model.Id";
     </div>
 </div>
 <div v-if="MenuMode == 61">
-    <div class="p-1 row d-flex justify-content-center">
+    <div class="p-1 row d-flex justify-content-center" style="max-height: 60vh; overflow-x: hidden; overflow-y: auto">
         <div>
             <h3 class="text-light text-center">{{Lang.TestTaskAnim}}:</h3>
-            <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto">
-                <div v-for="ax in EditAnimData.Activators" class="m-1 p-1">
+            <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto" v-if="EditAnimData.Activators.length">
+                <div v-for="ax in EditAnimData.Activators" class="m-1 p-1 ">
                     <div class="form-group">
                         <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
                             <option v-for="nxd in 4" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActivatorsNames(nxd-1)}}</option>
                         </select>
+                        <div v-if="ax.Event ===3||ax.Event ===2" class="d-flex flex-wrap">
+                            <div v-for="(an,i) in ax.Selector.concat([''])" class="col-4 m-1">
+                                <input v-model.number="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimData.Activators = EditAnimData.Activators.filter(function(value){return value !==ax;});">
+                        </div>
+                        <hr>
                     </div>
                 </div>
             </div>
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">{{Lang.TestAddAnimation}}</a>
+            <h6 class="text-light m-0 text-center" v-else>
+                Умов не виявлено
+            </h6>
+            <div class="p-3 d-flex justify-content-center">
+                <a class="btn btn-outline-light" v-on:click="AddActivator">Додати умову</a>
+            </div>
+        </div>
+        <hr>
+        <div>
+            <h3 class="text-light text-center"> Події:</h3>
+            <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto" v-if="EditAnimData.EventActions.length">
+                <div v-for="ax in EditAnimData.EventActions" class="m-1 p-1">
+                    <div class="form-group">
+                        <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
+                            <option v-for="nxd in 3" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActionNames(nxd-1)}}</option>
+                        </select>
+                        Об'єкти:
+                        <div class="d-flex flex-wrap">
+                            <div v-for="(an,i) in ax.Selector.concat([''])" class="col-4 m-1">
+                                <input v-model.number="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
+                            </div>
+                        </div>
+                        Значення:
+                        <div class="d-flex flex-wrap">
+                            <div v-for="(an,i) in 2" class="col-4 m-1">
+                                <input v-model.number="ax.Value[i]" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimData.EventActions = EditAnimData.EventActions.filter(function(value){return value !==ax;});">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <h6 class="text-light m-0 text-center" v-else>
+                Подій не виявлено
+            </h6>
+            <div class="p-3 d-flex justify-content-center">
+                <a class="btn btn-outline-light" v-on:click="AddEventAction">Додати подію</a>
+            </div>
         </div>
         <hr>
         <div class="p-3 d-flex justify-content-center">

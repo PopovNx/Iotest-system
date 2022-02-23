@@ -100,6 +100,7 @@ namespace IOTEST.Models
                 [Serializable]
                 public enum EventType
                 {
+                    None = -1,
                     Rotation = 0,
                     ResourceChange = 1,
                     Visibility = 2,

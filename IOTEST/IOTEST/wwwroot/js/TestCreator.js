@@ -125,9 +125,21 @@
         EditAnimation(r){
             this.EditAnimData = r;
             this.MenuMode = 61;
+            
             console.log(r)
         },
-
+        AddActivator(){
+            this.Core.Request("addActivator", this.EditAnimData);
+        },
+        AddEventAction(){
+            this.Core.Request("addEventAction", this.EditAnimData);
+        },
+        CheckEventSelectors(ax){
+            ax.Selector= ax.Selector.filter(function(x) {
+                    return x !== "";
+                });            
+        }
+        
     },
     watch: {},
     computed: {

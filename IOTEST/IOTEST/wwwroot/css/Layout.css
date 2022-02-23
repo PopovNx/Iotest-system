@@ -4,7 +4,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    overflow: hidden; 
+    overflow: hidden;
 }
 
 body, html {
@@ -16,4 +16,20 @@ body, html {
 .DOB {
     z-index: 200;
     position: relative;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f11a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b1b1b1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
