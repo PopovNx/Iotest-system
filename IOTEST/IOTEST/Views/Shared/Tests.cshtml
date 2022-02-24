@@ -256,7 +256,8 @@
 </div>
 <hr class="m-0"/>
 <div>
-    <span v-if="ShowMode==0">
+    <span v-if="ShowMode==0" class="d-flex justify-content-evenly">
+        <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">Ресурсы</a>
         <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">{{Lang.TestsCreateATest}}</a>
     </span>
     <span v-if="ShowMode==1">

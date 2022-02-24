@@ -24,9 +24,18 @@ class Resource {
 }
 
 class Trigger {
-    color = 0x00F0F0;    graphics;    VectorArray;
-    Size;    Id;    ObjectsInside;    Y;
-    X;    Visual;    Magnetic;    Accepted;
+    color = 0x00F0F0;
+    graphics;
+    VectorArray;
+    Size;
+    Id;
+    ObjectsInside;
+    Y;
+    X;
+    Visual;
+    Magnetic;
+    Accepted;
+
     constructor(object) {
         this.X = object.X;
         this.Y = object.Y;
@@ -42,6 +51,7 @@ class Trigger {
             this.X - this.Size, this.Y + this.Size];
         this.graphics = new PIXI.Graphics();
     }
+
     Draw() {
         this.graphics.clear();
         this.VectorArray = [
@@ -57,6 +67,7 @@ class Trigger {
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
+
     Work(Objects) {
         this.ObjectsInside = [];
         for (const e of Objects) {
@@ -81,6 +92,7 @@ class Trigger {
         }
         this.Draw();
     }
+
     getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {
         const d = (startX1 - endX1) * (endY2 - startY2) - (startY1 - endY1) * (endX2 - startX2);
         const da = (startX1 - startX2) * (endY2 - startY2) - (startY1 - startY2) * (endX2 - startX2);
@@ -95,6 +107,7 @@ class Trigger {
         }
         return [-100, -100];
     }
+
     pointInPoly(poly, pointX, pointY) {
         let i, j, c = false;
         const polyCords = [[poly[0], poly[1]], [poly[2], poly[3]], [poly[4], poly[5]], [poly[6], poly[7]]];
@@ -142,10 +155,23 @@ class NewObject {
 }
 
 class DraggableObject {
-    Id;    Weight;    Resource;    Sprite;
-    MouseOnThis;   GroupType;    Rotation;
-    Visible;    Button;    CanMove;  
-    MouseDown;    Dragging;    Clicked;    Type;    Text;    Triggerable;
+    Id;
+    Weight;
+    Resource;
+    Sprite;
+    MouseOnThis;
+    GroupType;
+    Rotation;
+    Visible;
+    Button;
+    CanMove;
+    MouseDown;
+    Dragging;
+    Clicked;
+    Type;
+    Text;
+    Triggerable;
+
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -186,12 +212,15 @@ class DraggableObject {
             .on('pointerover', () => this.onPointerOver())
             .on('pointerout', () => this.onPointerOut());
     }
+
     onPointerOver() {
         this.MouseOnThis = true;
     }
+
     onPointerOut() {
         this.MouseOnThis = false;
     }
+
     onDragStart(event) {
         this.MouseDown = true;
         if (!this.CanMove) return;
@@ -199,6 +228,7 @@ class DraggableObject {
         this.Sprite.alpha = 0.5;
         this.Dragging = true;
     }
+
     onDragEnd() {
         this.MouseDown = false;
         this.Clicked = true;
@@ -206,6 +236,7 @@ class DraggableObject {
         this.Dragging = false;
         this.Sprite.data = null;
     }
+
     onDragMove() {
 
         if (!this.CanMove) return;
@@ -215,50 +246,59 @@ class DraggableObject {
             this.Sprite.hasposx = newPosition.x;
             this.Sprite.hasposy = newPosition.y;
             if (!this.Sprite.OnTrigger) {
-                this.Sprite.x = Math.round(newPosition.x*10)/10;
-                this.Sprite.y =  Math.round(newPosition.y*10)/10;
+                this.Sprite.x = Math.round(newPosition.x * 10) / 10;
+                this.Sprite.y = Math.round(newPosition.y * 10) / 10;
             }
         }
     }
+
     SetResource(rs) {
         this.Resource = rs;
         this.Sprite.texture = rs.Loaded;
     }
-    SetRotation(rotation) {
+
+    get RotationVal() {
+        const rot = this.Sprite.rotation * 180 / Math.PI;
+        this.Rotation = rot;
+        return Math.round(rot * 10) / 10;
+    }
+
+    set RotationVal(rotation) {
         if (this.Rotation === rotation) return;
         this.Rotation = rotation;
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
+        if (this.RotationVal > 360) this.RotationVal -= 360;
+        if (this.RotationVal < 0) this.RotationVal += 360;
     }
-    GetRotation() {
-        const rot = this.Sprite.rotation * 180 / Math.PI;
-        this.Rotation = rot;
 
-        return Math.round(rot);
-    }
     AddRotation(rotation) {
         if (rotation === 0) return;
-        this.Rotation += rotation;
-        this.Sprite.rotation = Math.PI / 180 * this.Rotation;
+        this.RotationVal += rotation;
     }
+
     SetVisible(visible) {
         this.Visible = visible;
         this.Sprite.visible = this.Visible;
     }
+
     SetCanMove(e) {
         if (this.CanMove === e) return;
         this.CanMove = e;
         this.Sprite.CanMove = e;
         this.Sprite.buttonMode = this.Button || e;
     }
+
     SetIsButton(on) {
         if (this.Button === on) return;
         this.Button = on;
         this.Sprite.buttonMode = on;
     }
+
     GetText() {
         if (this.Text === null) return null;
         return {text: this.Text.text, color: this.Text._style.fill[0]}
     }
+
     SetText(text, color) {
         if (this.Text === null) return null;
         this.Text.text = text;
@@ -267,6 +307,7 @@ class DraggableObject {
         this.Text.updateText();
 
     }
+
     ReadClick() {
         if (this.Clicked) {
             this.Clicked = false;
@@ -277,18 +318,21 @@ class DraggableObject {
 }
 
 class EventActivator {
-    Event;    Selector;
+    Event;
+    Selector;
+
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
-       
+
     }
+
     Check(objects, trg) {
         if (this.Event === 0) return true;
         if (this.Event === 1) return false;
         if (this.Event === 2) {
             let zxc = 0;
-            if(this.Selector.length===0) return false;
+            if (this.Selector.length === 0) return false;
             for (const t of trg)
                 for (const s of this.Selector)
                     if (t.Id === s)
@@ -314,15 +358,18 @@ class EventActivator {
         }
     }
 }
+
 class EventAction {
     Event;
     Selector;
     Value;
+
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
         this.Value = object.Value;
     }
+
     Do(objects, res) {
         if (this.Event === 0) {
             for (const t of objects) {
@@ -363,56 +410,70 @@ class EventAction {
         }
     }
 }
+
 class Animation {
     Activators;
     EventActions;
-    static ActivatorsNames = function (id){
+    static ActivatorsNames = function (id) {
         switch (id) {
-            case 0: return "Завжди";
-            case 1: return "Ніколи";
-            case 2: return "При тригері";
-            case 3: return "При натиску";
-            default: return "Не определено";
+            case 0:
+                return "Завжди";
+            case 1:
+                return "Ніколи";
+            case 2:
+                return "При тригері";
+            case 3:
+                return "При натиску";
+            default:
+                return "Не определено";
         }
     }
-    static ActionNames = function (id){
+    static ActionNames = function (id) {
         switch (id) {
-            case -1: return "Нічого";
-            case 0: return "Обертання";
-            case 1: return "Ресурс";
-            case 2: return "Видимість";
-            default: return "Не определено";
+            case -1:
+                return "Нічого";
+            case 0:
+                return "Обертання";
+            case 1:
+                return "Ресурс";
+            case 2:
+                return "Видимість";
+            default:
+                return "Не определено";
         }
     }
+
     constructor(object) {
         this.Activators = []
         this.EventActions = []
         for (const el of object.Activators) {
             this.Activators.push(new EventActivator(el))
         }
-        
+
         for (const el of object.EventActions) {
             this.EventActions.push(new EventAction(el))
         }
 
     }
+
     Activate(objects, res) {
         for (const d of this.EventActions) {
             d.Do(objects, res);
         }
         console.log(this)
     }
+
     Work(objects, trg, res) {
         const al = this.Activators.length;
         let ic = 0;
         let bool = false;
         for (const e of this.Activators)
-            if (e.Check(objects, trg)){
+            if (e.Check(objects, trg)) {
                 ic++;
-                bool= true;
+                bool = true;
             }
-               
-        if (al === ic&&bool) this.Activate(objects, res);
+
+        if (al === ic && bool) this.Activate(objects, res);
     }
 }
 
@@ -435,8 +496,9 @@ class TestCore {
 
     Description;
     LastWidth;
+
     constructor(canvas, testParent, test, optimiseLoad) {
-        
+
         this.Id = test.Id;
         this.Resources = test.Resources;
         this.Name = test.Name;
@@ -453,16 +515,12 @@ class TestCore {
             resolution: 1,
         })
         this.TestParent = testParent;
-      
+
         this.DisplayContainer = new PIXI.Container();
         this.Display.stage.addChild(this.DisplayContainer);
-
-        this.Canvas.style.background = "url('/TestItems/Prefabs/Backgrounds/5.jpg')"
-        this.Canvas.style.backgroundRepeat = "round"
-
         const loader = PIXI.Loader.shared;
 
-    
+
         for (const e of this.Resources) {
             if (optimiseLoad) {
                 if (this.DraggableObjects.some(x => x.ResourceId === e.Id)) {
@@ -484,11 +542,11 @@ class TestCore {
             }
             this.texturesLoaded();
         });
-        const resizer = () =>{
-            if(this.Destroyed===true) return;
+        const resizer = () => {
+            if (this.Destroyed === true) return;
             this.resize(this);
         }
-        window.addEventListener('resize',resizer );
+        window.addEventListener('resize', resizer);
         setInterval(resizer, 100);
         this.resize(this);
     }
@@ -518,7 +576,7 @@ class TestCore {
             this.Animations[i] = new Animation(obj);
         }
         this.Display.ticker.add(() => this.Worker());
-        
+
     }
 
     Worker() {
@@ -531,17 +589,19 @@ class TestCore {
             e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
 
-    }    
+    }
+
     resize(core) {
         const nd = core.TestParent.getBoundingClientRect();
         const testWidth = nd.width;
-        if(core.LastWidth===testWidth) return;
+        if (core.LastWidth === testWidth) return;
         core.LastWidth = testWidth;
         const w = testWidth;
         const h = testWidth / 3 * 2;
         core.Display.renderer.resize(w, h);
         core.Display.stage.scale.set(testWidth / 1000, testWidth / 1000);
     }
+
     AddElement(data) {
         let maxId = 0;
         for (const t of this.DraggableObjects)
@@ -625,26 +685,30 @@ class TestCore {
             this.SwapElement(i, i - 1);
         }
     }
-    CreateAnimation(){
-        
-      const anim = new Animation({Activators:[], EventActions:[]});
-      this.Animations.push(anim);
-      console.log(this.Animations)
+
+    CreateAnimation() {
+
+        const anim = new Animation({Activators: [], EventActions: []});
+        this.Animations.push(anim);
+        console.log(this.Animations)
     }
-    AddActivator(anim){
-        const act = new EventActivator( {Event:1, Selector:[]});
+
+    AddActivator(anim) {
+        const act = new EventActivator({Event: 1, Selector: []});
         anim.Activators.push(act);
-      console.log(anim)
+        console.log(anim)
     }
-    AddEventAction(anim){
-        const act = new EventAction( {Event:0, Selector:[], Value:[0, 1]});
+
+    AddEventAction(anim) {
+        const act = new EventAction({Event: 0, Selector: [], Value: [0, 1]});
         anim.EventActions.push(act);
-      console.log(anim)
+        console.log(anim)
     }
-    RemoveAnimation(a){        
+
+    RemoveAnimation(a) {
         this.Animations = this.Animations.filter(x => x !== a);
     }
-    
+
     Request(request, data) {
         switch (request) {
             case "add":
@@ -667,10 +731,10 @@ class TestCore {
                 return this.CreateAnimation();
             case "destroyAnim":
                 return this.RemoveAnimation(data);
-            case "addActivator":                    
-                return this.AddActivator(data); 
+            case "addActivator":
+                return this.AddActivator(data);
             case "addEventAction":
-                return this.AddEventAction(data);                
+                return this.AddEventAction(data);
             default:
                 throw new Error();
 
@@ -684,28 +748,30 @@ class TestCore {
             trg: this.Triggers.map(x => x.ObjectsInside.map(y => y.Id))
         };
     }
-    
-    Calculate(){
+
+    Calculate() {
         const correct = this.CorrectState.trg;
-        const nowState = this.GetState().trg; 
+        const nowState = this.GetState().trg;
         let mass = 0;
         let now = 0;
         for (const trg of correct)
             mass += trg.length;
         for (let i = 0; i < correct.length; i++) {
-            for (const num of nowState[i]){
+            for (const num of nowState[i]) {
                 now += correct[i].includes(num);
             }
-        }                        
-        return now/mass;      
+        }
+        return now / mass;
     }
-    Destroy(){
+
+    Destroy() {
         PIXI.Loader.shared.reset();
         this.Display.stop()
         this.Display.renderer.destroy();
         this.Destroyed = true;
-        
-            }
+
+    }
+
     Save() {
         try {
             const saved = {
@@ -723,21 +789,21 @@ class TestCore {
                 const r = {Id: res.Id, Loaded: null, Name: res.Name, Url: res.Url}
                 r.__proto__ = Resource.prototype;
                 saved.Resources.push(r)
-            } 
+            }
             for (const anim of this.Animations) {
-                
-                const r = {Activators:[],EventActions:[]}
+
+                const r = {Activators: [], EventActions: []}
                 for (const a of anim.Activators) {
-                    const rx = {Event:a.Event,Selector:a.Selector};
+                    const rx = {Event: a.Event, Selector: a.Selector};
                     r.Activators.push(rx);
                 }
                 for (const a of anim.EventActions) {
                     const rx = {
-                        Event : a.Event,
-                        Selector : a.Selector.filter(function(x) {
+                        Event: a.Event,
+                        Selector: a.Selector.filter(function (x) {
                             return x !== "";
                         }),
-                        Value :a.Value                    
+                        Value: a.Value
                     };
                     r.EventActions.push(rx);
                 }

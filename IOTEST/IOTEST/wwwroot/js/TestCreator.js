@@ -28,7 +28,7 @@
 
         },
         TestLoad: function (test) {
-            const canvas = document.getElementById("TestCanvas");
+            const canvas = document.getElementsByClassName("TestScreen")[0];
             const parent = document.getElementById("TestMain");
             console.log(test)
             this.Core = new TestCore(canvas, parent, test, false);
