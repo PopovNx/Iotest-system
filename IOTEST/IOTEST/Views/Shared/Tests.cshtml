@@ -3,7 +3,6 @@
 
 @section ScriptsAfter
 {
-    <script src="js/TestCore.js" asp-append-version="true"></script>
     <script src="js/Tests.js" asp-append-version="true" type="module"></script>
 }
 
@@ -257,7 +256,7 @@
 <hr class="m-0"/>
 <div>
     <span v-if="ShowMode==0" class="d-flex justify-content-evenly">
-        <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">Ресурсы</a>
+        <a class="m-3 btn btn-outline-light" v-on:click="location.href = '/resources'">Ресурсы</a>
         <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">{{Lang.TestsCreateATest}}</a>
     </span>
     <span v-if="ShowMode==1">
