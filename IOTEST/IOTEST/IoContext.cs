@@ -15,6 +15,7 @@ namespace IOTEST
         public DbSet<Test> Tests { get; set; }
         public DbSet<LevelResult> LevelResults { get; set; }
         public DbSet<Group> Groups { get; set; }
+        public DbSet<Resource> Resources { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
