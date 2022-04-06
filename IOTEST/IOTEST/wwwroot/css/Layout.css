@@ -50,6 +50,9 @@ body, html {
 .fb90{
     flex-basis: 90%;
 }
+.fb100{
+    flex-basis: 100%;
+}
 input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
 }
@@ -70,4 +73,7 @@ input::-webkit-inner-spin-button {
 
 input[type=number] {
     -moz-appearance: textfield;
+}
+.disabledTrashBtn{
+    filter: opacity(0.3);
 }

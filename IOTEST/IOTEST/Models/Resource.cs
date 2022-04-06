@@ -16,6 +16,7 @@ namespace IOTEST
             public User Owner{ get; set; }
             public string FileName { get; set; }
             public string Name { get; set; }
+            public bool Public { get; set; }
         }
     }
 }

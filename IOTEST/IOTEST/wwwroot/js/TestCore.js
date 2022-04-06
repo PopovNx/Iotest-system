@@ -134,10 +134,10 @@ class NewObject {
     Visible;
 
     constructor(res, text) {
-        this.X = 100;
-        this.Y = 100;
-        this.ScaleX = 0.1;
-        this.ScaleY = 0.1;
+        this.X = 400;
+        this.Y = 400;
+        this.ScaleX = 0.2;
+        this.ScaleY = 0.2;
         this.Rotation = 0;
         this.Draggable = true;
         this.ButtonMode = true;
@@ -472,7 +472,6 @@ class Animation {
                 ic++;
                 bool = true;
             }
-
         if (al === ic && bool) this.Activate(objects, res);
     }
 }
@@ -480,25 +479,21 @@ class Animation {
 class TestCore {
     Canvas;
     TestParent;
-
     Display;
     DisplayContainer;
-
     Resources;
     Name;
-
     DraggableObjects;
     Triggers;
     Animations;
     Id;
-
     CorrectState;
-
     Description;
     LastWidth;
-
-    constructor(canvas, testParent, test, optimiseLoad) {
-
+    Loader;
+    EditMode;
+    constructor(canvas, testParent, test, optimiseLoad, editMode) {
+        this.EditMode = editMode;
         this.Id = test.Id;
         this.Resources = test.Resources;
         this.Name = test.Name;
@@ -515,26 +510,24 @@ class TestCore {
             resolution: 1,
         })
         this.TestParent = testParent;
-
         this.DisplayContainer = new PIXI.Container();
         this.Display.stage.addChild(this.DisplayContainer);
-        const loader = PIXI.Loader.shared;
-
-
+        this.Loader = new PIXI.Loader("", 10);
         for (const e of this.Resources) {
             if (optimiseLoad) {
                 if (this.DraggableObjects.some(x => x.ResourceId === e.Id)) {
-                    loader.add(e.Url);
+                    if(!this.Loader.resources[e.Url])
+                        this.Loader.add(e.Url);
                 } else {
                     e.Useless = true;
                 }
             } else {
-                loader.add(e.Url);
+                if(!this.Loader.resources[e.Url])
+                    this.Loader.add(e.Url);
             }
 
         }
-
-        loader.load((loader, res) => {
+        this.Loader.load((loader, res) => {
             for (const e of this.Resources) {
                 if (e.Useless) continue;
                 e.Loaded = res[e.Url].texture;
@@ -578,7 +571,6 @@ class TestCore {
         this.Display.ticker.add(() => this.Worker());
 
     }
-
     Worker() {
         for (let i = 0; i < this.Triggers.length; i++) {
             const e = this.Triggers[i];
@@ -604,11 +596,11 @@ class TestCore {
 
     AddElement(data) {
         let maxId = 0;
-        for (const t of this.DraggableObjects)
+        for (const t of this.DraggableObjects) {
             if (maxId < t.Id) {
                 maxId = t.Id;
             }
-
+        }
         data.Id = maxId + 1;
         const nob = new DraggableObject(data.Resource, data)
         this.DraggableObjects.push(nob);
@@ -616,21 +608,18 @@ class TestCore {
     }
 
     AddResource(data) {
-        const loader = PIXI.Loader.shared;
-        data.forEach((e) => loader.add(e.Url));
-        loader.load((loader, res) => {
-            for (const e of data) {
-                e.Loaded = res[e.Url].texture;
-                e.__proto__ = Resource.prototype;
-                this.Resources.push(e);
-            }
+        if (this.Resources.some(x=>x.Url ===data.Url)) return;
+        this.Resources.push(data);
+        if (this.Loader.resources[data.Url]) return;
+        this.Loader.add(data.Url);
+        this.Loader.load((loader, res) => {
+            data.Loaded = res[data.Url].texture;
+            data.__proto__ = Resource.prototype;
         });
     }
-
     RemoveObject(obj) {
         this.DisplayContainer.removeChild(obj.Sprite);
         this.DraggableObjects = this.DraggableObjects.filter(x => x !== obj);
-
     }
 
     AddTrigger() {
@@ -687,7 +676,6 @@ class TestCore {
     }
 
     CreateAnimation() {
-
         const anim = new Animation({Activators: [], EventActions: []});
         this.Animations.push(anim);
         console.log(this.Animations)
@@ -708,7 +696,9 @@ class TestCore {
     RemoveAnimation(a) {
         this.Animations = this.Animations.filter(x => x !== a);
     }
-
+    RemoveResource(a){
+        this.Resources = this.Resources.filter(x => x !== a);
+    }
     Request(request, data) {
         switch (request) {
             case "add":
@@ -735,6 +725,8 @@ class TestCore {
                 return this.AddActivator(data);
             case "addEventAction":
                 return this.AddEventAction(data);
+            case "removeRes":
+                return this.RemoveResource(data);
             default:
                 throw new Error();
 
@@ -765,7 +757,7 @@ class TestCore {
     }
 
     Destroy() {
-        PIXI.Loader.shared.reset();
+        this.Loader.destroy();
         this.Display.stop()
         this.Display.renderer.destroy();
         this.Destroyed = true;

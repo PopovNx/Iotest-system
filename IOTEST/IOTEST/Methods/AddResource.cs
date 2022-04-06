@@ -27,7 +27,8 @@ namespace IOTEST.Methods
                 Created = DateTime.Now,
                 Name = context.Request.Form["Name"].ToString(),
                 Owner = await db.Users.FirstOrDefaultAsync(x => x.Id == control.UserData.Id),
-                FileName = nName
+                FileName = nName,
+                Public = false
             };
             await db.Resources.AddAsync(rs);
             await db.SaveChangesAsync();

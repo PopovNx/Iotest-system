@@ -16,18 +16,19 @@ namespace IOTEST.Methods
     {
         public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
         {
-            await Task.Yield();
             if (!control.IsOk) return "error";
-            var data = (from f in Directory.GetFiles("wwwroot/TestItems/", "*.*", SearchOption.AllDirectories)
-                select f.Split("/").Last()
-                into s
-                select s.Split("\\")
-                into ss
-                let url = $"TestItems/{string.Join("/", ss)}"
-                let name = $"{string.Join(".", ss.Skip(1).SkipLast(1))}" + $".{ss.Last().Split(".").First()}"
-                select new TestX.Resource(name, url)).ToList();
-
-            return JsonConvert.SerializeObject(data);
+            const string path = "/TestItems/Prefabs/UserImages/";
+            var me = await db.Users.FirstOrDefaultAsync(x => x.Id == control.UserData.Id);
+            var publicRes =await db.Resources.Where(x => x.Public).ToListAsync();
+            var myRes = await db.Resources.Where(x => x.Owner==me).ToListAsync();
+            var resX = new List<(bool, TestX.Resource)>();
+            foreach (var f in myRes.Union(publicRes))
+            {
+                var dt = ( f.Public, new TestX.Resource(f.Name, $"{path}{f.FileName}"));
+                resX.Add(dt);
+            }
+            
+            return JsonConvert.SerializeObject(resX);
         }
     }
 }
