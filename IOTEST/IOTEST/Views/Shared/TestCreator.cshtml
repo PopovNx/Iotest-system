@@ -593,7 +593,7 @@ const TestId = "@Model.Id";
 </div>
 <div class="fb20" v-if="Core">
     <div style="overflow-x: hidden; overflow-y: auto;" v-bind:style="{'height': MaxHeightUCanva}" class="d-flex flex-column  bg-dark">
-        <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource">
+        <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource" v-on:mouseover="ObjectMouseover(obj)" v-on:mouseout="ObjectMouseover({})">
             <div class="p-1">
                 <div class="">
                     <h6 class="text-light text-center">

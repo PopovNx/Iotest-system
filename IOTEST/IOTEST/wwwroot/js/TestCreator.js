@@ -74,6 +74,9 @@
         EditObject(e) {
             this.UnselectObject(this.EditObj);
             this.EditObj = e;
+            for (const objElement of Core.Request('getObjects')) {
+                objElement.Selected = false;
+            }
             this.EditObj.Selected = true;
             this.EditTextData = e.GetText();
             this.MenuMode = 30;
@@ -84,6 +87,14 @@
                 this.EditObj.Selected = false;
             this.EditObj = null
 
+        },
+        ObjectMouseover(obj){
+            if(!this.EditObj){
+                for (const objElement of Core.Request('getObjects')) {
+                    objElement.Selected = false;
+                }
+                obj.Selected = true;
+            }
         },
         AddObjectMenu() {
             this.nObj = new NewObject();

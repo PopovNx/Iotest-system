@@ -516,7 +516,7 @@ class TestCore {
     Loader;
     EditMode;
     SelectorGraph;
-
+    SelectorContainer;
     constructor(canvas, testParent, test, optimiseLoad, editMode) {
         this.EditMode = editMode;
         this.Id = test.Id;
@@ -529,12 +529,15 @@ class TestCore {
         this.CorrectState = test.CorrectState
         this.Description = test.Description;
         this.SelectorGraph = new PIXI.Graphics();
+        this.SelectorContainer = new PIXI.Container();
+        this.SelectorContainer.addChild( this.SelectorGraph)
         this.Display = new PIXI.Application({
             view: this.Canvas,
             backgroundAlpha: 0,
             antialias: true,
             resolution: 1,
         })
+
         this.TestParent = testParent;
         this.DisplayContainer = new PIXI.Container();
         this.Display.stage.addChild(this.DisplayContainer);
@@ -616,28 +619,30 @@ class TestCore {
                     selectedObj = e;
                     break;
                 }
-        const containsGraph = this.DisplayContainer.children.includes(this.SelectorGraph);
+        const containsGraph = this.DisplayContainer.children.includes(this.SelectorContainer);
+        
         if (selectedObj) {
             if (!containsGraph) {
-                this.DisplayContainer.addChild(this.SelectorGraph)
+                this.DisplayContainer.addChild(this.SelectorContainer)
             }
             const vD = selectedObj.Sprite;
             const path = [
-                vD.x - (vD.texture.width * vD.scale.x) / 2, vD.y - (vD.texture.height * vD.scale.y) / 2,
-                vD.x - (vD.texture.width * vD.scale.x) / 2, vD.y + (vD.texture.height * vD.scale.y) / 2,
-                vD.x + (vD.texture.width * vD.scale.x) / 2, vD.y + (vD.texture.height * vD.scale.y) / 2,
-                vD.x + (vD.texture.width * vD.scale.x) / 2, vD.y - (vD.texture.height * vD.scale.y) / 2,
+                - (vD.texture.width * vD.scale.x) / 2, - (vD.texture.height * vD.scale.y) / 2,
+                - (vD.texture.width * vD.scale.x) / 2, + (vD.texture.height * vD.scale.y) / 2,
+                + (vD.texture.width * vD.scale.x) / 2, + (vD.texture.height * vD.scale.y) / 2,
+                + (vD.texture.width * vD.scale.x) / 2, - (vD.texture.height * vD.scale.y) / 2,
             ];
+            this.SelectorContainer.position.x = vD.x;
+            this.SelectorContainer.position.y = vD.y;
+            this.SelectorContainer.rotation= vD.rotation;
             this.SelectorGraph.clear();
-            this.SelectorGraph.lineStyle(0);
             this.SelectorGraph.lineStyle(4, 0xA3B9DB, 1);
             this.SelectorGraph.drawPolygon(path);
             this.SelectorGraph.endFill();
-       
 
         } else {
             if (containsGraph) {
-                this.DisplayContainer.removeChild(this.SelectorGraph)
+                this.DisplayContainer.removeChild(this.SelectorContainer)
             }
         }
     }
@@ -648,6 +653,7 @@ class TestCore {
         for (const e of this.Animations) {
             e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
+        if(this.EditMode)
         this.SelectorWorker();     
 
     }
