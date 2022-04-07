@@ -23,7 +23,7 @@ namespace IOTEST
             services.AddControllers();
             var connection = Configuration.GetConnectionString("DefaultConnection");
             Debug.WriteLine(connection);
-            services.AddDbContext<IoContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<IoContext>(options => options.UseSqlite(connection));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

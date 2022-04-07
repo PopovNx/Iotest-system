@@ -181,7 +181,11 @@
             const reader = new FileReader();
             reader.onload = (e) => this.imgBase64 = e.target.result
             reader.readAsDataURL(e);
+        },
+        MenuMode(e){
+            console.log(e);
         }
+        
     },
     computed: {
         HeaderBoxOne: function () {

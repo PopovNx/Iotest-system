@@ -171,7 +171,7 @@ class DraggableObject {
     Type;
     Text;
     Triggerable;
-
+    
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -180,7 +180,7 @@ class DraggableObject {
             this.Sprite = new PIXI.Sprite(this.Text.texture);
             this.Resource = -1;
         } else {
-            this.Sprite = new PIXI.Sprite();
+            this.Sprite = new PIXI.Sprite(null);
             this.SetResource(resource)
             this.Text = null;
         }
@@ -211,6 +211,9 @@ class DraggableObject {
             .on('pointermove', () => this.onDragMove())
             .on('pointerover', () => this.onPointerOver())
             .on('pointerout', () => this.onPointerOut());
+        
+        
+        
     }
 
     onPointerOver() {
@@ -269,6 +272,9 @@ class DraggableObject {
         this.Sprite.rotation = Math.PI / 180 * this.Rotation;
         if (this.RotationVal > 360) this.RotationVal -= 360;
         if (this.RotationVal < 0) this.RotationVal += 360;
+    }
+    set Blur(e) {
+        
     }
 
     AddRotation(rotation) {

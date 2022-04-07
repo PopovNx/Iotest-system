@@ -1,6 +1,9 @@
 ﻿@model IoContext.User
 @{ ViewData["Title"] = "Tests"; }
-
+@section ScriptsBefore
+{
+    <script src="js/TestCore.js" asp-append-version="true"></script>
+}
 @section ScriptsAfter
 {
     <script src="js/Tests.js" asp-append-version="true" type="module"></script>
@@ -195,7 +198,8 @@
                                                 </div>
                                                 <div class="">
                                                     <div class="col-12">
-                                                        <h6>{{Lang.TestResult}}: 
+                                                        <h6>
+                                                            {{Lang.TestResult}}:
                                                             <span v-if="i.Item2!=='Не завершено'">
                                                                 {{i.Item2}}
                                                             </span>

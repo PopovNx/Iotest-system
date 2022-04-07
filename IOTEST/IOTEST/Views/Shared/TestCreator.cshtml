@@ -75,7 +75,7 @@ const TestId = "@Model.Id";
     <div>
         <div v-bind:style="{'height': MaxHeightUCanva}" class="d-flex justify-content-center">
             <div v-if="AddResourceMode===0" class="d-flex flex-column fb100">
-                <div class="overflow-auto" v-if="Core.Resources.length>0">
+                <div class="overflow-auto flex-grow-1" v-if="Core.Resources.length>0">
                     <div v-for="r in Core.Resources">
                         <div class="d-flex flex-column">
                             <h5 class="text-light text-center">{{r.Name}}</h5>
@@ -93,10 +93,10 @@ const TestId = "@Model.Id";
                         <hr>
                     </div>
                 </div>
+                                    <div v-else class="flex-grow-1">
+                                        <h4 class="text-light text-center">{{Lang.TestsEmpty}}</h4>
+                                    </div>
                 <div>
-                    <div v-else>
-                        <h4 class="text-light text-center">{{Lang.TestsEmpty}}</h4>
-                    </div>
                     <div class="p-1 d-flex justify-content-center">
                         <a class="btn btn-outline-light fb70" v-on:click="AddResource(0)">Публичные</a>
                     </div>
@@ -109,34 +109,36 @@ const TestId = "@Model.Id";
                     </div>
                 </div>
             </div>
-            <div v-if="AddResourceMode===1&&(ResourcesAw.length)" class="fb100 d-flex flex-column">
-                <div class="overflow-auto">
-                     <div v-for="r in ResSelectorList">
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h5 class="text-light text-center">{{r.Name}}</h5>
-                                            <div class="d-flex justify-content-end">
-                                                <div class="fb25 align-self-center">
-                                                    <div class="d-flex justify-content-center" v-if="!Core.Resources.some(x=>x.Url ===r.Url)">
-                                                        <img src="~/Images/plus.png" asp-append-version="true" width="32" height="32" alt="" v-on:click="AddResourceToList(r)">
-                                                    </div>
-                                                    <div class="d-flex justify-content-center" v-else>
-                                                        <img src="~/Images/check-mark.png" asp-append-version="true" width="32" height="32" alt="">
-                                                    </div>
-                                                </div>
-                                                <div class="fb50">
-                                                    <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="#">
-                                                </div>
-                                                <div class="fb25 align-self-center">
-                                                    <div class="d-flex justify-content-center" v-if="!r.public&&0">
-                                                        <img src="~/Images/settings.png" asp-append-version="true" width="32" height="32" alt="" v-on:click="RemoveResource(r)">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr>
+            <div v-if="AddResourceMode===1" class="fb100 d-flex flex-column">
+                <div class="overflow-auto flex-grow-1" v-if="ResourcesAw.length">
+                    <div v-for="r in ResSelectorList">
+                        <div class="d-flex flex-column justify-content-center">
+                            <h5 class="text-light text-center">{{r.Name}}</h5>
+                            <div class="d-flex justify-content-end">
+                                <div class="fb25 align-self-center">
+                                    <div class="d-flex justify-content-center" v-if="!Core.Resources.some(x=>x.Url ===r.Url)">
+                                        <img src="~/Images/plus.png" asp-append-version="true" width="32" height="32" alt="" v-on:click="AddResourceToList(r)">
                                     </div>
+                                    <div class="d-flex justify-content-center" v-else>
+                                        <img src="~/Images/check-mark.png" asp-append-version="true" width="32" height="32" alt="">
+                                    </div>
+                                </div>
+                                <div class="fb50">
+                                    <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="#">
+                                </div>
+                                <div class="fb25 align-self-center">
+                                    <div class="d-flex justify-content-center" v-if="!r.public&&0">
+                                        <img src="~/Images/settings.png" asp-append-version="true" width="32" height="32" alt="" v-on:click="RemoveResource(r)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
                 </div>
-               
+                <div class="overflow-auto flex-grow-1" v-else>
+                     <h5 class="text-light text-center">Ресурси відсутні</h5>
+                </div>
                 <div>
                     <div class="d-flex justify-content-center my-2" v-if="ResDisMode&&!imgFileLoading">
                         <a class="btn btn-outline-light fb70" v-on:click="AddResourceMode=2">Добавить</a>
@@ -155,13 +157,13 @@ const TestId = "@Model.Id";
                             <input v-model="imgFileLabel" type="text" v-bind:class="{'is-invalid':!NewResNameCorrect}" class="fb70 form-control text-center bg-dark text-light border-1 border-light"/>
                         </div>
                         <label class="fb25" for="CCfile">
-                            <img class="img-fluid p-3"  src="" v-bind:src="imgBase64?imgBase64:'/Images/FileAddPlus.png'" alt="#">
-                            <input id="CCfile" ref='picInp' v-on:change="LoadImg" type="file" class="d-none" accept=".png, .jpg, .jpeg" >
+                            <img class="img-fluid p-3" src="" v-bind:src="imgBase64?imgBase64:'/Images/FileAddPlus.png'" alt="#">
+                            <input id="CCfile" ref='picInp' v-on:change="LoadImg" type="file" class="d-none" accept=".png, .jpg, .jpeg">
                         </label>
-                                            <div class="d-flex justify-content-center my-2" v-if="NewResNameCorrect">
-                                                <a class="btn btn-outline-light fb70" v-on:click="CompleteUpload(1)">Добавить</a>
-                                            </div>
-                                            
+                        <div class="d-flex justify-content-center my-2" v-if="NewResNameCorrect">
+                            <a class="btn btn-outline-light fb70" v-on:click="CompleteUpload(1)">Добавить</a>
+                        </div>
+
                     </div>
                 </div>
                 <div>
@@ -173,8 +175,6 @@ const TestId = "@Model.Id";
 
 
         </div>
-
-
     </div>
 </div>
 <div v-if="MenuMode == 2">
@@ -198,15 +198,15 @@ const TestId = "@Model.Id";
 
     </div>
 </div>
-<div v-if="MenuMode == 20" >
-    <div class="d-flex flex-column"  v-bind:style="{'height': MaxHeightUCanva}">
+<div v-if="MenuMode == 20">
+    <div class="d-flex flex-column" v-bind:style="{'height': MaxHeightUCanva}">
         <div v-if="Core.Resources.length>0" class="overflow-auto">
-            <div class="d-flex flex-column" >
+            <div class="d-flex flex-column">
                 <div v-for="r in Core.Resources" v-on:click="nObj.Resource = r">
                     <div class="d-flex flex-column p-1" v-bind:class="{'bg-success':nObj.Resource==r}">
-                           <h6 class="text-light text-center">{{r.Name}}</h6>
-                           
-                      <div class="d-flex justify-content-center">
+                        <h6 class="text-light text-center">{{r.Name}}</h6>
+
+                        <div class="d-flex justify-content-center">
                             <img style="width: 0" class="img-fluid bg-light fb70" src="" v-bind:src="r.Url" alt="">
                         </div>
                     </div>
@@ -219,17 +219,16 @@ const TestId = "@Model.Id";
                 <h6 class="text-light text-center">{{Lang.TestRecoursesNotFound}}</h6>
             </div>
         </div>
-         <div class="p-1">
-                    <div class="d-flex justify-content-center">
-                        <a class="btn btn-outline-light fb70" v-if="nObj.Resource" v-on:click="AddElement">{{Lang.TestAdd}}</a>
-                    </div>
-                <hr class="my-1">
-                  <div class="d-flex justify-content-center">
-                                     <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
-                            </div>
-    </div>
-   
- 
+        <div class="p-1">
+            <div class="d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-if="nObj.Resource" v-on:click="AddElement">{{Lang.TestAdd}}</a>
+            </div>
+            <hr class="my-1">
+            <div class="d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
+            </div>
+        </div>
+
 
     </div>
 </div>
