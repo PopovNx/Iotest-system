@@ -40,7 +40,7 @@
             {
                 lang = user.Lang;
             }
-            else if(Model.Item1 is IoContext.User user1)
+            else if (Model.Item1 is IoContext.User user1)
             {
                 lang = user1.Lang;
             }
@@ -51,11 +51,12 @@
     @await RenderSectionAsync("ScriptsBefore", false)
 </head>
 <body>
-<div id="Background" class="BackD"></div>
-<div id="app" v-cloak>
-    @RenderBody()
 
+<div id="Background" class="BackD"></div>
+<div id="app" v-cloak class="d-flex flex-column vh-100">
+    @RenderBody()
 </div>
+
 @await RenderSectionAsync("ScriptsAfter", false)
 </body>
 </html>

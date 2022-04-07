@@ -174,6 +174,7 @@ class DraggableObject {
     blurFilter;
     alphaFilter;
     Selected;
+    RigthClicked;
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -207,12 +208,15 @@ class DraggableObject {
         this.MouseDown = false;
         this.Clicked = false;
         this.Sprite
+            .on('rightdown', (e) => this.onDragEnd())
+            .on('rightclick', (e) => this.onRightClick(e))
             .on('pointerdown', (e) => this.onDragStart(e))
             .on('pointerup', () => this.onDragEnd())
             .on('pointerupoutside', () => this.onDragEnd())
             .on('pointermove', () => this.onDragMove())
             .on('pointerover', () => this.onPointerOver())
             .on('pointerout', () => this.onPointerOut());
+
         this.blurFilter = new PIXI.filters.BlurFilter(object.Blur || 0, 4);
         this.alphaFilter = new PIXI.filters.AlphaFilter(object.Alpha || 1);
         this.Sprite.filters = [this.blurFilter, this.alphaFilter];
@@ -226,7 +230,9 @@ class DraggableObject {
     onPointerOut() {
         this.MouseOnThis = false;
     }
-
+    onRightClick(e){
+        this.RigthClicked = true;
+    }
     onDragStart(event) {
         this.MouseDown = true;
         if (!this.CanMove) return;
@@ -517,6 +523,7 @@ class TestCore {
     EditMode;
     SelectorGraph;
     SelectorContainer;
+    OpenEditFunction;
     constructor(canvas, testParent, test, optimiseLoad, editMode) {
         this.EditMode = editMode;
         this.Id = test.Id;
@@ -540,6 +547,8 @@ class TestCore {
 
         this.TestParent = testParent;
         this.DisplayContainer = new PIXI.Container();
+
+        
         this.Display.stage.addChild(this.DisplayContainer);
         this.Loader = new PIXI.Loader("", 10);
         for (const e of this.Resources) {
@@ -570,7 +579,7 @@ class TestCore {
         }
         window.addEventListener('resize', resizer);
         setInterval(resizer, 100);
-        this.resize(this);
+        this.resize(this);       
     }
 
     texturesLoaded() {
@@ -653,8 +662,16 @@ class TestCore {
         for (const e of this.Animations) {
             e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
-        if(this.EditMode)
-        this.SelectorWorker();     
+        if(this.EditMode){
+            this.SelectorWorker();
+            for (const a of this.DraggableObjects) {
+                if(a.RigthClicked){
+                    a.RigthClicked = false;
+                    this.OpenEditFunction(a);
+                }
+            }
+        }
+       
 
     }
 

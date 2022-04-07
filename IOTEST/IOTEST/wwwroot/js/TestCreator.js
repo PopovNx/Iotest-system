@@ -35,6 +35,7 @@
             console.log(test)
             this.Core = new TestCore(canvas, parent, test, false, true);
             window.Core = this.Core;
+            this.Core.OpenEditFunction = this.EditObject;
         },
         AddElement: function () {
 
