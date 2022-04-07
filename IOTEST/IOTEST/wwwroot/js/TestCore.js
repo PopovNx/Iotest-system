@@ -172,8 +172,8 @@ class DraggableObject {
     Text;
     Triggerable;
     blurFilter;
-    aplhaFilter;
-
+    alphaFilter;
+    Selected;
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -600,6 +600,12 @@ class TestCore {
     SelectorWorker(){
         let selectedObj = null;
         for (const e of this.DraggableObjects)
+            if (e.Selected) {
+                selectedObj = e;
+                break;
+            }
+        if (!selectedObj)
+        for (const e of this.DraggableObjects)
             if (e.Dragging) {
                 selectedObj = e;
                 break;
@@ -617,18 +623,17 @@ class TestCore {
             }
             const vD = selectedObj.Sprite;
             const path = [
-                vD.x - (vD.texture.height * vD.scale.x) / 2 + vD.scale.x / 2 * 100, vD.y - (vD.texture.width * vD.scale.y) / 2 - vD.scale.x / 2 * 100,
-                vD.x - (vD.texture.height * vD.scale.x) / 2 + vD.scale.x / 2 * 100, vD.y + (vD.texture.width * vD.scale.y) / 2 + vD.scale.x / 2 * 100,
-                vD.x + (vD.texture.height * vD.scale.x) / 2 - vD.scale.x / 2 * 100, vD.y + (vD.texture.width * vD.scale.y) / 2 + vD.scale.x / 2 * 100,
-                vD.x + (vD.texture.height * vD.scale.x) / 2 - vD.scale.x / 2 * 100, vD.y - (vD.texture.width * vD.scale.y) / 2 - vD.scale.x / 2 * 100,
+                vD.x - (vD.texture.width * vD.scale.x) / 2, vD.y - (vD.texture.height * vD.scale.y) / 2,
+                vD.x - (vD.texture.width * vD.scale.x) / 2, vD.y + (vD.texture.height * vD.scale.y) / 2,
+                vD.x + (vD.texture.width * vD.scale.x) / 2, vD.y + (vD.texture.height * vD.scale.y) / 2,
+                vD.x + (vD.texture.width * vD.scale.x) / 2, vD.y - (vD.texture.height * vD.scale.y) / 2,
             ];
             this.SelectorGraph.clear();
             this.SelectorGraph.lineStyle(0);
             this.SelectorGraph.lineStyle(4, 0xA3B9DB, 1);
             this.SelectorGraph.drawPolygon(path);
             this.SelectorGraph.endFill();
-            console.log(vD);
-            console.log(path);
+       
 
         } else {
             if (containsGraph) {

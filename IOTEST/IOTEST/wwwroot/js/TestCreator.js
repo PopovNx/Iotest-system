@@ -15,10 +15,10 @@
 
         EditAnimData: null,
         ResDisMode: 0,
-        imgFile:null,
-        imgBase64:null,
-        imgFileLabel:"",
-        imgFileLoading:0,
+        imgFile: null,
+        imgBase64: null,
+        imgFileLabel: "",
+        imgFileLoading: 0,
     },
     methods: {
         Init: function () {
@@ -40,7 +40,7 @@
 
             this.Core.Request("add", this.nObj);
         },
-        GetAllResources(){
+        GetAllResources() {
             const Data = new FormData();
             Data.append('method', 'GetAllResources');
             axios.post('/method', Data).then(r => {
@@ -57,24 +57,33 @@
             this.AddResourceMode = 1;
             this.GetAllResources();
         },
-        AddResourceToList(r) {            
+        AddResourceToList(r) {
             this.Core.Request("resAdd", r);
         },
-        AddResourceToListBack(){
+        AddResourceToListBack() {
             this.AddResourceMode = 0;
             this.ResourcesAw = [];
         },
         DestroyObject(e) {
             this.Core.Request("removeObj", e);
-            if(this.EditObj ===e){
+            if (this.EditObj === e) {
                 this.MenuMode = 0;
                 this.EditObj = null;
             }
         },
         EditObject(e) {
+            this.UnselectObject(this.EditObj);
             this.EditObj = e;
+            this.EditObj.Selected = true;
             this.EditTextData = e.GetText();
             this.MenuMode = 30;
+        },
+        UnselectObject() {
+            this.MenuMode = 0;
+            if (this.EditObj)
+                this.EditObj.Selected = false;
+            this.EditObj = null
+
         },
         AddObjectMenu() {
             this.nObj = new NewObject();
@@ -142,8 +151,8 @@
         isResUsed(r) {
             return Core.Request('getObjects').some(x => x.Resource === r);
         },
-        RemoveResource(r){
-            if(this.isResUsed(r)) return;
+        RemoveResource(r) {
+            if (this.isResUsed(r)) return;
             this.Core.Request("removeRes", r);
             console.log(r)
         },
@@ -159,16 +168,16 @@
             const files = this.$refs.picInp.files;
             if (files.length !== 1) return;
             this.imgFile = files[0];
-            if(this.imgFile.size>2000000){
-                this.imgFile=null;
+            if (this.imgFile.size > 2000000) {
+                this.imgFile = null;
                 alert("Размер файла не может привышать 2 мегабайта");
                 return;
             }
             console.log(this.imgFile);
         },
         async CompleteUpload(e) {
-            if(e===1){
-                if(!this.NewResNameCorrect)return;
+            if (e === 1) {
+                if (!this.NewResNameCorrect) return;
                 const Data = new FormData();
                 Data.append('method', 'AddResource');
                 Data.append('Name', this.imgFileLabel);
@@ -185,7 +194,7 @@
     },
     watch: {
         imgFile: function (e) {
-            if(e===null) {
+            if (e === null) {
                 this.imgBase64 = null;
                 return;
             }
@@ -193,10 +202,10 @@
             reader.onload = (e) => this.imgBase64 = e.target.result
             reader.readAsDataURL(e);
         },
-        MenuMode(e){
+        MenuMode(e) {
             console.log(e);
         }
-        
+
     },
     computed: {
         HeaderBoxOne: function () {
@@ -227,14 +236,14 @@
                     return "error";
             }
         },
-        MaxHeightUCanva: function (){            
-            return this.Core.LastWidth/3*2+'px';
+        MaxHeightUCanva: function () {
+            return this.Core.LastWidth / 3 * 2 + 'px';
         },
-        ResSelectorList: function (){
-            return this.ResourcesAw.filter(x=>x.public^this.ResDisMode);
+        ResSelectorList: function () {
+            return this.ResourcesAw.filter(x => x.public ^ this.ResDisMode);
         },
-        NewResNameCorrect: function (){
-            return this.imgFileLabel.length>3&&this.imgFileLabel.length<12&&this.imgBase64;
+        NewResNameCorrect: function () {
+            return this.imgFileLabel.length > 3 && this.imgFileLabel.length < 12 && this.imgBase64;
         }
     },
     mounted() {
