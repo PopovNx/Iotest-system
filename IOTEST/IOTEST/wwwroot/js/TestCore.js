@@ -171,7 +171,9 @@ class DraggableObject {
     Type;
     Text;
     Triggerable;
-    
+    blurFilter;
+    aplhaFilter;
+
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -211,9 +213,10 @@ class DraggableObject {
             .on('pointermove', () => this.onDragMove())
             .on('pointerover', () => this.onPointerOver())
             .on('pointerout', () => this.onPointerOut());
-        
-        
-        
+        this.blurFilter = new PIXI.filters.BlurFilter(object.Blur || 0, 4);
+        this.alphaFilter = new PIXI.filters.AlphaFilter(object.Alpha || 1);
+        this.Sprite.filters = [this.blurFilter, this.alphaFilter];
+
     }
 
     onPointerOver() {
@@ -273,8 +276,22 @@ class DraggableObject {
         if (this.RotationVal > 360) this.RotationVal -= 360;
         if (this.RotationVal < 0) this.RotationVal += 360;
     }
+
     set Blur(e) {
-        
+        this.blurFilter.blur = e;
+    }
+
+    get Blur() {
+        return this.blurFilter.blur;
+    }
+
+    set Alpha(e) {
+        this.alphaFilter.alpha = e;
+    }
+
+    get Alpha() {
+        return this.alphaFilter.alpha;
+
     }
 
     AddRotation(rotation) {
@@ -498,6 +515,8 @@ class TestCore {
     LastWidth;
     Loader;
     EditMode;
+    SelectorGraph;
+
     constructor(canvas, testParent, test, optimiseLoad, editMode) {
         this.EditMode = editMode;
         this.Id = test.Id;
@@ -509,6 +528,7 @@ class TestCore {
         this.Canvas = canvas;
         this.CorrectState = test.CorrectState
         this.Description = test.Description;
+        this.SelectorGraph = new PIXI.Graphics();
         this.Display = new PIXI.Application({
             view: this.Canvas,
             backgroundAlpha: 0,
@@ -522,13 +542,13 @@ class TestCore {
         for (const e of this.Resources) {
             if (optimiseLoad) {
                 if (this.DraggableObjects.some(x => x.ResourceId === e.Id)) {
-                    if(!this.Loader.resources[e.Url])
+                    if (!this.Loader.resources[e.Url])
                         this.Loader.add(e.Url);
                 } else {
                     e.Useless = true;
                 }
             } else {
-                if(!this.Loader.resources[e.Url])
+                if (!this.Loader.resources[e.Url])
                     this.Loader.add(e.Url);
             }
 
@@ -577,15 +597,53 @@ class TestCore {
         this.Display.ticker.add(() => this.Worker());
 
     }
+    SelectorWorker(){
+        let selectedObj = null;
+        for (const e of this.DraggableObjects)
+            if (e.Dragging) {
+                selectedObj = e;
+                break;
+            }
+        if (!selectedObj)
+            for (const e of this.DraggableObjects)
+                if (e.MouseOnThis) {
+                    selectedObj = e;
+                    break;
+                }
+        const containsGraph = this.DisplayContainer.children.includes(this.SelectorGraph);
+        if (selectedObj) {
+            if (!containsGraph) {
+                this.DisplayContainer.addChild(this.SelectorGraph)
+            }
+            const vD = selectedObj.Sprite;
+            const path = [
+                vD.x - (vD.texture.height * vD.scale.x) / 2 + vD.scale.x / 2 * 100, vD.y - (vD.texture.width * vD.scale.y) / 2 - vD.scale.x / 2 * 100,
+                vD.x - (vD.texture.height * vD.scale.x) / 2 + vD.scale.x / 2 * 100, vD.y + (vD.texture.width * vD.scale.y) / 2 + vD.scale.x / 2 * 100,
+                vD.x + (vD.texture.height * vD.scale.x) / 2 - vD.scale.x / 2 * 100, vD.y + (vD.texture.width * vD.scale.y) / 2 + vD.scale.x / 2 * 100,
+                vD.x + (vD.texture.height * vD.scale.x) / 2 - vD.scale.x / 2 * 100, vD.y - (vD.texture.width * vD.scale.y) / 2 - vD.scale.x / 2 * 100,
+            ];
+            this.SelectorGraph.clear();
+            this.SelectorGraph.lineStyle(0);
+            this.SelectorGraph.lineStyle(4, 0xA3B9DB, 1);
+            this.SelectorGraph.drawPolygon(path);
+            this.SelectorGraph.endFill();
+            console.log(vD);
+            console.log(path);
+
+        } else {
+            if (containsGraph) {
+                this.DisplayContainer.removeChild(this.SelectorGraph)
+            }
+        }
+    }
     Worker() {
-        for (let i = 0; i < this.Triggers.length; i++) {
-            const e = this.Triggers[i];
+        for (const e of this.Triggers) {
             e.Work(this.DraggableObjects, this.Triggers);
         }
-        for (let i = 0; i < this.Animations.length; i++) {
-            const e = this.Animations[i];
+        for (const e of this.Animations) {
             e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
+        this.SelectorWorker();     
 
     }
 
@@ -614,7 +672,7 @@ class TestCore {
     }
 
     AddResource(data) {
-        if (this.Resources.some(x=>x.Url ===data.Url)) return;
+        if (this.Resources.some(x => x.Url === data.Url)) return;
         this.Resources.push(data);
         if (this.Loader.resources[data.Url]) return;
         this.Loader.add(data.Url);
@@ -623,6 +681,7 @@ class TestCore {
             data.__proto__ = Resource.prototype;
         });
     }
+
     RemoveObject(obj) {
         this.DisplayContainer.removeChild(obj.Sprite);
         this.DraggableObjects = this.DraggableObjects.filter(x => x !== obj);
@@ -702,9 +761,11 @@ class TestCore {
     RemoveAnimation(a) {
         this.Animations = this.Animations.filter(x => x !== a);
     }
-    RemoveResource(a){
+
+    RemoveResource(a) {
         this.Resources = this.Resources.filter(x => x !== a);
     }
+
     Request(request, data) {
         switch (request) {
             case "add":
@@ -815,6 +876,8 @@ class TestCore {
                     ResourceId: obj.Resource.Id, Id: obj.Id,
                     Visible: obj.Sprite.visible,
                     Triggerable: obj.Triggerable,
+                    Blur: obj.Blur,
+                    Alpha: obj.Alpha,
                     Text: obj.GetText()
                 }
                 r.__proto__ = DraggableObject.prototype;

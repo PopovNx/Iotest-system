@@ -38,6 +38,8 @@ namespace IOTEST.Models
             public bool Draggable { get; set; }
             public bool ButtonMode { get; set; }
             public int ResourceId { get; set; }
+            public float Blur { get; set; }
+            public float Alpha { get; set; }
             public int Id { get; set; }
             public bool Visible { get; set; }
             public dynamic Text { get; set; }
@@ -58,6 +60,8 @@ namespace IOTEST.Models
                 Draggable = draggable;
                 ButtonMode = btn;
                 Id = id;
+                Blur = 0;
+                Alpha = 1;
             }
         }
         [Serializable]

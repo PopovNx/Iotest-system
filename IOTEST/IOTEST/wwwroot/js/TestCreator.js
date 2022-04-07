@@ -40,19 +40,22 @@
 
             this.Core.Request("add", this.nObj);
         },
-        AddResource: function (mode) {
-            this.ResDisMode = mode;
-            this.AddResourceMode = 1;
+        GetAllResources(){
             const Data = new FormData();
             Data.append('method', 'GetAllResources');
             axios.post('/method', Data).then(r => {
                 this.ResourcesAw = [];
                 for (const rElement of r.data) {
                     rElement.Item2.__proto__ = Resource.prototype;
-                    rElement.Item2.public = rElement.Item1 
+                    rElement.Item2.public = rElement.Item1
                     this.ResourcesAw.push(rElement.Item2);
                 }
             });
+        },
+        AddResource: function (mode) {
+            this.ResDisMode = mode;
+            this.AddResourceMode = 1;
+            this.GetAllResources();
         },
         AddResourceToList(r) {            
             this.Core.Request("resAdd", r);
@@ -143,6 +146,14 @@
             if(this.isResUsed(r)) return;
             this.Core.Request("removeRes", r);
             console.log(r)
+        },
+        async ExcludeResource(r) {
+            const Data = new FormData();
+            Data.append('method', 'ExcludeResource');
+            Data.append('Resource', JSON.stringify(r));
+            console.log(await axios.post('/method', Data));
+            console.log(r)
+            this.GetAllResources();
         },
         LoadImg() {
             const files = this.$refs.picInp.files;

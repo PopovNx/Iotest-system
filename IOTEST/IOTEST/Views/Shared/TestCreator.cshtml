@@ -93,9 +93,9 @@ const TestId = "@Model.Id";
                         <hr>
                     </div>
                 </div>
-                                    <div v-else class="flex-grow-1">
-                                        <h4 class="text-light text-center">{{Lang.TestsEmpty}}</h4>
-                                    </div>
+                <div v-else class="flex-grow-1">
+                    <h4 class="text-light text-center">{{Lang.TestsEmpty}}</h4>
+                </div>
                 <div>
                     <div class="p-1 d-flex justify-content-center">
                         <a class="btn btn-outline-light fb70" v-on:click="AddResource(0)">Публичные</a>
@@ -127,8 +127,8 @@ const TestId = "@Model.Id";
                                     <img class="img-fluid bg-light" src="" v-bind:src="r.Url" alt="#">
                                 </div>
                                 <div class="fb25 align-self-center">
-                                    <div class="d-flex justify-content-center" v-if="!r.public&&0">
-                                        <img src="~/Images/settings.png" asp-append-version="true" width="32" height="32" alt="" v-on:click="RemoveResource(r)">
+                                    <div class="d-flex justify-content-center" v-if="!r.public">
+                                        <img src="~/Images/settings.png" asp-append-version="true" width="32" height="32" alt="" v-on:click="ExcludeResource(r)">
                                     </div>
                                 </div>
                             </div>
@@ -137,11 +137,11 @@ const TestId = "@Model.Id";
                     </div>
                 </div>
                 <div class="overflow-auto flex-grow-1" v-else>
-                     <h5 class="text-light text-center">Ресурси відсутні</h5>
+                    <h5 class="text-light text-center">Ресурси відсутні</h5>
                 </div>
                 <div>
                     <div class="d-flex justify-content-center my-2" v-if="ResDisMode&&!imgFileLoading">
-                        <a class="btn btn-outline-light fb70" v-on:click="AddResourceMode=2">Добавить</a>
+                        <a class="btn btn-outline-light fb70" v-on:click="AddResourceMode=2">Создать</a>
                     </div>
                     <div class="d-flex justify-content-center my-2">
                         <a class="btn btn-outline-light fb70" v-on:click="AddResourceToListBack()">Назад</a>
@@ -272,6 +272,12 @@ const TestId = "@Model.Id";
         <div>
             <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
+        <div id="BLUR_TUT">
+            <input v-model.number="EditObj.Blur" min="0" max="15" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+        </div>
+         <div id="ALPHa_TUT">
+                    <input v-model.number="EditObj.Alpha" min="0" max="1" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+                </div>
         <div class="d-flex justify-content-between">
             <div class="fb25 mx-1 d-flex">
                 <h5 class="text-light text-center align-self-end">{{Lang.TestRotation}}:</h5>
