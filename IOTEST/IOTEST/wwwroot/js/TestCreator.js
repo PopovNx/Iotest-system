@@ -36,15 +36,20 @@
             this.Core = new TestCore(canvas, parent, test, false, true);
             window.Core = this.Core;
             this.Core.OpenEditFunction = this.EditObject;
+            document.addEventListener('keyup',  (evt)=> {
+                if (evt.key  === "Escape") {
+                    this.UnselectObject();
+                }
+            });
         },
         AddElement: function () {
 
             this.Core.Request("add", this.nObj);
         },
-        GetAllResources() {
+        async GetAllResources() {
             const Data = new FormData();
             Data.append('method', 'GetAllResources');
-            axios.post('/method', Data).then(r => {
+            await axios.post('/method', Data).then(r => {
                 this.ResourcesAw = [];
                 for (const rElement of r.data) {
                     rElement.Item2.__proto__ = Resource.prototype;
@@ -53,10 +58,11 @@
                 }
             });
         },
-        AddResource: function (mode) {
+        AddResource: async function (mode) {
+            await this.GetAllResources();
             this.ResDisMode = mode;
             this.AddResourceMode = 1;
-            this.GetAllResources();
+            
         },
         AddResourceToList(r) {
             this.Core.Request("resAdd", r);

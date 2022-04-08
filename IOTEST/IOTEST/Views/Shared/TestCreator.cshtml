@@ -7,6 +7,7 @@
 {
     <script src="lib/Pixijs/pixi.js"></script>
     <script src="js/TestCore.js" asp-append-version="true"></script>
+    <link href="css/testCreator.css" rel="stylesheet"/>
 }
 
 @section ScriptsAfter
@@ -37,7 +38,7 @@ const TestKey = "@Model.Test.Key";
 const TestId = "@Model.Id";
 </script>
 <div id="Page" class="user-select-none container-fluid d-flex justify-content-center" v-cloak>
-<div class="fb90">
+<div class="fb90" v-cloak>
 <div class="DOB m-3" style="background-color:rgba(45, 51, 51, 0.50)" v-show="Core">
 <div class="d-flex flex-column">
 <div id="boxHeader" class="d-flex justify-content-between">
@@ -149,7 +150,7 @@ const TestId = "@Model.Id";
                 </div>
             </div>
             <div v-if="AddResourceMode===2" class="fb100 d-flex flex-column">
-                <div class="d-flex flex-column fb90">
+                <div class="d-flex flex-column fb90 overflow-auto">
                     <div class="d-flex flex-column">
                         <h5 v-if="!imgBase64" class="text-center text-light">Добавте изображение</h5>
                         <h5 v-if="imgBase64" class="text-center text-light">Название</h5>
@@ -172,8 +173,6 @@ const TestId = "@Model.Id";
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -232,122 +231,115 @@ const TestId = "@Model.Id";
 
     </div>
 </div>
-<div v-if="MenuMode == 30">
-    <div class="p-1 d-flex justify-content-center flex-column">
-        <div v-if="EditTextData">
+<div v-if="MenuMode == 30" v-bind:style="{'height': MaxHeightUCanva}" class="d-flex flex-column" >
+    <div class="p-1 flex-column overflow-auto">
+        <div class="d-flex justify-content-center flex-column">
+            <div v-if="EditTextData">
+                <div class="d-flex justify-content-around">
+                    <div class="fb70">
+                        <input v-model="EditTextData.text" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="text" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                    </div>
+                    <div class="fb20 d-flex">
+                        <input v-model="EditTextData.color" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="color" class="align-self-center form-control form-control-color bg-dark p-0"/>
+                    </div>
+                </div>
+                <hr class="mt-2">
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="fb20 mx-1">
+                    <h3 class="text-light text-center">X:</h3>
+                </div>
+                <div class="fb60 mx-1">
+                    <input v-model.number="EditObj.Sprite.x" min="0" step="10" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center">
+                <div class="fb20 mx-1">
+                    <h3 class="text-light text-center">Y:</h3>
+                </div>
+                <div class="fb60 mx-1">
+                    <input v-model.number="EditObj.Sprite.y" min="0" step="10" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="fb25 mx-1 d-flex">
+                    <h5 class="text-light text-center align-self-end">{{Lang.TestSize}}:</h5>
+                </div>
+                <div class="fb50 mx-1">
+                    <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div>
+                <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="fb25 mx-1 d-flex">
+                    <h5 class="text-light text-center align-self-end">{{Lang.TestRotation}}:</h5>
+                </div>
+                <div class="fb50 mx-1">
+                    <input v-model.number="EditObj.RotationVal" min="-1" max="361" step="1" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div class="">
+                <input v-model="EditObj.RotationVal" min="0" max="360" step="1" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+            </div>
+            <hr class="m-0">
             <div class="d-flex justify-content-around">
-                <div class="fb70">
-                    <input v-model="EditTextData.text" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="text" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                <div v-bind:title="Lang.TestVisibility" class="d-flex fb25">
+                    <input type="checkbox" v-model="EditObj.Sprite.visible" class="custom-control-input d-none" id="editObjVisible">
+                    <label class="custom-control-label d-flex" for="editObjVisible" draggable="false">
+                        <img v-if="EditObj.Sprite.visible" src="/Images/VisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
+                        <img v-else src="/Images/UnVisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
+                    </label>
                 </div>
-                <div class="fb20 d-flex">
-                    <input v-model="EditTextData.color" v-on:input="EditObj.SetText(EditTextData.text,EditTextData.color)" type="color" class="align-self-center form-control form-control-color bg-dark p-0"/>
+                <div v-bind:title="Lang.TestDraggable" class="d-flex fb25">
+                    <input type="checkbox" v-model="EditObj.CanMove" class="custom-control-input d-none" id="editObjMovable">
+                    <label class="custom-control-label  d-flex" for="editObjMovable">
+                        <img v-if="EditObj.CanMove" src="/Images/move.png" asp-append-version="true" alt="#" class="img-fluid" draggable="false">
+                        <img v-else src="/Images/dont-move.png" asp-append-version="true" alt="#" class="img-fluid">
+                    </label>
+                </div>
+                <div v-bind:title="Lang.TestPressed" class="d-flex fb25">
+                    <input type="checkbox" v-model="EditObj.Sprite.buttonMode" class="custom-control-input d-none" id="editObjBtnMode">
+                    <label class="custom-control-label  d-flex" for="editObjBtnMode">
+                        <img v-if="EditObj.Sprite.buttonMode" src="/Images/PressOn.png" asp-append-version="true" alt="#" class="img-fluid" draggable="false">
+                        <img v-else src="/Images/PressOff.png" asp-append-version="true" alt="#" class="img-fluid">
+                    </label>
                 </div>
             </div>
-            <hr class="mt-2">
-        </div>
-        <div class="d-flex justify-content-center">
-            <div class="fb20 mx-1">
-                <h3 class="text-light text-center">X:</h3>
-            </div>
-            <div class="fb60 mx-1">
-                <input v-model.number="EditObj.Sprite.x" min="0" step="10" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center">
-            <div class="fb20 mx-1">
-                <h3 class="text-light text-center">Y:</h3>
-            </div>
-            <div class="fb60 mx-1">
-                <input v-model.number="EditObj.Sprite.y" min="0" step="10" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-            </div>
-        </div>
-        <div class="d-flex justify-content-between">
-            <div class="fb25 mx-1 d-flex">
-                <h5 class="text-light text-center align-self-end">{{Lang.TestSize}}:</h5>
-            </div>
-            <div class="fb50 mx-1">
-                <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-            </div>
-        </div>
-        <div>
-            <input v-model.number="EditObj.Sprite.scale.x" v-on:input="EditObj.Sprite.scale.y = EditObj.Sprite.scale.x" min="0.01" max="3" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
-        </div>
-        <div id="BLUR_TUT">
-            <input v-model.number="EditObj.Blur" min="0" max="15" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
-        </div>
-         <div id="ALPHa_TUT">
-                    <input v-model.number="EditObj.Alpha" min="0" max="1" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+            <hr class="m-0">
+            <div class=" text-center">
+                <div v-bind:title="Lang.TestTriggerNiy" class="d-flex justify-content-around">
+                    <input type="checkbox" v-model="EditObj.Triggerable" class="custom-control-input d-none" id="editObjTrg">
+                    <label class="custom-control-label  d-flex fb25" for="editObjTrg" draggable="false">
+                        <img v-if="EditObj.Triggerable" src="/Images/lightning.png" asp-append-version="true" alt="#" class="img-fluid">
+                        <img v-else src="/Images/x.png" asp-append-version="true" alt="#" class="img-fluid">
+                    </label>
+                    <label for="editObjTrg" class="text-light fb70  h5 align-self-center m-0">{{Lang.TestTriggerNiy}}</label>
                 </div>
-        <div class="d-flex justify-content-between">
-            <div class="fb25 mx-1 d-flex">
-                <h5 class="text-light text-center align-self-end">{{Lang.TestRotation}}:</h5>
             </div>
-            <div class="fb50 mx-1">
-                <input v-model.number="EditObj.RotationVal" min="-1" max="361" step="1" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+            <hr class="m-0">
+            <div class="d-flex flex-column">
+                <div>
+                    <h5 class="text-light text-center">Блюр:</h5>
+                </div>
+                <div>
+                    <input v-model.number="EditObj.Blur" min="0" max="15" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+                </div>
             </div>
-        </div>
-        <div class="">
-            <input v-model="EditObj.RotationVal" min="0" max="360" step="1" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
-        </div>
-        <hr class="m-0">
-        <div class="d-flex justify-content-around">
-            <div v-bind:title="Lang.TestVisibility" class="d-flex fb25">
-                <input type="checkbox" v-model="EditObj.Sprite.visible" class="custom-control-input d-none" id="editObjVisible">
-                <label class="custom-control-label d-flex" for="editObjVisible" draggable="false">
-                    <img v-if="EditObj.Sprite.visible" src="/Images/VisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
-                    <img v-else src="/Images/UnVisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
-                </label>
-            </div>
-            <div v-bind:title="Lang.TestDraggable" class="d-flex fb25">
-                <input type="checkbox" v-model="EditObj.CanMove" class="custom-control-input d-none" id="editObjMovable">
-                <label class="custom-control-label  d-flex" for="editObjMovable">
-                    <img v-if="EditObj.CanMove" src="/Images/move.png" asp-append-version="true" alt="#" class="img-fluid" draggable="false">
-                    <img v-else src="/Images/dont-move.png" asp-append-version="true" alt="#" class="img-fluid">
-                </label>
-            </div>
-            <div v-bind:title="Lang.TestPressed" class="d-flex fb25">
-                <input type="checkbox" v-model="EditObj.Sprite.buttonMode" class="custom-control-input d-none" id="editObjBtnMode">
-                <label class="custom-control-label  d-flex" for="editObjBtnMode">
-                    <img v-if="EditObj.Sprite.buttonMode" src="/Images/PressOn.png" asp-append-version="true" alt="#" class="img-fluid" draggable="false">
-                    <img v-else src="/Images/PressOff.png" asp-append-version="true" alt="#" class="img-fluid">
-                </label>
-            </div>
-        </div>
-        <hr class="m-0">
-        <div class=" text-center">
-            <div v-bind:title="Lang.TestTriggerNiy" class="d-flex justify-content-around">
-                <input type="checkbox" v-model="EditObj.Triggerable" class="custom-control-input d-none" id="editObjTrg">
-                <label class="custom-control-label  d-flex fb25" for="editObjTrg" draggable="false">
-                    <img v-if="EditObj.Triggerable" src="/Images/lightning.png" asp-append-version="true" alt="#" class="img-fluid">
-                    <img v-else src="/Images/x.png" asp-append-version="true" alt="#" class="img-fluid">
-                </label>
-                <label for="editObjTrg" class="text-light fb70  h5 align-self-center m-0">{{Lang.TestTriggerNiy}}</label>
-            </div>
-        </div>
-        <hr class="m-0">
-        <div class=" text-center p-1">
-            <div class="d-flex justify-content-evenly">
-                <span v-on:click="MoveZObject(EditObj,0)">
-                    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                         viewBox="0 0 330 330" xml:space="preserve" style="fill: #567478">
-                        <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393
-                     	c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393
-                     	s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
-                    </svg>
-                </span>
-                <span v-on:click="MoveZObject(EditObj,1)">
-                    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                         viewBox="0 0 330 330" xml:space="preserve" style="fill: #567478">
-                        <path d="M325.606,229.393l-150.004-150C172.79,76.58,168.974,75,164.996,75c-3.979,0-7.794,1.581-10.607,4.394
-                                     	l-149.996,150c-5.858,5.858-5.858,15.355,0,21.213c5.857,5.857,15.355,5.858,21.213,0l139.39-139.393l139.397,139.393
-                                     	C307.322,253.536,311.161,255,315,255c3.839,0,7.678-1.464,10.607-4.394C331.464,244.748,331.464,235.251,325.606,229.393z"/>
-                    </svg>
-                </span>
-            </div>
+               <hr class="m-0">
+              <div class="d-flex flex-column" >
+                            <div>
+                                <h5 class="text-light text-center">Прозрачность:</h5>
+                            </div>
+                            <div>
+                               <input v-model.number="EditObj.Alpha" min="0" max="1" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+                                         </div>
+                          </div>
         </div>
     </div>
     <div class="p-2 d-flex justify-content-center">
-        <a class="btn btn-outline-light" v-on:click="UnselectObject">{{Lang.meGetBack}}</a>
+        <a class="btn btn-outline-light fb70" v-on:click="UnselectObject">{{Lang.meGetBack}}</a>
     </div>
 </div>
 <div v-if="MenuMode == 40">
@@ -595,13 +587,13 @@ const TestId = "@Model.Id";
     <div style="overflow-x: hidden; overflow-y: auto;" v-bind:style="{'height': MaxHeightUCanva}" class="d-flex flex-column  bg-dark">
         <div v-for="obj in Core.Request('getObjects')" v-if="obj.Resource" v-on:mouseover="ObjectMouseover(obj)" v-on:mouseout="ObjectMouseover({})">
             <div class="p-1">
-                <div class="">
+                <div class="py-2 SelectableSceneElement" v-bind:class="{'ElOpen': (obj==EditObj)}">
                     <h6 class="text-light text-center">
                         <span v-if="obj.Resource.Name">
                             {{obj.Resource.Name}}
                         </span>
                         <span v-else>
-                            {{obj.GetText().text}}
+                            {{obj.GetText().text.substr(0,16)}}
                         </span>
                         - {{obj.Id}}
                     </h6>
@@ -609,7 +601,32 @@ const TestId = "@Model.Id";
                         <div class="d-flex justify-content-between">
                             <div class="fb25 align-self-center">
                                 <div class="d-flex justify-content-center">
-                                    <img v-if="obj!=EditObj" src="~/Images/settings.png" asp-append-version="true" class="" width="32" height="32" alt="" v-on:click="EditObject(obj)">
+                                    <div v-if="obj!=EditObj">
+                                        <img src="~/Images/settings.png" asp-append-version="true" class="" width="32" height="32" alt="" v-on:click="EditObject(obj)">
+                                    </div>
+                                    <div v-if="obj==EditObj">
+                                        <div class=" text-center p-1">
+                                            <div class="d-flex flex-column-reverse">
+                                                <span v-on:click="MoveZObject(EditObj,0)">
+                                                    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                         viewBox="0 0 330 330" xml:space="preserve" style="fill: #567478">
+                                                        <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393
+                                                          	c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393
+                                                          	s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"/>
+                                                    </svg>
+                                                </span>
+                                                <span v-on:click="MoveZObject(EditObj,1)">
+                                                    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                                         viewBox="0 0 330 330" xml:space="preserve" style="fill: #567478">
+                                                        <path d="M325.606,229.393l-150.004-150C172.79,76.58,168.974,75,164.996,75c-3.979,0-7.794,1.581-10.607,4.394
+                                                                          	l-149.996,150c-5.858,5.858-5.858,15.355,0,21.213c5.857,5.857,15.355,5.858,21.213,0l139.39-139.393l139.397,139.393
+                                                                          	C307.322,253.536,311.161,255,315,255c3.839,0,7.678-1.464,10.607-4.394C331.464,244.748,331.464,235.251,325.606,229.393z"/>
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                             <div class="fb25 align-self-center">
@@ -642,7 +659,7 @@ const TestId = "@Model.Id";
                     </div>
                 </div>
             </div>
-            <hr class="m-0">
+
         </div>
     </div>
 </div>
