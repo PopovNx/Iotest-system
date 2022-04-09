@@ -231,7 +231,7 @@ const TestId = "@Model.Id";
 
     </div>
 </div>
-<div v-if="MenuMode == 30" v-bind:style="{'height': MaxHeightUCanva}" class="d-flex flex-column" >
+<div v-if="MenuMode == 30" v-bind:style="{'height': MaxHeightUCanva}" class="d-flex flex-column">
     <div class="p-1 flex-column overflow-auto">
         <div class="d-flex justify-content-center flex-column">
             <div v-if="EditTextData">
@@ -327,15 +327,15 @@ const TestId = "@Model.Id";
                     <input v-model.number="EditObj.Blur" min="0" max="15" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
                 </div>
             </div>
-               <hr class="m-0">
-              <div class="d-flex flex-column" >
-                            <div>
-                                <h5 class="text-light text-center">Прозрачность:</h5>
-                            </div>
-                            <div>
-                               <input v-model.number="EditObj.Alpha" min="0" max="1" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
-                                         </div>
-                          </div>
+            <hr class="m-0">
+            <div class="d-flex flex-column">
+                <div>
+                    <h5 class="text-light text-center">Прозрачность:</h5>
+                </div>
+                <div>
+                    <input v-model.number="EditObj.Alpha" min="0" max="1" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
         </div>
     </div>
     <div class="p-2 d-flex justify-content-center">
@@ -343,74 +343,75 @@ const TestId = "@Model.Id";
     </div>
 </div>
 <div v-if="MenuMode == 40">
-    <div class="p-1 row d-flex justify-content-center">
-        <div style="max-height: 20vh; overflow-x: hidden">
-            <div v-for="r in Core.Triggers">
-                <div class="p-1 row">
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyTrigger(r)">
+    <div class="p-1 flex-column d-flex" v-bind:style="{'height': MaxHeightUCanva}">
+        <div class="overflow-auto flex-grow-1">
+            <div>
+                <div v-for="r in Core.Triggers" class="SelectableSceneElement my-1" v-on:mouseover="r.Hover = true" v-on:mouseleave="r.Hover = false">
+                    <div class="p-1 d-flex justify-content-between">
+                        <div class="">
+                            <div class="d-flex justify-content-center">
+                                <img src="~/Images/delete.png" class="" width="32" height="32" alt="" v-on:click="DestroyTrigger(r)">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4" v-on:mouseover="r.Hover = true" v-on:mouseleave="r.Hover = false">
-                        <h6 class="text-light text-center">{{r.Id}}</h6>
-                    </div>
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditTrigger(r)">
+                        <div class="">
+                            <h6 class="text-light text-center">{{r.Id}}</h6>
                         </div>
-
+                        <div class="" v-on:click="r.Hover = false">
+                            <div class="d-flex justify-content-center">
+                                <img src="~/Images/settings.png" class="" width="32" height="32" alt="" v-on:click="EditTrigger(r)">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <hr>
             </div>
         </div>
-
-        <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddTrigger">{{Lang.TestAdd}}</a>
+        <div>
+            <div class="py-1 d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="AddTrigger">{{Lang.TestAdd}}</a>
+            </div>
+            <div class="py-1  d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
+            </div>
         </div>
-    </div>
-    <div class="p-3">
-        <a class="btn btn-outline-light" v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
     </div>
 </div>
 <div v-if="MenuMode == 41">
-    <div class="p-1 row d-flex justify-content-center">
-        <div class="col-4">
+    <div class="p-1 d-flex justify-content-center flex-column">
+        <div class="">
             <h3 class="text-light text-center">X:</h3>
         </div>
-        <div class="col-8">
+        <div class="">
             <input v-model.number="EditedTrigger.X" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
-        <div class="col-4">
+        <div class="">
             <h3 class="text-light text-center">Y:</h3>
         </div>
-        <div class="col-8">
+        <div class="">
             <input v-model.number="EditedTrigger.Y" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
         </div>
 
-        <div class="col-12">
+        <div class="">
             <h5 class="text-light text-center">{{Lang.TestSize}}: {{EditedTrigger.Size}} </h5>
         </div>
 
-        <div class="col-12">
+        <div class="">
             <input v-model.number="EditedTrigger.Size" min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
         </div>
-        <div class="col-10 offset-1 text-center p-1">
+        <div class=" text-center p-1">
             <div class="form-check">
                 <label for="editTrgVisible" class="text-light">{{Lang.TestVisibility}}</label>
                 <input id="editTrgVisible" v-model="EditedTrigger.Visual" type="checkbox" class="form-check-input">
             </div>
         </div>
-        <div class="col-10 offset-1 text-center p-1">
+        <div class="text-center p-1">
             <div class="form-check">
                 <label for="editTrgMagnetic" class="text-light">{{Lang.TestMagnetic}}</label>
                 <input id="editTrgMagnetic" v-model="EditedTrigger.Magnetic" type="checkbox" class="form-check-input">
             </div>
         </div>
         <hr>
-        <div class="p-3">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 40">{{Lang.meGetBack}}</a>
+        <div class="p-1 d-flex justify-content-center">
+            <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 40">{{Lang.meGetBack}}</a>
         </div>
     </div>
 </div>

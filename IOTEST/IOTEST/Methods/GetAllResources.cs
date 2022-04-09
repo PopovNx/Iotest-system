@@ -17,16 +17,21 @@ namespace IOTEST.Methods
         public async Task<string> Invoke(HttpContext context, IoContext db, DataControl control)
         {
             if (!control.IsOk) return "error";
-            const string path = "/TestItems/Prefabs/UserImages/";
-            var me = await db.Users.FirstOrDefaultAsync(x => x.Id == control.UserData.Id);
+            const string myPath = "/TestItems/Prefabs/UserImages/";
+            const string publicPath = "/TestItems/Prefabs/Public/";
+            var user = await db.Users.FirstOrDefaultAsync(x => x.Id == control.UserData.Id);
+            var myRes = await db.Resources.Where(x => x.Owner==user).ToListAsync();
+            
             var publicRes =await db.Resources.Where(x => x.Public).ToListAsync();
-            var myRes = await db.Resources.Where(x => x.Owner==me).ToListAsync();
+            
+            
             var resX = new List<(bool, TestX.Resource)>();
-            foreach (var f in myRes.Union(publicRes))
-            {
-                var dt = ( f.Public, new TestX.Resource(f.Name, $"{path}{f.FileName}"));
-                resX.Add(dt);
-            }
+            
+            foreach (var f in myRes) 
+                resX.Add((false, new TestX.Resource(f.Name, $"{myPath}{f.FileName}")));
+
+            foreach (var f in publicRes) 
+                resX.Add((true, new TestX.Resource(f.Name, $"{publicPath}{f.FileName}")));
             
             return JsonConvert.SerializeObject(resX);
         }

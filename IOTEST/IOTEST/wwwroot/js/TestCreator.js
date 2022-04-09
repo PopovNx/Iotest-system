@@ -180,7 +180,7 @@
             Data.append('Resource', JSON.stringify(r));
             console.log(await axios.post('/method', Data));
             console.log(r)
-            this.GetAllResources();
+            await this.GetAllResources();
         },
         LoadImg() {
             const files = this.$refs.picInp.files;
@@ -206,7 +206,7 @@
             }
             this.imgFile = null;
             this.imgFileLabel = "";
-            this.AddResource(1);
+           await this.AddResource(1);
         }
 
     },

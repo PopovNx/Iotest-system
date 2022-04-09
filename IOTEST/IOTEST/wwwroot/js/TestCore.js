@@ -53,6 +53,7 @@ class Trigger {
     }
 
     Draw() {
+        console.log(this.Visual)
         this.graphics.clear();
         this.VectorArray = [
             this.X - this.Size, this.Y - this.Size,
@@ -297,7 +298,6 @@ class DraggableObject {
 
     get Alpha() {
         return this.alphaFilter.alpha;
-
     }
 
     AddRotation(rotation) {
@@ -696,7 +696,11 @@ class TestCore {
         data.Id = maxId + 1;
         const nob = new DraggableObject(data.Resource, data)
         this.DraggableObjects.push(nob);
-        this.DisplayContainer.addChild(nob.Sprite)
+        this.DisplayContainer.addChild(nob.Sprite);
+        for (const t of this.Triggers) {
+            this.DisplayContainer.removeChild(t.graphics);
+            this.DisplayContainer.addChild(t.graphics);
+        }
     }
 
     AddResource(data) {
