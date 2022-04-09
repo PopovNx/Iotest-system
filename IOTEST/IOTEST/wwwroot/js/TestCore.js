@@ -53,7 +53,6 @@ class Trigger {
     }
 
     Draw() {
-        console.log(this.Visual)
         this.graphics.clear();
         this.VectorArray = [
             this.X - this.Size, this.Y - this.Size,

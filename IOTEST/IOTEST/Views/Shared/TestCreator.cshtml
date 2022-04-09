@@ -54,7 +54,7 @@ const TestId = "@Model.Id";
 </div>
 <hr class="mb-1 mt-0">
 <div class="d-flex justify-content-between">
-<div class="fb20 flex-row justify-content-center">
+<div class="fb20">
 <div v-if="MenuMode == 0">
     <div class="d-grid justify-content-center">
         <div class="p-3 d-flex justify-content-center">
@@ -375,45 +375,61 @@ const TestId = "@Model.Id";
         </div>
     </div>
 </div>
-<div v-if="MenuMode == 41">
-    <div class="p-1 d-flex justify-content-center flex-column">
-        <div class="">
-            <h3 class="text-light text-center">X:</h3>
-        </div>
-        <div class="">
-            <input v-model.number="EditedTrigger.X" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-        </div>
-        <div class="">
-            <h3 class="text-light text-center">Y:</h3>
-        </div>
-        <div class="">
-            <input v-model.number="EditedTrigger.Y" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
-        </div>
-
-        <div class="">
-            <h5 class="text-light text-center">{{Lang.TestSize}}: {{EditedTrigger.Size}} </h5>
-        </div>
-
-        <div class="">
-            <input v-model.number="EditedTrigger.Size" min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
-        </div>
-        <div class=" text-center p-1">
-            <div class="form-check">
-                <label for="editTrgVisible" class="text-light">{{Lang.TestVisibility}}</label>
-                <input id="editTrgVisible" v-model="EditedTrigger.Visual" type="checkbox" class="form-check-input">
+<div v-if="MenuMode == 41" class="d-flex" v-bind:style="{'height': MaxHeightUCanva}">
+    <div class="p-1 d-flex flex-column flex-grow-1">
+        <div class="flex-grow-1">
+            <div class="d-flex justify-content-around my-1">
+                <div class="fb20 d-flex align-items-center">
+                    <h3 class="text-light text-center m-0">X:</h3>
+                </div>
+                <div class="fb60">
+                    <input v-model.number="EditedTrigger.X" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div class="d-flex justify-content-around my-1">
+                <div class="fb20 d-flex align-items-center">
+                    <h3 class="text-light text-center  m-0">Y:</h3>
+                </div>
+                <div class="fb60">
+                    <input v-model.number="EditedTrigger.Y" min="0" step="25" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div class="d-flex justify-content-around my-1">
+                <div class="fb20 d-flex align-items-center">
+                    <h5 class="text-light text-center m-0">{{Lang.TestSize}}:</h5>
+                </div>
+                <div class="fb50">
+                    <input v-model.number="EditedTrigger.Size" min="10" max="1000" step="0.01" type="number" class="form-control text-center bg-dark text-light border-1 border-light"/>
+                </div>
+            </div>
+            <div class="">
+                <input v-model.number="EditedTrigger.Size" min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
+            </div>
+            <div class="d-flex justify-content-evenly">
+                <div v-bind:title="Lang.TestVisibility" class="d-flex" style="flex-basis: 35%">
+                    <input type="checkbox" v-model="EditedTrigger.Visual" class="custom-control-input d-none" id="editTrgVisible">
+                    <label class="custom-control-label d-flex" for="editTrgVisible" draggable="false">
+                        <img v-if="EditedTrigger.Visual" src="/Images/VisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
+                        <img v-else src="/Images/UnVisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
+                    </label>
+                </div>
+                <div v-bind:title="Lang.TestMagnetic" class="d-flex" style="flex-basis: 30%">
+                    <input type="checkbox" v-model="EditedTrigger.Magnetic" class="custom-control-input d-none" id="editTrgMagnetic">
+                    <label class="custom-control-label" for="editTrgMagnetic" draggable="false">
+                        <img v-if="EditedTrigger.Magnetic" src="/Images/resources.png" asp-append-version="true" alt="#" class="img-fluid">
+                        <img v-else src="/Images/resourcesD.png" asp-append-version="true" alt="#" class="img-fluid">
+                    </label>
+                </div>
             </div>
         </div>
-        <div class="text-center p-1">
-            <div class="form-check">
-                <label for="editTrgMagnetic" class="text-light">{{Lang.TestMagnetic}}</label>
-                <input id="editTrgMagnetic" v-model="EditedTrigger.Magnetic" type="checkbox" class="form-check-input">
+
+        <div>
+            <div class="p-1 d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 40">{{Lang.meGetBack}}</a>
             </div>
-        </div>
-        <hr>
-        <div class="p-1 d-flex justify-content-center">
-            <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 40">{{Lang.meGetBack}}</a>
         </div>
     </div>
+
 </div>
 <div v-if="MenuMode == 50">
     <div class="p-1 row d-flex justify-content-center">
