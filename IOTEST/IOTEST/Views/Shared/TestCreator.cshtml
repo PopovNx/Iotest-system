@@ -475,41 +475,51 @@ const TestId = "@Model.Id";
     </div>
 </div>
 <div v-if="MenuMode == 60">
-    <div class="p-1 row d-flex justify-content-center">
-        <div class="p-1 row d-flex justify-content-center">
-            <div style="max-height: 20vh; overflow-x: hidden">
-                <div v-for="(r,i) in Core.Animations">
-                    <div class="p-1 row">
-                        <div class="col-4">
+    <div class="d-flex flex-column" v-bind:style="{'height': MaxHeightUCanva}">
+        <div class="d-flex justify-content-center flex-grow-1 overflow-auto">
+            <div class="d-flex flex-column flex-grow-1">
+                <div v-for="(r,i) in Core.Animations" class="my-1">
+                    <div class="d-flex flex-column SelectableSceneElement py-1">
+                                                <div class="">
+                                                    <h4 class="text-light text-center">Id: {{i+1}}</h4>
+                                                </div>
+                        <div class="d-flex justify-content-around">
+                            
+                        
+                        <div class="">
                             <div class="d-flex justify-content-center">
-                                <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyAnimation(r)">
+                                <img src="~/Images/delete.png" class="" width="32" height="32" alt="" v-on:click="DestroyAnimation(r)">
                             </div>
                         </div>
-                        <div class="col-4">
-                            <h6 class="text-light text-center">{{i+1}}</h6>
-                        </div>
-                        <div class="col-4">
+
+                        <div class="">
                             <div class="d-flex justify-content-center">
-                                <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r)">
+                                <img src="~/Images/lightning.png" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r,1)">
                             </div>
                         </div>
+                            <div class="">
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/move.png" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r,1)">
+                                </div>  
+                                </div>
+                            </div>
                     </div>
-                    <hr>
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddAnimation">{{Lang.TestAdd}}</a>
-
+        <div>
+             <div class="d-flex justify-content-center my-2">
+                        <a class="btn btn-outline-light fb70" v-on:click="AddAnimation">{{Lang.TestAdd}}</a>
+                    </div>
+                    <div class="d-flex justify-content-center my-2">
+                        <a class="btn btn-outline-light fb70 " v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
+                    </div>
         </div>
-        <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
-        </div>
+       
     </div>
 </div>
 <div v-if="MenuMode == 61">
-    <div class="p-1 row d-flex justify-content-center" style="max-height: 60vh; overflow-x: hidden; overflow-y: auto">
+    <div  class="d-flex flex-column" v-bind:style="{'height': MaxHeightUCanva}">
         <div>
             <h3 class="text-light text-center">{{Lang.TestTaskAnim}}:</h3>
             <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto" v-if="EditAnimData.Activators.length">
