@@ -384,6 +384,18 @@ class EventActivator {
                 }
             }
         }
+        if (this.Event === 4) {
+            for (const t of objects) {
+                for (const s of this.Selector) {
+                    if (t.Id === s) {
+                        if (t.MouseOnThis) {
+                            return true;
+                        } 
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
 
@@ -452,6 +464,8 @@ class Animation {
                 return "При тригері";
             case 3:
                 return "При натиску";
+            case 4:
+                return "При наведенні";
             default:
                 return "Не определено";
         }

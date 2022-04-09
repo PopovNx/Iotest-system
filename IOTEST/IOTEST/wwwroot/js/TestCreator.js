@@ -151,9 +151,9 @@
         DestroyAnimation(r) {
             this.Core.Request("destroyAnim", r)
         },
-        EditAnimation(r) {
+        EditAnimation(r,t) {
             this.EditAnimData = r;
-            this.MenuMode = 61;
+            this.MenuMode = 61+t;
         },
         AddActivator() {
             this.Core.Request("addActivator", this.EditAnimData);
@@ -163,8 +163,9 @@
         },
         CheckEventSelectors(ax) {
             ax.Selector = ax.Selector.filter(function (x) {
-                return x !== "";
+                return !isNaN(x);
             });
+            ax.Selector =  [...new Set(ax.Selector)]
         },
         isResUsed(r) {
             return Core.Request('getObjects').some(x => x.Resource === r);

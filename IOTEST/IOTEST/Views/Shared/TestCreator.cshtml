@@ -343,7 +343,7 @@ const TestId = "@Model.Id";
     </div>
 </div>
 <div v-if="MenuMode == 40">
-    <div class="p-1 flex-column d-flex" v-bind:style="{'height': MaxHeightUCanva}">
+    <div class="flex-column d-flex" v-bind:style="{'height': MaxHeightUCanva}">
         <div class="overflow-auto flex-grow-1">
             <div>
                 <div v-for="r in Core.Triggers" class="SelectableSceneElement my-1" v-on:mouseover="r.Hover = true" v-on:mouseleave="r.Hover = false">
@@ -475,107 +475,95 @@ const TestId = "@Model.Id";
     </div>
 </div>
 <div v-if="MenuMode == 60">
-    <div class="p-1 row d-flex justify-content-center">
-        <div class="p-1 row d-flex justify-content-center">
-            <div style="max-height: 20vh; overflow-x: hidden">
-                <div v-for="(r,i) in Core.Animations">
-                    <div class="p-1 row">
-                        <div class="col-4">
-                            <div class="d-flex justify-content-center">
-                                <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="DestroyAnimation(r)">
+    <div class="d-flex flex-column" v-bind:style="{'height': MaxHeightUCanva}">
+        <div class="d-flex justify-content-center flex-grow-1 overflow-auto">
+            <div class="d-flex flex-column flex-grow-1">
+                <div v-for="(r,i) in Core.Animations" class="my-1">
+                    <div class="d-flex flex-column SelectableSceneElement py-1">
+                        <div class="">
+                            <h4 class="text-light text-center">Id: {{i+1}}</h4>
+                        </div>
+                        <div class="d-flex justify-content-around">
+
+
+                            <div class="">
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/delete.png" class="" width="32" height="32" alt="" v-on:click="DestroyAnimation(r)">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <h6 class="text-light text-center">{{i+1}}</h6>
-                        </div>
-                        <div class="col-4">
-                            <div class="d-flex justify-content-center">
-                                <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r)">
+
+                            <div class="">
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/lightning.png" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r,0)">
+                                </div>
+                            </div>
+                            <div class="">
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/move.png" class="" width="32" height="32" alt="" v-on:click="EditAnimation(r,1)">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
                 </div>
             </div>
         </div>
-        <hr>
-        <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="AddAnimation">{{Lang.TestAdd}}</a>
+        <div>
+            <div class="d-flex justify-content-center my-2">
+                <a class="btn btn-outline-light fb70" v-on:click="AddAnimation">{{Lang.TestAdd}}</a>
+            </div>
+            <div class="d-flex justify-content-center my-2">
+                <a class="btn btn-outline-light fb70 " v-on:click="MenuMode = 2">{{Lang.meGetBack}}</a>
+            </div>
+        </div>
 
-        </div>
-        <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 0">{{Lang.meGetBack}}</a>
-        </div>
     </div>
 </div>
 <div v-if="MenuMode == 61">
-    <div class="p-1 row d-flex justify-content-center" style="max-height: 60vh; overflow-x: hidden; overflow-y: auto">
-        <div>
+    <div class="flex-column d-flex" v-bind:style="{'height': MaxHeightUCanva}">
+        <div class="overflow-auto flex-grow-1">
             <h3 class="text-light text-center">{{Lang.TestTaskAnim}}:</h3>
-            <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto" v-if="EditAnimData.Activators.length">
-                <div v-for="ax in EditAnimData.Activators" class="m-1 p-1 ">
-                    <div class="form-group">
-                        <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
-                            <option v-for="nxd in 4" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActivatorsNames(nxd-1)}}</option>
-                        </select>
-                        <div v-if="ax.Event ===3||ax.Event ===2" class="d-flex flex-wrap">
-                            <div v-for="(an,i) in ax.Selector.concat([''])" class="col-4 m-1">
-                                <input v-model.number="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
+            <div class="p-1">
+                <div v-for="ax in EditAnimData.Activators" class="SelectableSceneElement p-1">
+                    <div>
+                        <div class="d-flex justify-content-around">
+                            <div>
+                                <div class="d-flex justify-content-center">
+                                    <img src="~/Images/delete.png" class="" width="32" height="32" alt="" v-on:click="EditAnimData.Activators = EditAnimData.Activators.filter(function(value){return value !==ax;});">
+                                </div>
+                            </div>
+                            <div>
+                                <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
+                                    <option v-for="nxd in 5" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActivatorsNames(nxd-1)}}</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-center">
-                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimData.Activators = EditAnimData.Activators.filter(function(value){return value !==ax;});">
+                        <div v-if="ax.Event === 2" style="display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 6px">
+                            <div v-for="(an,i) in ax.Selector.concat([''])" class="m-1" v-if="ax.Event === 2">
+                                <select v-model="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="text-center text-light bg-transparent form-control" v-on:mouseover="if(ax.Selector[i]){app.Core.Triggers.find((x)=>x.Id==ax.Selector[i]).Hover = true}" v-on:mouseleave="if(ax.Selector[i]){app.Core.Triggers.find((x)=>x.Id==ax.Selector[i]).Hover = false}">
+                                    <option class="bg-dark text-light" value="none">None</option>
+                                    <option v-for="trg in app.Core.Triggers" v-if="!ax.Selector.includes(trg.Id)||ax.Selector[i]==trg.Id" class="bg-dark text-light" v-bind:value="trg.Id">Id: {{trg.Id}}</option>
+                                </select>
+                            </div>
                         </div>
-                        <hr>
+                        <div  v-if="ax.Event === 3||ax.Event === 4">
+                            <div v-for="(an,i) in (!ax.Selector.length?['']:ax.Selector)" class="m-1" v-on:mouseover="ObjectMouseover(app.Core.DraggableObjects.find(x=>x.Id===ax.Selector[i])||{})" v-on:mouseout="ObjectMouseover({})">
+                                <select v-model="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="text-center text-light bg-transparent form-control">
+                                    <option class="bg-dark text-light" value="none">None</option>
+                                    <option v-for="obj in [...app.Core.DraggableObjects].reverse()" v-if="!ax.Selector.includes(obj.Id)||ax.Selector[i]==obj.Id" class="bg-dark text-light" v-bind:value="obj.Id">Id: {{obj.Id}}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <h6 class="text-light m-0 text-center" v-else>
-                Умов не виявлено
-            </h6>
-            <div class="p-3 d-flex justify-content-center">
-                <a class="btn btn-outline-light" v-on:click="AddActivator">Додати умову</a>
-            </div>
         </div>
-        <hr>
         <div>
-            <h3 class="text-light text-center"> Події:</h3>
-            <div style="max-height: 15vh; overflow-x: hidden; overflow-y: auto" v-if="EditAnimData.EventActions.length">
-                <div v-for="ax in EditAnimData.EventActions" class="m-1 p-1">
-                    <div class="form-group">
-                        <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
-                            <option v-for="nxd in 3" class="bg-dark text-light" v-bind:value="nxd-1">{{Animation.ActionNames(nxd-1)}}</option>
-                        </select>
-                        Об'єкти:
-                        <div class="d-flex flex-wrap">
-                            <div v-for="(an,i) in ax.Selector.concat([''])" class="col-4 m-1">
-                                <input v-model.number="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
-                            </div>
-                        </div>
-                        Значення:
-                        <div class="d-flex flex-wrap">
-                            <div v-for="(an,i) in 2" class="col-4 m-1">
-                                <input v-model.number="ax.Value[i]" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-center">
-                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimData.EventActions = EditAnimData.EventActions.filter(function(value){return value !==ax;});">
-                        </div>
-
-                    </div>
-                </div>
+            <div class="py-1 d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="AddActivator">Добавить условие</a>
             </div>
-            <h6 class="text-light m-0 text-center" v-else>
-                Подій не виявлено
-            </h6>
-            <div class="p-3 d-flex justify-content-center">
-                <a class="btn btn-outline-light" v-on:click="AddEventAction">Додати подію</a>
+            <div class="py-1  d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
             </div>
-        </div>
-        <hr>
-        <div class="p-3 d-flex justify-content-center">
-            <a class="btn btn-outline-light" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
         </div>
     </div>
 </div>
@@ -607,7 +595,7 @@ const TestId = "@Model.Id";
                 <div class="py-2 SelectableSceneElement" v-bind:class="{'ElOpen': (obj==EditObj)}">
                     <h6 class="text-light text-center">
                         <span v-if="obj.Resource.Name">
-                            {{obj.Resource.Name}}
+                            {{obj.Resource.Name.substr(0,16)}}
                         </span>
                         <span v-else>
                             {{obj.GetText().text.substr(0,16)}}
