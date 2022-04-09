@@ -21,7 +21,7 @@
         LoadLevel() {
             this.LevelNow = this.Levels[this.NowLevelIndex];
             
-            this.Core = new TestCore(this.Canva, this.CoreParent, this.LevelNow, true);
+            this.Core = new TestCore(this.Canva, this.CoreParent, this.LevelNow, true, false);
             window.Core = this.Core; 
         },
         async PassLevel() {

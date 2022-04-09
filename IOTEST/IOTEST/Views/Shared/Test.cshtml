@@ -26,9 +26,9 @@
 @section ScriptsAfter
 {
 
-    <script src="lib/Pixijs/pixi.js"></script>
-    <script src="js/TestCore.js" asp-append-version="true"></script>
-    <script src="js/Test.js" asp-append-version="true" type="module"></script>
+    <script src="~/lib/Pixijs/pixi.js"></script>
+    <script src="~/js/TestCore.js" asp-append-version="true"></script>
+    <script src="~/js/Test.js" asp-append-version="true" type="module"></script>
 }
 
 <header>
@@ -117,7 +117,7 @@ else
                                 </div>
                             </div>
                             <div v-show="TestPage" id="InteractiveBlock">
-                                <canvas id="canva"></canvas>
+                                <canvas id="canva" class="bg-black"></canvas>
                             </div>
                         </div>
                         <hr class="bg-light"/>

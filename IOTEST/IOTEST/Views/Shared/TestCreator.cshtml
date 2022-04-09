@@ -1,18 +1,18 @@
-﻿@model (IOTEST.IoContext.User User,IOTEST.IoContext.Test Test, int Id)
+﻿@model (IOTEST.IoContext.User User, string TestKey, int TaskId)
 @{
     ViewData["Title"] = "Test Creator";
 }
 
 @section ScriptsBefore
 {
-    <script src="lib/Pixijs/pixi.js"></script>
-    <script src="js/TestCore.js" asp-append-version="true"></script>
-    <link href="css/testCreator.css" rel="stylesheet"/>
+    <script src="~/lib/Pixijs/pixi.js"></script>
+    <script src="~/js/TestCore.js" asp-append-version="true"></script>
+    <link href="~/css/testCreator.css" rel="stylesheet"/>
 }
 
 @section ScriptsAfter
 {
-    <script src="js/TestCreator.js" asp-append-version="true" type="module"></script>
+    <script src="~/js/TestCreator.js" asp-append-version="true" type="module"></script>
 }
 
 <header>
@@ -34,8 +34,8 @@
 </header>
 <script>
 const MyMail = "@Model.User.Gmail";
-const TestKey = "@Model.Test.Key";
-const TestId = "@Model.Id";
+const TestKey = "@Model.TestKey";
+const TestId = "@Model.TaskId";
 </script>
 <div id="Page" class="user-select-none container-fluid d-flex justify-content-center" v-cloak>
 <div class="fb90" v-cloak>

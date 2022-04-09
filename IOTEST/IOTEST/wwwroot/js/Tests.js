@@ -71,15 +71,26 @@
             await axios.post('/method', Data);
             await this.LoadTests();
         },
-        AddTask: function (i, e) {
-            let id = Math.random().toString().split(".")[1].slice(0, 8);
-            if (e === true) {
-                id = i.Id;
-            }
-            location.href = `https://iotest.pp.ua/testCreator?test=${this.EditedTest.Key}&id=${id}`;
+        AddTask: async function () {
+
+            const editTest = this.EditedTest.Key;
+            const Data = new FormData();
+            Data.append('method', 'CreateTask');
+            console.log(editTest)
+            Data.append('TestKey', editTest);
+            Data.append('Name', "Новое задание");            
+           console.log( await axios.post('/method', Data));
+            await this.LoadTests();
+            this.EditTest(this.LoadedTests.find(x=>x.Key === editTest));
+            
+        },
+        EditTask(e){
+            location.href = `/testCreator/${this.EditedTest.Key}/${e.Id}`;
         },
         async RemoveTask(task) {
-            console.log(task);
+            if(!confirm("Вы действительно хотите удалить задание?")){
+               return;
+            }
             const enTestKey = this.EditedTest.Key;
             const Data = new FormData();
             Data.append('method', 'RemoveTestX');
@@ -91,8 +102,13 @@
                 })
 
             });
-        }
+        },
+        GetFTime(e){
 
+            const last = e[e.length-1];
+            const dt = new Date(last);
+            return `${last.split(".")[0]}`;
+        }
     },
     watch: {},
     computed: {

@@ -10,11 +10,6 @@
         if (Pwa === false && location.pathname !== "/install" && Cookies.get("Web") !== "true") location.href = "/install";
         if (Pwa === true && location.pathname === "/install") location.href = "/login";
     </script>
-    <style>
-        [v-cloak] {
-            display: none;
-        }
-    </style>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"]</title>

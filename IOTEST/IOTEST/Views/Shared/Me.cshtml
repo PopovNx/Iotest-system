@@ -28,14 +28,14 @@
     <script>window.isTeacher = @isTeacher.ToString().ToLower()</script>
 }
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
-    <div class="row d-flex justify-content-center mt-sm-5">
+    <div class="row d-flex justify-content-center mt-sm-5" v-cloak>
         <div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
             <div class="bg-dark">
                 <div>
                     <div class="row">
                         <div class="mt-3">
                             <div class="tab-pane fade show active" id="v-pill-profile" role="tabpanel" aria-labelledby="pill-profile">
-                                <div class="DOB">
+                                <div class="DOB" v-cloak>
                                     <h4>{{Lang.meStatics}}</h4>
                                     <hr/>
                                     <h6>

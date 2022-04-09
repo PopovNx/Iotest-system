@@ -571,8 +571,9 @@ class TestCore {
     SelectorGraph;
     SelectorContainer;
     OpenEditFunction;
-
-    constructor(canvas, testParent, test, optimiseLoad, editMode) {
+    Loaded;
+    constructor(canvas, testParent, test, optimiseLoad, editMode, loaded) {
+        this.Loaded = loaded;
         this.EditMode = editMode;
         this.Id = test.Id;
         this.Resources = test.Resources;
@@ -655,7 +656,8 @@ class TestCore {
             this.Animations[i] = new Animation(obj);
         }
         this.Display.ticker.add(() => this.Worker());
-
+        if( this.Loaded)
+        this.Loaded(this);
     }
 
     SelectorWorker() {

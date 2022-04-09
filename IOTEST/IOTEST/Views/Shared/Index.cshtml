@@ -28,7 +28,7 @@
     </nav>
 </header>
 <div id="Page" class="user-select-none container-fluid  text-light text-center">
-    <div class="row">
+    <div class="row" v-cloak>
         <div class="col-12 col-md-4 order-0 order-md-1 offset-md-4">
             <div class="bg-dark mt-4 rounded">
                 <div class="form-group DOB p-2 row d-flex   justify-content-center">
@@ -49,7 +49,7 @@
                         <h4 class="text-light text-center mt-3 bg-dark">{{Lang.indexTestsToPass}}</h4>
                         <hr>
                     }
-                    <div class="p-1 row bg-dark m-1" v-on:click="location.href='/test?@g.Key'">
+                    <div class="p-1 row bg-dark m-1" v-on:click="location.href='/test/@g.Key'">
                         <div class="col-12">
                             <h4 class="text-light text-center">@g.Name</h4>
                             <h6 class="text-light text-center">@g.Key</h6> 

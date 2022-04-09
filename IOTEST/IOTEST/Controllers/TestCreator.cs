@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace IOTEST.Controllers
 {
-    [Route("/testCreator")]
+    [Route("/testCreator/{testKey}/{id}")]
     public class TestCreator : Controller
     {
         private readonly IoContext _database;
         public TestCreator(IoContext userContext) => _database = userContext;
 
-        public async Task<ActionResult> IndexAsync()
+        public async Task<ActionResult> IndexAsync([CanBeNull] string testKey, int id)
         {
             var control = new DataControl(HttpContext.Request.Cookies);
             if (!await control.Exist(_database))
@@ -21,21 +22,17 @@ namespace IOTEST.Controllers
                 HttpContext.Response.Redirect("/login");
                 return View("Empty");
             }
-
             var user = await _database.Users.FirstAsync(x => x.Id == control.UserData.Id);
-            if (user.UserProf == IoContext.User.UserProfType.Teacher
-                && HttpContext.Request.Query.TryGetValue("test", out var key)
-                && HttpContext.Request.Query.TryGetValue("id", out var id)
-                && await _database.Tests.AnyAsync(x => x.Key == key.ToString()))
+            
+            if (testKey != null  && user.UserProf == IoContext.User.UserProfType.Teacher && testKey.Length>1 && await _database.Tests.AnyAsync(x => x.Key == testKey))
             {
-                var test = await _database.Tests.FirstAsync(x => x.Key == key.ToString());
+                var test = await _database.Tests.FirstAsync(x => x.Key == testKey);
                 
-                return View("TestCreator", (user, test, int.Parse(id.ToString()) ));
+                return View("TestCreator", (user, test.Key, id ));
             }
             else
             {
-                HttpContext.Response.Redirect("/");
-                return View("Empty");
+                return Redirect("/");
             }
         }
     }

@@ -33,9 +33,12 @@
             const canvas = document.getElementsByClassName("TestScreen")[0];
             const parent = document.getElementById("TestMain");
             console.log(test)
-            this.Core = new TestCore(canvas, parent, test, false, true);
+            this.Core = new TestCore(canvas, parent, test, false, true, (e)=>{
+                this.LastSave = e.Save();
+            });
             window.Core = this.Core;
             this.Core.OpenEditFunction = this.EditObject;
+           
             document.addEventListener('keyup',  (evt)=> {
                 if (evt.key  === "Escape") {
                     this.UnselectObject();
@@ -115,13 +118,7 @@
             Data.append('Data', JSON.stringify(this.LastSave));
             await axios.post('/method', Data);
             console.log(this.LastSave)
-        },
-        NeedSave() {
-            if (this.Core === null) return false;
-            const save = this.Core.Save();
-
-            return JSON.stringify(save) === JSON.stringify(this.LastSave);
-        },
+        }      ,
         AddTrigger() {
             this.Core.Request("trgAdd");
 
@@ -208,6 +205,11 @@
             this.imgFile = null;
             this.imgFileLabel = "";
            await this.AddResource(1);
+        },
+        NeedSave() {
+            if (this.Core === null) return false;
+            const save = this.Core.Save();
+            return JSON.stringify(save) === JSON.stringify(this.LastSave);
         }
 
     },
@@ -270,6 +272,16 @@
     mounted() {
         this.Init();
         setInterval(x => (this.$forceUpdate()), 200);
+        window.onbeforeunload=(e)=> {
+         if(!this.NeedSave()){
+             e.cancelBubble = true;
+             e.returnValue = '';
+             if (e.stopPropagation) {
+                 e.stopPropagation();
+                 e.preventDefault();
+             }
+         }
+        };
     }
 });
 window.app = app;

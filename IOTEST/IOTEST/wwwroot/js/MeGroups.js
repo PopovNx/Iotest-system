@@ -20,7 +20,7 @@
         ConnectGroupKeyInvalid: null,
         ConnectTestKey:"",
         ConnectTestKeyInvalid:null,
-        
+        EditedTestResults:[],
     },
     methods: {
         GetGroups: function () {
@@ -64,6 +64,9 @@
             console.log(this.EditGroup);
         },
         async RemoveTestFromGroup(e) {
+            if(!confirm("Вы действительно хотите удалить тест из группы?")){
+                return false
+            }
             const key = JSON.parse(e).Key;
             const Data = new FormData();
             Data.append('method', 'ConnectTest');
@@ -74,6 +77,19 @@
             this.GetGroups();
  
         },
+        async OpenResultList(i) {
+            const test = JSON.parse(i);
+            this.ShowMode = 4;
+            const Data = new FormData();
+            this.EditedTestResults=[];
+            Data.append('method', 'GetTestResult');
+            Data.append('Key', test.Key);
+            Data.append('Group', this.GroupEditId);
+            const data = await axios.post('/method', Data);
+            this.EditedTestResults = data.data;
+            this.EditedTestResults.Test = test.Name;
+        },
+        
         ConnectTest(){
             this.ConnectTestKeyInvalid = null;
             const Data = new FormData();
@@ -105,6 +121,12 @@
                 this.ShowMode = 0;
                 this.GetGroups();
             });
+        },
+        GetFTime(e){
+
+            const last = e[e.length-1];
+            const dt = new Date(last);
+            return `${last.split(".")[0]}`;
         },
         ConnectToGroup: function () {
             this.ConnectGroupKeyInvalid = null;
@@ -146,6 +168,12 @@
                 this.GetGroups();
                 console.log(e.data)
             });
+        },
+        ShowMode(e){
+            console.log(e);
+        },
+        EditedTestResults(e){
+            console.log(e);
         }
     },
     computed: {

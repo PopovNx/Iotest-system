@@ -6,7 +6,7 @@
     },
     methods: {
         GotoModel() {
-            location.href = "/test?" + this.code;
+            location.href = "/test/" + this.code;
         }
     },
     mounted() {

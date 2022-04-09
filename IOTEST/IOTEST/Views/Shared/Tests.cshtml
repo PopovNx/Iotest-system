@@ -1,9 +1,11 @@
 ﻿@model IoContext.User
 @{ ViewData["Title"] = "Tests"; }
+
 @section ScriptsBefore
 {
     <script src="js/TestCore.js" asp-append-version="true"></script>
 }
+
 @section ScriptsAfter
 {
     <script src="js/Tests.js" asp-append-version="true" type="module"></script>
@@ -26,12 +28,12 @@
         </div>
     </nav>
 </header>
-<div id="Page" class="user-select-none container-fluid text-light text-center">
+<div id="Page" class="user-select-none container-fluid text-light text-center" v-clock>
 <div class="row d-flex justify-content-center mt-sm-5">
-<div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 ">
+<div class="col-12 col-xl-8 col-lg-9 col-md-10 mt-md-5 " v-cloak>
 <div class="bg-dark">
 <div class="row">
-<div class="DOB mt-2">
+<div class="DOB mt-2" v-cloak>
 <div>
     <span v-if="ShowMode==0">
         <div class="row">
@@ -142,6 +144,7 @@
         </div>
     </span>
     <span v-else-if="ShowMode==11">
+
         <div class="row">
             <div>
                 <div class="form-group col-6 offset-3 p-3">
@@ -160,9 +163,8 @@
                                                     <div class="col-6">
                                                         <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="RemoveTask(i)">
                                                     </div>
-
                                                     <div class="col-6">
-                                                        <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="AddTask(i,true)">
+                                                        <img src="~/Images/application.svg" class="" width="32" height="32" alt="" v-on:click="EditTask(i)">
                                                     </div>
                                                 </div>
                                             </div>
@@ -208,6 +210,13 @@
                                                             </span>
                                                         </h6>
                                                     </div>
+                                                </div>
+                                                <div class="">
+                                                    <div class="col-12"  v-if="i.Item2!=='Не завершено'">
+                                                        <h6>Время сдачи:  </h6>
+                                                            <h6> {{GetFTime(i.Item3)}}</h6>
+                                                    </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -259,8 +268,7 @@
 </div>
 <hr class="m-0"/>
 <div>
-    <span v-if="ShowMode==0" class="d-flex justify-content-evenly">
-        <a class="m-3 btn btn-outline-light" v-on:click="location.href = '/resources'">Ресурсы</a>
+    <span v-if="ShowMode==0" class="d-flex justify-content-center">
         <a class="m-3 btn btn-outline-light" v-on:click="CreateTestOpen">{{Lang.TestsCreateATest}}</a>
     </span>
     <span v-if="ShowMode==1">

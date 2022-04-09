@@ -1,5 +1,5 @@
 ﻿if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
+    navigator.serviceWorker.register('/sw.js',{scope: './'})
         .then(() => navigator.serviceWorker.ready.then((worker) => {
             worker.sync.register('syncdata');
         }))
@@ -12,5 +12,5 @@ const LoadBackground = ()=>{
         background: "#0f0f0f",
         interactive: true,
         density: 6000,  };
-    const particleCanvas = new ParticleNetwork(canvasDiv, options)
+    new ParticleNetwork(canvasDiv, options);
 }
