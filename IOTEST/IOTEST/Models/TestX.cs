@@ -81,6 +81,8 @@ namespace IOTEST.Models
                 Magnetic = magnetic;
                 Id = id;
                 Accepted = ac.ToList();
+                OnlyVisible = true;
+                CalcP = true;
             }
 
             public double X { get; set; }
@@ -88,6 +90,8 @@ namespace IOTEST.Models
             public double Size { get; set; }
             public bool Visual { get; set; }
             public bool Magnetic { get; set; }
+            public bool OnlyVisible { get; set; }
+            public bool CalcP { get; set; }
             public int Id { get; set; }
             public List<int> Accepted { get; set; }
         }

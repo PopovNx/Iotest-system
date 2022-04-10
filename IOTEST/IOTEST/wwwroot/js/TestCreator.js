@@ -249,6 +249,8 @@
                     return Lang.TestAnimations;
                 case 61:
                     return Lang.TestAnimation;
+                case 62:
+                    return Lang.TestAnimation;
                 case 100:
                     return Lang.TestTask;
                 default:

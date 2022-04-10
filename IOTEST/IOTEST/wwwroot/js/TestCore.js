@@ -36,6 +36,8 @@ class Trigger {
     Magnetic;
     Accepted;
 
+    OnlyVisible;
+    CalcP;
     constructor(object) {
         this.X = object.X;
         this.Y = object.Y;
@@ -44,6 +46,8 @@ class Trigger {
         this.Magnetic = object.Magnetic;
         this.Id = object.Id;
         this.Accepted = object.Accepted;
+        this.OnlyVisible = object.OnlyVisible;
+        this.CalcP = object.CalcP;
         this.VectorArray = [
             this.X - this.Size, this.Y - this.Size,
             this.X + this.Size, this.Y - this.Size,
@@ -85,9 +89,14 @@ class Trigger {
             }
             if (this.pointInPoly(this.VectorArray, e.Sprite.x, e.Sprite.y)) {
 
-                if (e.Visible) {
+                if(this.OnlyVisible){
+                    if (e.Visible) {
+                        this.ObjectsInside.push(e);
+                    }
+                }else{
                     this.ObjectsInside.push(e);
                 }
+             
             }
         }
         this.Draw();
@@ -162,7 +171,6 @@ class DraggableObject {
     MouseOnThis;
     GroupType;
     Rotation;
-    Visible;
     Button;
     CanMove;
     MouseDown;
@@ -175,6 +183,7 @@ class DraggableObject {
     alphaFilter;
     Selected;
     RigthClicked;
+
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -189,7 +198,7 @@ class DraggableObject {
         }
         this.Triggerable = object.Triggerable;
         this.MouseOnThis = false;
-        this.SetVisible(object.Visible)
+        this.Visible = object.Visible;
         this.Id = object.Id;
         this.Sprite.x = object.X;
         this.Sprite.y = object.Y;
@@ -230,9 +239,11 @@ class DraggableObject {
     onPointerOut() {
         this.MouseOnThis = false;
     }
-    onRightClick(e){
+
+    onRightClick(e) {
         this.RigthClicked = true;
     }
+
     onDragStart(event) {
         this.MouseDown = true;
         if (!this.CanMove) return;
@@ -298,15 +309,15 @@ class DraggableObject {
     get Alpha() {
         return this.alphaFilter.alpha;
     }
-
+    set Visible(e){
+        this.Sprite.visible =e;
+    }
+    get Visible(){
+        return this.Sprite.visible;
+    }
     AddRotation(rotation) {
         if (rotation === 0) return;
         this.RotationVal += rotation;
-    }
-
-    SetVisible(visible) {
-        this.Visible = visible;
-        this.Sprite.visible = this.Visible;
     }
 
     SetCanMove(e) {
@@ -390,7 +401,7 @@ class EventActivator {
                     if (t.Id === s) {
                         if (t.MouseOnThis) {
                             return true;
-                        } 
+                        }
                     }
                 }
             }
@@ -411,15 +422,40 @@ class EventAction {
     }
 
     Do(objects, res) {
-        if (this.Event === 0) {
-            for (const t of objects) {
-                for (const s of this.Selector) {
-                    if (t.Id === s) {
-                        t.AddRotation(this.Value[0]);
+        for (const t of objects) {
+            for (const s of this.Selector) {
+                if (t.Id === s) {
+                    switch (this.Event) {
+                        case 0:
+                            t.AddRotation(this.Value[0]);
+                            break;
+                        case 1:
+                            t.RotationVal = this.Value[0];
+                            break;
+                        case 2:
+                            t.Visible = !t.Visible;
+                            break;
+                        case 3:
+                            t.Visible = this.Value[0];
+                            break;
+                        case 4:
+                            t.Sprite.scale.x += this.Value[0];
+                            t.Sprite.scale.y +=this.Value[0];
+                            break;
+                        case 5:
+                            t.Sprite.scale.x = this.Value[0];
+                            t.Sprite.scale.y =this.Value[0];
+                            break;
+                        case 6:
+                            t.Triggerable = this.Value[0];
+                            break;
                     }
+
                 }
             }
         }
+    
+        /*
         if (this.Event === 1) {
             for (const t of objects) {
                 for (const s of this.Selector) {
@@ -435,19 +471,9 @@ class EventAction {
                 }
             }
         }
-        if (this.Event === 2) {
-            for (const t of objects) {
-                for (const s of this.Selector) {
-                    if (t.Id === s) {
-                        if (t.Sprite.visible === this.Value[0]) {
-                            t.SetVisible(this.Value[1]);
-                        } else {
-                            t.SetVisible(this.Value[0]);
-                        }
-                    }
-                }
-            }
-        }
+        */
+
+       
     }
 }
 
@@ -475,11 +501,19 @@ class Animation {
             case -1:
                 return "Нічого";
             case 0:
-                return "Обертання";
+                return "Обертання (Додати)";
             case 1:
-                return "Ресурс";
+                return "Обертання (Встановити)";
             case 2:
-                return "Видимість";
+                return "Видимість (Змінити)";
+            case 3:
+                return "Видимість (Встановити)";
+            case 4:
+                return "Розмір (Додати)";
+            case 5:
+                return "Розмір (Встановити)";
+            case 6:
+                return "Тригерність (Встановити)";
             default:
                 return "Не определено";
         }
@@ -537,6 +571,7 @@ class TestCore {
     SelectorGraph;
     SelectorContainer;
     OpenEditFunction;
+
     constructor(canvas, testParent, test, optimiseLoad, editMode) {
         this.EditMode = editMode;
         this.Id = test.Id;
@@ -550,7 +585,7 @@ class TestCore {
         this.Description = test.Description;
         this.SelectorGraph = new PIXI.Graphics();
         this.SelectorContainer = new PIXI.Container();
-        this.SelectorContainer.addChild( this.SelectorGraph)
+        this.SelectorContainer.addChild(this.SelectorGraph)
         this.Display = new PIXI.Application({
             view: this.Canvas,
             backgroundAlpha: 0,
@@ -561,7 +596,7 @@ class TestCore {
         this.TestParent = testParent;
         this.DisplayContainer = new PIXI.Container();
 
-        
+
         this.Display.stage.addChild(this.DisplayContainer);
         this.Loader = new PIXI.Loader("", 10);
         for (const e of this.Resources) {
@@ -592,7 +627,7 @@ class TestCore {
         }
         window.addEventListener('resize', resizer);
         setInterval(resizer, 100);
-        this.resize(this);       
+        this.resize(this);
     }
 
     texturesLoaded() {
@@ -622,7 +657,8 @@ class TestCore {
         this.Display.ticker.add(() => this.Worker());
 
     }
-    SelectorWorker(){
+
+    SelectorWorker() {
         let selectedObj = null;
         for (const e of this.DraggableObjects)
             if (e.Selected) {
@@ -630,11 +666,11 @@ class TestCore {
                 break;
             }
         if (!selectedObj)
-        for (const e of this.DraggableObjects)
-            if (e.Dragging) {
-                selectedObj = e;
-                break;
-            }
+            for (const e of this.DraggableObjects)
+                if (e.Dragging) {
+                    selectedObj = e;
+                    break;
+                }
         if (!selectedObj)
             for (const e of this.DraggableObjects)
                 if (e.MouseOnThis) {
@@ -642,21 +678,21 @@ class TestCore {
                     break;
                 }
         const containsGraph = this.DisplayContainer.children.includes(this.SelectorContainer);
-        
+
         if (selectedObj) {
             if (!containsGraph) {
                 this.DisplayContainer.addChild(this.SelectorContainer)
             }
             const vD = selectedObj.Sprite;
             const path = [
-                - (vD.texture.width * vD.scale.x) / 2, - (vD.texture.height * vD.scale.y) / 2,
-                - (vD.texture.width * vD.scale.x) / 2, + (vD.texture.height * vD.scale.y) / 2,
-                + (vD.texture.width * vD.scale.x) / 2, + (vD.texture.height * vD.scale.y) / 2,
-                + (vD.texture.width * vD.scale.x) / 2, - (vD.texture.height * vD.scale.y) / 2,
+                -(vD.texture.width * vD.scale.x) / 2, -(vD.texture.height * vD.scale.y) / 2,
+                -(vD.texture.width * vD.scale.x) / 2, +(vD.texture.height * vD.scale.y) / 2,
+                +(vD.texture.width * vD.scale.x) / 2, +(vD.texture.height * vD.scale.y) / 2,
+                +(vD.texture.width * vD.scale.x) / 2, -(vD.texture.height * vD.scale.y) / 2,
             ];
             this.SelectorContainer.position.x = vD.x;
             this.SelectorContainer.position.y = vD.y;
-            this.SelectorContainer.rotation= vD.rotation;
+            this.SelectorContainer.rotation = vD.rotation;
             this.SelectorGraph.clear();
             this.SelectorGraph.lineStyle(4, 0xA3B9DB, 1);
             this.SelectorGraph.drawPolygon(path);
@@ -668,6 +704,7 @@ class TestCore {
             }
         }
     }
+
     Worker() {
         for (const e of this.Triggers) {
             e.Work(this.DraggableObjects, this.Triggers);
@@ -675,16 +712,16 @@ class TestCore {
         for (const e of this.Animations) {
             e.Work(this.DraggableObjects, this.Triggers, this.Resources);
         }
-        if(this.EditMode){
+        if (this.EditMode) {
             this.SelectorWorker();
             for (const a of this.DraggableObjects) {
-                if(a.RigthClicked){
+                if (a.RigthClicked) {
                     a.RigthClicked = false;
                     this.OpenEditFunction(a);
                 }
             }
         }
-       
+
 
     }
 
@@ -745,7 +782,9 @@ class TestCore {
             Visual: true,
             Magnetic: true,
             Id: maxId + 1,
-            Accepted: [0, 1, 2],
+            Accepted: [],
+            OnlyVisible:true,
+            CalcP: true
         }
         const trg = new Trigger(obj);
         console.log(trg);
@@ -849,25 +888,12 @@ class TestCore {
     GetState() {
         if (this.Triggers.length < 1) return null;
         return {
-            trg: this.Triggers.map(x => x.ObjectsInside.map(y => y.Id))
+            trg: this.Triggers.filter((e)=>{
+                return e.CalcP;
+            }).map(x => x.ObjectsInside.map(y => y.Id))
         };
     }
-
-    Calculate() {
-        const correct = this.CorrectState.trg;
-        const nowState = this.GetState().trg;
-        let mass = 0;
-        let now = 0;
-        for (const trg of correct)
-            mass += trg.length;
-        for (let i = 0; i < correct.length; i++) {
-            for (const num of nowState[i]) {
-                now += correct[i].includes(num);
-            }
-        }
-        return now / mass;
-    }
-
+    
     Destroy() {
         this.Loader.destroy();
         this.Display.stop()
@@ -937,6 +963,8 @@ class TestCore {
                     Magnetic: trg.Magnetic,
                     Id: trg.Id,
                     Accepted: trg.Accepted,
+                    CalcP: trg.CalcP,
+                    OnlyVisible: trg.OnlyVisible,
                 }
                 r.__proto__ = Trigger.prototype;
                 saved.Triggers.push(r)

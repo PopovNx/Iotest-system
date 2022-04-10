@@ -286,9 +286,9 @@ const TestId = "@Model.Id";
             <hr class="m-0">
             <div class="d-flex justify-content-around">
                 <div v-bind:title="Lang.TestVisibility" class="d-flex fb25">
-                    <input type="checkbox" v-model="EditObj.Sprite.visible" class="custom-control-input d-none" id="editObjVisible">
+                    <input type="checkbox" v-model="EditObj.Visible" class="custom-control-input d-none" id="editObjVisible">
                     <label class="custom-control-label d-flex" for="editObjVisible" draggable="false">
-                        <img v-if="EditObj.Sprite.visible" src="/Images/VisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
+                        <img v-if="EditObj.Visible" src="/Images/VisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
                         <img v-else src="/Images/UnVisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
                     </label>
                 </div>
@@ -406,14 +406,14 @@ const TestId = "@Model.Id";
                 <input v-model.number="EditedTrigger.Size" min="10" max="1000" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
             </div>
             <div class="d-flex justify-content-evenly">
-                <div v-bind:title="Lang.TestVisibility" class="d-flex" style="flex-basis: 35%">
+                <div v-bind:title="Lang.TestVisibility" class="d-flex" style="flex-basis: 35%" draggable="false">
                     <input type="checkbox" v-model="EditedTrigger.Visual" class="custom-control-input d-none" id="editTrgVisible">
                     <label class="custom-control-label d-flex" for="editTrgVisible" draggable="false">
                         <img v-if="EditedTrigger.Visual" src="/Images/VisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
                         <img v-else src="/Images/UnVisBtn.png" asp-append-version="true" alt="#" class="img-fluid">
                     </label>
                 </div>
-                <div v-bind:title="Lang.TestMagnetic" class="d-flex" style="flex-basis: 30%">
+                <div v-bind:title="Lang.TestMagnetic" class="d-flex" style="flex-basis: 30%" draggable="false">
                     <input type="checkbox" v-model="EditedTrigger.Magnetic" class="custom-control-input d-none" id="editTrgMagnetic">
                     <label class="custom-control-label" for="editTrgMagnetic" draggable="false">
                         <img v-if="EditedTrigger.Magnetic" src="/Images/resources.png" asp-append-version="true" alt="#" class="img-fluid">
@@ -421,6 +421,18 @@ const TestId = "@Model.Id";
                     </label>
                 </div>
             </div>
+            <div class="d-flex justify-content-evenly align-items-center my-1">
+                <label class="custom-control-label d-flex" for="editTrgOnlyVisible" draggable="false">
+                    <h6 class="text-light text-center  m-0">Только видимые:</h6>
+                </label>
+                <input type="checkbox" v-model="EditedTrigger.OnlyVisible" class="form-check-input m-2" style="transform: scale(1.5)" id="editTrgOnlyVisible">
+            </div>
+                  <div class="d-flex justify-content-evenly align-items-center my-1">
+                                <label class="custom-control-label d-flex" for="editTrgCalcP" draggable="false">
+                                                                       <h6 class="text-light text-center  m-0">Оцениваемый:</h6>
+                                                                   </label>
+                                               <input type="checkbox" v-model="EditedTrigger.CalcP" class="form-check-input m-2" style="transform: scale(1.5)" id="editTrgCalcP">
+                        </div>
         </div>
 
         <div>
@@ -545,7 +557,7 @@ const TestId = "@Model.Id";
                                 </select>
                             </div>
                         </div>
-                        <div  v-if="ax.Event === 3||ax.Event === 4">
+                        <div v-if="ax.Event === 3||ax.Event === 4">
                             <div v-for="(an,i) in (!ax.Selector.length?['']:ax.Selector)" class="m-1" v-on:mouseover="ObjectMouseover(app.Core.DraggableObjects.find(x=>x.Id===ax.Selector[i])||{})" v-on:mouseout="ObjectMouseover({})">
                                 <select v-model="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="text-center text-light bg-transparent form-control">
                                     <option class="bg-dark text-light" value="none">None</option>
@@ -560,6 +572,57 @@ const TestId = "@Model.Id";
         <div>
             <div class="py-1 d-flex justify-content-center">
                 <a class="btn btn-outline-light fb70" v-on:click="AddActivator">Добавить условие</a>
+            </div>
+            <div class="py-1  d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div v-if="MenuMode == 62">
+    <div class="flex-column d-flex" v-bind:style="{'height': MaxHeightUCanva}">
+        <div class="overflow-auto flex-grow-1">
+            <h3 class="text-light text-center">Події:</h3>
+            <div class="p-1">
+                <div v-for="ax in EditAnimData.EventActions" class="SelectableSceneElement p-1">
+                    <div>
+                        <select v-model="ax.Event" class="text-center text-light bg-transparent form-control">
+                            <option v-for="nxd in 8" class="bg-dark text-light" v-bind:value="nxd-2">{{Animation.ActionNames(nxd-2)}}</option>
+                        </select>
+                        <div>
+                            <div>
+                                <h5 class="text-light text-center m-2">Объекты:</h5>
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 6px">
+                                <div v-for="(an,i) in ax.Selector.concat([''])" class="m-1" v-on:mouseover="ObjectMouseover(app.Core.DraggableObjects.find(x=>x.Id===ax.Selector[i])||{})" v-on:mouseout="ObjectMouseover({})">
+                                    <select v-model="ax.Selector[i]" v-on:change="CheckEventSelectors(ax)" class="text-center text-light bg-transparent form-control">
+                                        <option class="bg-dark text-light" value="none">None</option>
+                                        <option v-for="obj in [...app.Core.DraggableObjects].reverse()" v-if="!ax.Selector.includes(obj.Id)||ax.Selector[i]==obj.Id" class="bg-dark text-light" v-bind:value="obj.Id">Id: {{obj.Id}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div>
+                                <h5 class="text-light text-center m-2">Значение:</h5>
+                            </div>
+                            <div>
+                                <input type="number" v-model.number="ax.Value[0]" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
+                            </div>
+                        </div>
+
+
+                        <div class="d-flex justify-content-center">
+                            <img src="~/Images/trash.svg" class="" width="32" height="32" alt="" v-on:click="EditAnimData.EventActions = EditAnimData.EventActions.filter(function(value){return value !==ax;});">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="py-1 d-flex justify-content-center">
+                <a class="btn btn-outline-light fb70" v-on:click="AddEventAction">Добавить действие</a>
             </div>
             <div class="py-1  d-flex justify-content-center">
                 <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
