@@ -88,7 +88,7 @@
             location.href = `/testCreator/${this.EditedTest.Key}/${e.Id}`;
         },
         async RemoveTask(task) {
-            if(!confirm("Вы действительно хотите удалить задание?")){
+            if(!confirm(Lang.MeGroupJSConfirmDeleteExercise)){
                return;
             }
             const enTestKey = this.EditedTest.Key;

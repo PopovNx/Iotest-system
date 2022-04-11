@@ -483,39 +483,39 @@ class Animation {
     static ActivatorsNames = function (id) {
         switch (id) {
             case 0:
-                return "Завжди";
+                return Lang.TestCoreAnimationAAlways;
             case 1:
-                return "Ніколи";
+                return Lang.TestCoreAnimationANever;
             case 2:
-                return "При тригері";
+                return Lang.TestCoreAnimationAWhenTrigger;
             case 3:
-                return "При натиску";
+                return Lang.TestCoreAnimationAOnClick;
             case 4:
-                return "При наведенні";
+                return Lang.TestCoreAnimationAOnHover;
             default:
-                return "Не определено";
+                return Lang.TestCoreAnimationAUndefined;
         }
     }
     static ActionNames = function (id) {
         switch (id) {
             case -1:
-                return "Нічого";
+                return Lang.TestCoreAnimationANothing;
             case 0:
-                return "Обертання (Додати)";
+                return Lang.TestCoreAnimationARotationAdd;
             case 1:
-                return "Обертання (Встановити)";
+                return Lang.TestCoreAnimationARotationInstall;
             case 2:
-                return "Видимість (Змінити)";
+                return Lang.TestCoreAnimationAVisibleChange;
             case 3:
-                return "Видимість (Встановити)";
+                return Lang.TestCoreAnimationAVisibleInstall;
             case 4:
-                return "Розмір (Додати)";
+                return Lang.TestCoreAnimationASizeAdd;
             case 5:
-                return "Розмір (Встановити)";
+                return Lang.AlertSizeASizeSet;
             case 6:
-                return "Тригерність (Встановити)";
+                return Lang.AlertSizeATriggerSet;
             default:
-                return "Не определено";
+                return Lang.TestCoreAnimationAUndefined;
         }
     }
 

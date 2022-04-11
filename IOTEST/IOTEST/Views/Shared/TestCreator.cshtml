@@ -99,10 +99,10 @@ const TestId = "@Model.TaskId";
                 </div>
                 <div>
                     <div class="p-1 d-flex justify-content-center">
-                        <a class="btn btn-outline-light fb70" v-on:click="AddResource(0)">Публичные</a>
+                        <a class="btn btn-outline-light fb70" v-on:click="AddResource(0)">{{Lang.TestCreatorAddResourcePublic}}</a>
                     </div>
                     <div class="p-1 d-flex justify-content-center">
-                        <a class="btn btn-outline-light fb70" v-on:click="AddResource(1)">Личные</a>
+                        <a class="btn btn-outline-light fb70" v-on:click="AddResource(1)">{{Lang.TestCreatorAddResourcePrivate}}</a>
                     </div>
                     <hr class="m-1">
                     <div class="p-1 d-flex justify-content-center">
@@ -138,22 +138,22 @@ const TestId = "@Model.TaskId";
                     </div>
                 </div>
                 <div class="overflow-auto flex-grow-1" v-else>
-                    <h5 class="text-light text-center">Ресурси відсутні</h5>
+                    <h5 class="text-light text-center">{{Lang.TestCreatorResourcesNoResources}}</h5>
                 </div>
                 <div>
                     <div class="d-flex justify-content-center my-2" v-if="ResDisMode&&!imgFileLoading">
-                        <a class="btn btn-outline-light fb70" v-on:click="AddResourceMode=2">Создать</a>
+                        <a class="btn btn-outline-light fb70" v-on:click="AddResourceMode=2">{{Lang.TestCreatorResourcesCreate}}</a>
                     </div>
                     <div class="d-flex justify-content-center my-2">
-                        <a class="btn btn-outline-light fb70" v-on:click="AddResourceToListBack()">Назад</a>
+                            <a class="btn btn-outline-light fb70" v-on:click="AddResourceToListBack()">{{Lang.TestCreatorResourcesBack}}</a>
                     </div>
                 </div>
             </div>
             <div v-if="AddResourceMode===2" class="fb100 d-flex flex-column">
                 <div class="d-flex flex-column fb90 overflow-auto">
                     <div class="d-flex flex-column">
-                        <h5 v-if="!imgBase64" class="text-center text-light">Добавте изображение</h5>
-                        <h5 v-if="imgBase64" class="text-center text-light">Название</h5>
+                        <h5 v-if="!imgBase64" class="text-center text-light">{{Lang.TestCreatorResourcesAddImage}}</h5>
+                        <h5 v-if="imgBase64" class="text-center text-light">{{Lang.TestCreatorResourcesLabel}}</h5>
                         <div v-if="imgBase64" class="fb70 d-flex justify-content-center">
                             <input v-model="imgFileLabel" type="text" v-bind:class="{'is-invalid':!NewResNameCorrect}" class="fb70 form-control text-center bg-dark text-light border-1 border-light"/>
                         </div>
@@ -162,14 +162,14 @@ const TestId = "@Model.TaskId";
                             <input id="CCfile" ref='picInp' v-on:change="LoadImg" type="file" class="d-none" accept=".png, .jpg, .jpeg">
                         </label>
                         <div class="d-flex justify-content-center my-2" v-if="NewResNameCorrect">
-                            <a class="btn btn-outline-light fb70" v-on:click="CompleteUpload(1)">Добавить</a>
+                            <a class="btn btn-outline-light fb70" v-on:click="CompleteUpload(1)">{{Lang.TestCreatorResourcesAdd}}</a>
                         </div>
 
                     </div>
                 </div>
                 <div>
                     <div class="d-flex justify-content-center my-2">
-                        <a class="btn btn-outline-light fb70" v-on:click="CompleteUpload(0)">Назад</a>
+                        <a class="btn btn-outline-light fb70" v-on:click="CompleteUpload(0)">{{Lang.TestCreatorResourcesBack}}</a>
                     </div>
                 </div>
             </div>
@@ -330,7 +330,7 @@ const TestId = "@Model.TaskId";
             <hr class="m-0">
             <div class="d-flex flex-column">
                 <div>
-                    <h5 class="text-light text-center">Прозрачность:</h5>
+                    <h5 class="text-light text-center">{{Lang.TestCreatorResourcesTransparency}}</h5>
                 </div>
                 <div>
                     <input v-model.number="EditObj.Alpha" min="0" max="1" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
@@ -423,13 +423,13 @@ const TestId = "@Model.TaskId";
             </div>
             <div class="d-flex justify-content-evenly align-items-center my-1">
                 <label class="custom-control-label d-flex" for="editTrgOnlyVisible" draggable="false">
-                    <h6 class="text-light text-center  m-0">Только видимые:</h6>
+                    <h6 class="text-light text-center  m-0">{{Lang.TestCreatorResourcesTransparency}}</h6>
                 </label>
                 <input type="checkbox" v-model="EditedTrigger.OnlyVisible" class="form-check-input m-2" style="transform: scale(1.5)" id="editTrgOnlyVisible">
             </div>
                   <div class="d-flex justify-content-evenly align-items-center my-1">
                                 <label class="custom-control-label d-flex" for="editTrgCalcP" draggable="false">
-                                                                       <h6 class="text-light text-center  m-0">Оцениваемый:</h6>
+                                                                       <h6 class="text-light text-center  m-0">{{Lang.TestCreatorResourcesCountable}}</h6>
                                                                    </label>
                                                <input type="checkbox" v-model="EditedTrigger.CalcP" class="form-check-input m-2" style="transform: scale(1.5)" id="editTrgCalcP">
                         </div>
@@ -571,7 +571,7 @@ const TestId = "@Model.TaskId";
         </div>
         <div>
             <div class="py-1 d-flex justify-content-center">
-                <a class="btn btn-outline-light fb70" v-on:click="AddActivator">Добавить условие</a>
+                <a class="btn btn-outline-light fb70" v-on:click="AddActivator">{{Lang.TestCreatorAnimationAddCondition}}</a>
             </div>
             <div class="py-1  d-flex justify-content-center">
                 <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
@@ -582,7 +582,7 @@ const TestId = "@Model.TaskId";
 <div v-if="MenuMode == 62">
     <div class="flex-column d-flex" v-bind:style="{'height': MaxHeightUCanva}">
         <div class="overflow-auto flex-grow-1">
-            <h3 class="text-light text-center">Події:</h3>
+            <h3 class="text-light text-center">{{Lang.TestCreatorAnimationEvent}}</h3>
             <div class="p-1">
                 <div v-for="ax in EditAnimData.EventActions" class="SelectableSceneElement p-1">
                     <div>
@@ -591,7 +591,7 @@ const TestId = "@Model.TaskId";
                         </select>
                         <div>
                             <div>
-                                <h5 class="text-light text-center m-2">Объекты:</h5>
+                                <h5 class="text-light text-center m-2">{{Lang.TestCreatorAnimationObjects}}</h5>
                             </div>
                             <div style="display: grid; grid-template-columns: repeat(2, 1fr); column-gap: 6px">
                                 <div v-for="(an,i) in ax.Selector.concat([''])" class="m-1" v-on:mouseover="ObjectMouseover(app.Core.DraggableObjects.find(x=>x.Id===ax.Selector[i])||{})" v-on:mouseout="ObjectMouseover({})">
@@ -604,7 +604,7 @@ const TestId = "@Model.TaskId";
                         </div>
                         <div>
                             <div>
-                                <h5 class="text-light text-center m-2">Значение:</h5>
+                                <h5 class="text-light text-center m-2">{{Lang.TestCreatorAnimationMeaning}}</h5>
                             </div>
                             <div>
                                 <input type="number" v-model.number="ax.Value[0]" class="form-control text-center text-light border-1 bg-transparent mt-1"/>
@@ -622,7 +622,7 @@ const TestId = "@Model.TaskId";
         </div>
         <div>
             <div class="py-1 d-flex justify-content-center">
-                <a class="btn btn-outline-light fb70" v-on:click="AddEventAction">Добавить действие</a>
+                <a class="btn btn-outline-light fb70" v-on:click="AddEventAction">{{Lang.TestCreatorAnimationAddAction}}</a>
             </div>
             <div class="py-1  d-flex justify-content-center">
                 <a class="btn btn-outline-light fb70" v-on:click="MenuMode = 60">{{Lang.meGetBack}}</a>
