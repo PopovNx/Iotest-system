@@ -572,7 +572,7 @@ class TestCore {
     SelectorContainer;
     OpenEditFunction;
     Loaded;
-    constructor(canvas, testParent, test, optimiseLoad, editMode, loaded) {
+    constructor(CanvaHolder, testParent, test, optimiseLoad, editMode, loaded) {
         this.Loaded = loaded;
         this.EditMode = editMode;
         this.Id = test.Id;
@@ -581,12 +581,16 @@ class TestCore {
         this.DraggableObjects = test.DraggableObjects;
         this.Triggers = test.Triggers;
         this.Animations = test.Animations;
-        this.Canvas = canvas;
+
+        this.Canvas = document.createElement("canvas");
+        CanvaHolder.append(this.Canvas);
+        
         this.CorrectState = test.CorrectState
         this.Description = test.Description;
         this.SelectorGraph = new PIXI.Graphics();
         this.SelectorContainer = new PIXI.Container();
         this.SelectorContainer.addChild(this.SelectorGraph)
+       
         this.Display = new PIXI.Application({
             view: this.Canvas,
             backgroundAlpha: 0,
@@ -901,7 +905,7 @@ class TestCore {
         this.Display.stop()
         this.Display.renderer.destroy();
         this.Destroyed = true;
-
+        this.Canvas.remove();
     }
 
     Save() {

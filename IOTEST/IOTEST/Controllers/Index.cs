@@ -17,12 +17,11 @@ namespace IOTEST.Controllers
             var control = new DataControl(HttpContext.Request.Cookies);
             
             if (!await control.Exist(_database))
-            {
-                HttpContext.Response.Redirect("/login");
-                return View("Empty");
-            }
-            var user = await _database.Users.FirstAsync(x => x.Gmail == control.UserData.Gmail);
-
+                return Redirect("/login");
+            var user = await _database.Users.FirstOrDefaultAsync(x => x.Gmail == control.UserData.Gmail);
+            if (user is null)
+                return Redirect("/login");
+            
             var groups = await _database.Groups.ToListAsync();
             var tests = await _database.Tests.ToListAsync();
             var results =await _database.LevelResults.Where(x => x.User == user).ToListAsync();

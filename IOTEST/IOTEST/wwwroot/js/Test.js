@@ -8,7 +8,7 @@
         LevelNow: null,
 
         TestPage: false,
-        Canva: null,
+        CanvaHolder: null,
         CoreParent: null,
         Core: null,
 
@@ -21,7 +21,7 @@
         LoadLevel() {
             this.LevelNow = this.Levels[this.NowLevelIndex];
             
-            this.Core = new TestCore(this.Canva, this.CoreParent, this.LevelNow, true, false);
+            this.Core = new TestCore(this.CanvaHolder, this.CoreParent, this.LevelNow, true, false);
             window.Core = this.Core; 
         },
         async PassLevel() {
@@ -70,7 +70,7 @@
     mounted() {
         if( !window.Disabled){
             if(!this.Finish){
-                this.Canva = document.getElementById("canva");
+                this.CanvaHolder = document.getElementById("canvaHolder");
                 this.CoreParent = document.getElementById("testMain");
                 this.LoadLevel();
             }else{

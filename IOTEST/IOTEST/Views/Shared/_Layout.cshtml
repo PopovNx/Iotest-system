@@ -48,8 +48,11 @@
 <body>
 
 <div id="Background" class="BackD"></div>
-<div id="app"  class="d-flex flex-column vh-100">
-    @RenderBody()
+<div id="app" class="d-flex flex-column vh-100" v-cloak>
+    <span v-cloak>
+            @RenderBody()
+    </span>
+
 </div>
 
 @await RenderSectionAsync("ScriptsAfter", false)
