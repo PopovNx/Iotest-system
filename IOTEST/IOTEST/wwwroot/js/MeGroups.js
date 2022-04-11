@@ -64,7 +64,7 @@
             console.log(this.EditGroup);
         },
         async RemoveTestFromGroup(e) {
-            if(!confirm("Вы действительно хотите удалить тест из группы?")){
+            if(!confirm(Lang.MeGroupJSConfirmDelete)){
                 return false
             }
             const key = JSON.parse(e).Key;

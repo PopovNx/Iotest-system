@@ -278,7 +278,7 @@ const UserType = "@Model.UserProf";
                                     </div>
                                     <div class="">
                                         <div class="col-12" v-if="i.Item2!=='Не завершено'">
-                                            <h6>Время сдачи: </h6>
+                                            <h6> {{Lang.MeGroupsDeliveryTime}} </h6>
                                             <h6> {{GetFTime(i.Item3)}}</h6>
                                         </div>
 
@@ -288,7 +288,7 @@ const UserType = "@Model.UserProf";
                             </div>
                         </span>
                         <span v-else>
-                            <h6>Результаты отсутствуют</h6>
+                            <h6>{{Lang.MeGroupsNoResult}}</h6>
                         </span>
                     </div>
                 </div>

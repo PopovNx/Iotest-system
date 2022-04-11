@@ -186,7 +186,7 @@
             this.imgFile = files[0];
             if (this.imgFile.size > 2000000) {
                 this.imgFile = null;
-                alert("Размер файла не может привышать 2 мегабайта");
+                alert(Lang.AlertSize);
                 return;
             }
             console.log(this.imgFile);

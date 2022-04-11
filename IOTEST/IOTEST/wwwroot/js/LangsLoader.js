@@ -579,6 +579,166 @@
         "Мова інтерфейсу",
         "Язык интерфейса",
         "Interface language"
+    ],
+    "MeGroupsNoResult": [
+        "Результат відсутній",
+        "Результаты отсутствуют",
+        "No results"
+    ],
+    "MeGroupsDeliveryTime": [
+        "Час здачі",
+        "Время сдачи",
+        "Delivery time"
+    ],
+    "TestCreatorAddResourcePublic": [
+        "Публічні",
+        "Публичные",
+        "Public"
+    ],
+    "TestCreatorAddResourcePrivate": [
+        "Особисті",
+        "Личные",
+        "Personal"
+    ],
+    "TestCreatorResourcesNoResources": [
+        "Ресурси відсутні",
+        "Ресурсы отсутствуют",
+        "No resources"
+    ],
+    "TestCreatorResourcesCreate": [
+        "Створити",
+        "Создать",
+        "Create"
+    ],
+    "TestCreatorResourcesBack": [
+        "Назад",
+        "Назад",
+        "Back"
+    ],
+    "TestCreatorResourcesAddImage": [
+        "Додати зображення",
+        "Добавте изображение",
+        "Add image"
+    ],
+    "TestCreatorResourcesAdd": [
+        "Додати",
+        "Добавить",
+        "Add"
+    ],
+    "TestCreatorResourcesTransparency": [
+        "Тільки видимі:",
+        "Только видимые:",
+        "Only visible:"
+    ],
+    "TestCreatorResourcesCountable": [
+        "Оцінюється:",
+        "Оцениваемый:",
+        "Countable:"
+    ],
+    "TestCreatorAnimationAddCondition": [
+        "Додати умову",
+        "Добавить условие",
+        "Add condition"
+    ],
+    "TestCreatorAnimationEvent": [
+        "Події:",
+        "События:",
+        "Event:"
+    ],
+    "TestCreatorAnimationObjects": [
+        "Об'єкти",
+        "Объекты",
+        "Objects"
+    ],
+    "TestCreatorAnimationMeaning": [
+        "Значення:",
+        "Значение:",
+        "Meaning:"
+    ],
+    "TestCreatorAnimationAddAction": [
+        "Додати дію",
+        "Добавить действие",
+        "Add action"
+    ],
+    "MeGroupJSConfirmDelete": [
+        "Ви дійсно хочете видалити тест із групи?",
+        "Вы действительно хотите удалить тест из группы?",
+        "Are you sure you want to remove the test from the group?"
+    ],
+    "MeGroupJSConfirmDeleteExercise": [
+        "Ви дійсно хочете видалити завдання?",
+        "Вы действительно хотите удалить задание?",
+        "Are you sure you want to remove exercises?"
+    ],
+    "TestCoreAnimationAAlways": [
+        "Завжди",
+        "Всегда",
+        "Always"
+    ],
+    "TestCoreAnimationANever": [
+        "Ніколи",
+        "Никогда",
+        "Never"
+    ],
+    "TestCoreAnimationAWhenTrigger": [
+        "При тригері",
+        "При триггере",
+        "When triggered"
+    ],
+    "TestCoreAnimationAOnClick": [
+        "При натиску",
+        "При нажатии",
+        "On click"
+    ],
+    "TestCoreAnimationAOnHover": [
+        "При наведенні",
+        "При наведении",
+        "On hover"
+    ],
+    "TestCoreAnimationAUndefined": [
+        "Не визначено",
+        "Не определено",
+        "Undefined"
+    ],
+    "TestCoreAnimationANothing": [
+        "Нічого",
+        "Ничего",
+        "Nothing"
+    ],
+    "TestCoreAnimationARotationAdd": [
+        "Обертання (Додати)",
+        "Вращение (Добавить)",
+        "Rotation (Add)"
+    ],
+    "TestCoreAnimationARotationInstall": [
+        "Обертання (Встановити)",
+        "Вращение (Установить)",
+        "Rotation (Set)"
+    ],
+    "TestCoreAnimationAVisibleChange": [
+        "Видимість (Змінити)",
+        "Видимость (Изменить)",
+        "Visibility (Change)"
+    ],
+    "TestCoreAnimationAVisibleInstall": [
+        "Видимість (Встановити)",
+        "Видимость (Установить)",
+        "Visibility (Set)"
+    ],
+    "TestCoreAnimationASizeAdd": [
+        "Розмір (Додати)",
+        "Размер (Добавить)",
+        "Size (Add)"
+    ],
+    "AlertSizeASizeSet": [
+        "Розмір (Встановити)",
+        "Размер (Установить)",
+        "Size (Set)"
+    ],
+    "AlertSizeATriggerSet": [
+        "Тригерність (Встановити)",
+        "Триггерность (Установить)",
+        "Trigger (Set)"
     ]
 }
 window.Lang = {};
