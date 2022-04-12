@@ -18,12 +18,9 @@ namespace IOTEST.Controllers
                 return new RedirectResult("/login");
             var test = await _database.Tests.FirstOrDefaultAsync(x => x.Key == key);
             var user = await _database.Users.FirstAsync(x => x.Id == control.UserData.Id);
-
             if (test is null)
                 return new RedirectResult("/");
-
             var results = await _database.LevelResults.Where(x => x.User == user).Where(x => x.Test == test).ToListAsync();
-            
             return View("Test",  (user, test,results));
         }
         [Route("/test/")]
@@ -32,7 +29,6 @@ namespace IOTEST.Controllers
             var control = new DataControl(HttpContext.Request.Cookies);
             if (!await control.Exist(_database))
                 return new RedirectResult("/login");
-            
             return new RedirectResult("/");
         }
     }

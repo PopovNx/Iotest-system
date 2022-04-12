@@ -24,20 +24,12 @@ class Resource {
 }
 
 class Trigger {
-    color = 0x00F0F0;
-    graphics;
-    VectorArray;
-    Size;
-    Id;
-    ObjectsInside;
-    Y;
-    X;
-    Visual;
-    Magnetic;
-    Accepted;
-
-    OnlyVisible;
-    CalcP;
+    color = 0x00F0F0;  
+    graphics;    VectorArray;
+    Size;    Id;    ObjectsInside;   
+    Y;    X;    Visual;
+    Magnetic;    Accepted;    
+    OnlyVisible;    CalcP;
     constructor(object) {
         this.X = object.X;
         this.Y = object.Y;
@@ -55,7 +47,6 @@ class Trigger {
             this.X - this.Size, this.Y + this.Size];
         this.graphics = new PIXI.Graphics();
     }
-
     Draw() {
         this.graphics.clear();
         this.VectorArray = [
@@ -71,7 +62,6 @@ class Trigger {
         this.graphics.drawPolygon(this.VectorArray);
         this.graphics.endFill();
     }
-
     Work(Objects) {
         this.ObjectsInside = [];
         for (const e of Objects) {
@@ -101,7 +91,6 @@ class Trigger {
         }
         this.Draw();
     }
-
     getPointOfIntersection(startX1, startY1, endX1, endY1, startX2, startY2, endX2, endY2) {
         const d = (startX1 - endX1) * (endY2 - startY2) - (startY1 - endY1) * (endX2 - startX2);
         const da = (startX1 - startX2) * (endY2 - startY2) - (startY1 - startY2) * (endX2 - startX2);
@@ -116,7 +105,6 @@ class Trigger {
         }
         return [-100, -100];
     }
-
     pointInPoly(poly, pointX, pointY) {
         let i, j, c = false;
         const polyCords = [[poly[0], poly[1]], [poly[2], poly[3]], [poly[4], poly[5]], [poly[6], poly[7]]];
@@ -164,26 +152,10 @@ class NewObject {
 }
 
 class DraggableObject {
-    Id;
-    Weight;
-    Resource;
-    Sprite;
-    MouseOnThis;
-    GroupType;
-    Rotation;
-    Button;
-    CanMove;
-    MouseDown;
-    Dragging;
-    Clicked;
-    Type;
-    Text;
-    Triggerable;
-    blurFilter;
-    alphaFilter;
-    Selected;
-    RigthClicked;
-
+    Id;    Weight;    Resource;    Sprite;    MouseOnThis;
+    GroupType;    Rotation;    Button;    CanMove;    MouseDown; 
+    Dragging;    Clicked;    Type;    Text;    Triggerable;    blurFilter;
+    alphaFilter;    Selected;    RigthClicked;
     constructor(resource, object) {
         if (resource === -1) {
             const textStyle = new PIXI.TextStyle({fontFamily: 'Arial', fill: [object.Text.color], fontSize: 120})
@@ -231,36 +203,27 @@ class DraggableObject {
         this.Sprite.filters = [this.blurFilter, this.alphaFilter];
 
     }
-
     onPointerOver() {
         this.MouseOnThis = true;
-    }
-
-    onPointerOut() {
+    }    onPointerOut() {
         this.MouseOnThis = false;
     }
-
     onRightClick(e) {
         this.RigthClicked = true;
-    }
-
-    onDragStart(event) {
+    }    onDragStart(event) {
         this.MouseDown = true;
         if (!this.CanMove) return;
         this.Sprite.data = event.data;
         this.Sprite.alpha = 0.5;
         this.Dragging = true;
     }
-
     onDragEnd() {
         this.MouseDown = false;
         this.Clicked = true;
         this.Sprite.alpha = 1;
         this.Dragging = false;
         this.Sprite.data = null;
-    }
-
-    onDragMove() {
+    }    onDragMove() {
 
         if (!this.CanMove) return;
         if (this.Dragging) {
@@ -274,18 +237,15 @@ class DraggableObject {
             }
         }
     }
-
     SetResource(rs) {
         this.Resource = rs;
         this.Sprite.texture = rs.Loaded;
     }
-
     get RotationVal() {
         const rot = this.Sprite.rotation * 180 / Math.PI;
         this.Rotation = rot;
         return Math.round(rot * 10) / 10;
     }
-
     set RotationVal(rotation) {
         if (this.Rotation === rotation) return;
         this.Rotation = rotation;
@@ -293,52 +253,39 @@ class DraggableObject {
         if (this.RotationVal > 360) this.RotationVal -= 360;
         if (this.RotationVal < 0) this.RotationVal += 360;
     }
-
     set Blur(e) {
         this.blurFilter.blur = e;
-    }
-
-    get Blur() {
+    }    get Blur() {
         return this.blurFilter.blur;
-    }
-
+    } 
     set Alpha(e) {
         this.alphaFilter.alpha = e;
-    }
-
-    get Alpha() {
+    }    get Alpha() {
         return this.alphaFilter.alpha;
-    }
+    }  
     set Visible(e){
         this.Sprite.visible =e;
-    }
-    get Visible(){
+    }    get Visible(){
         return this.Sprite.visible;
     }
     AddRotation(rotation) {
         if (rotation === 0) return;
         this.RotationVal += rotation;
     }
-
     SetCanMove(e) {
         if (this.CanMove === e) return;
         this.CanMove = e;
         this.Sprite.CanMove = e;
         this.Sprite.buttonMode = this.Button || e;
-    }
-
-    SetIsButton(on) {
+    }    SetIsButton(on) {
         if (this.Button === on) return;
         this.Button = on;
         this.Sprite.buttonMode = on;
     }
-
     GetText() {
         if (this.Text === null) return null;
         return {text: this.Text.text, color: this.Text._style.fill[0]}
-    }
-
-    SetText(text, color) {
+    }    SetText(text, color) {
         if (this.Text === null) return null;
         this.Text.text = text;
         this.Text._style.fill[0] = color;
@@ -346,7 +293,6 @@ class DraggableObject {
         this.Text.updateText();
 
     }
-
     ReadClick() {
         if (this.Clicked) {
             this.Clicked = false;
@@ -359,13 +305,11 @@ class DraggableObject {
 class EventActivator {
     Event;
     Selector;
-
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
 
     }
-
     Check(objects, trg) {
         if (this.Event === 0) return true;
         if (this.Event === 1) return false;
@@ -409,18 +353,15 @@ class EventActivator {
         return false;
     }
 }
-
 class EventAction {
     Event;
     Selector;
     Value;
-
     constructor(object) {
         this.Event = object.Event;
         this.Selector = object.Selector;
         this.Value = object.Value;
     }
-
     Do(objects, res) {
         for (const t of objects) {
             for (const s of this.Selector) {
@@ -476,7 +417,6 @@ class EventAction {
        
     }
 }
-
 class Animation {
     Activators;
     EventActions;
@@ -518,7 +458,6 @@ class Animation {
                 return Lang.TestCoreAnimationAUndefined;
         }
     }
-
     constructor(object) {
         this.Activators = []
         this.EventActions = []
@@ -531,14 +470,12 @@ class Animation {
         }
 
     }
-
     Activate(objects, res) {
         for (const d of this.EventActions) {
             d.Do(objects, res);
         }
         console.log(this)
     }
-
     Work(objects, trg, res) {
         const al = this.Activators.length;
         let ic = 0;
