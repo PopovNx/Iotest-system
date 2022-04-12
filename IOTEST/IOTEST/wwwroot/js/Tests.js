@@ -78,7 +78,7 @@
             Data.append('method', 'CreateTask');
             console.log(editTest)
             Data.append('TestKey', editTest);
-            Data.append('Name', "Новое задание");            
+            Data.append('Name', Lang.TestsNewTask);            
            console.log( await axios.post('/method', Data));
             await this.LoadTests();
             this.EditTest(this.LoadedTests.find(x=>x.Key === editTest));

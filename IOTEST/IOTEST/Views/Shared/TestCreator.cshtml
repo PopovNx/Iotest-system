@@ -321,7 +321,7 @@ const TestId = "@Model.TaskId";
             <hr class="m-0">
             <div class="d-flex flex-column">
                 <div>
-                    <h5 class="text-light text-center">Блюр:</h5>
+                    <h5 class="text-light text-center">{{Lang.TestCreatorAnimationBlur}}</h5>
                 </div>
                 <div>
                     <input v-model.number="EditObj.Blur" min="0" max="15" step="0.01" type="range" class="form-range text-center bg-dark text-light border-1 border-light"/>
@@ -423,7 +423,7 @@ const TestId = "@Model.TaskId";
             </div>
             <div class="d-flex justify-content-evenly align-items-center my-1">
                 <label class="custom-control-label d-flex" for="editTrgOnlyVisible" draggable="false">
-                    <h6 class="text-light text-center  m-0">{{Lang.TestCreatorResourcesTransparency}}</h6>
+                    <h6 class="text-light text-center  m-0">{{Lang.TestCreatorResourcesOnlyVisible}}</h6>
                 </label>
                 <input type="checkbox" v-model="EditedTrigger.OnlyVisible" class="form-check-input m-2" style="transform: scale(1.5)" id="editTrgOnlyVisible">
             </div>

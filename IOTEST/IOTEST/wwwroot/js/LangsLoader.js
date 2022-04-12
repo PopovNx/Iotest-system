@@ -625,10 +625,20 @@
         "Добавить",
         "Add"
     ],
-    "TestCreatorResourcesTransparency": [
+    "TestCreatorResourcesOnlyVisible": [
         "Тільки видимі:",
         "Только видимые:",
         "Only visible:"
+    ],
+    "TestCreatorAnimationBlur": [
+        "Розмиття:",
+        "Размытие:",
+        "Blur:"
+    ],
+    "TestCreatorAnimationTransparency": [
+        "Прозорість",
+        "Прозрачность",
+        "Transparency"
     ],
     "TestCreatorResourcesCountable": [
         "Оцінюється:",
@@ -739,6 +749,11 @@
         "Тригерність (Встановити)",
         "Триггерность (Установить)",
         "Trigger (Set)"
+    ],
+    "TestsNewTask": [
+        "Нове завдання",
+        "Новое задание",
+        "New task"
     ]
 }
 window.Lang = {};
